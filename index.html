@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nómada Agencia — Viajes que te transforman</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,700;1,400&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/styles.css" />
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════ NAV ═══════════════════════════════════ -->
+  <header class="header" id="header">
+    <nav class="nav container">
+      <a href="#" class="nav__logo">
+        <span class="nav__logo-icon">✦</span>
+        Nómada
+      </a>
+
+      <ul class="nav__list" id="nav-list">
+        <li><a href="#inicio" class="nav__link">Inicio</a></li>
+        <li><a href="#destinos" class="nav__link">Destinos</a></li>
+        <li><a href="#paquetes" class="nav__link">Paquetes</a></li>
+        <li><a href="#nosotros" class="nav__link">Nosotros</a></li>
+        <li><a href="#contacto" class="nav__link nav__link--cta">Contacto</a></li>
+      </ul>
+
+      <button class="nav__toggle" id="nav-toggle" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- ═══════════════════════════════════ HERO ═══════════════════════════════════ -->
+    <section class="hero" id="inicio">
+      <div class="hero__bg">
+        <img src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1920&q=80&auto=format&fit=crop" alt="Paisaje de viaje" class="hero__img" />
+        <div class="hero__overlay"></div>
+      </div>
+
+      <div class="hero__content container">
+        <p class="hero__label">Agencia de viajes boutique</p>
+        <h1 class="hero__title">
+          Viajes que<br />
+          <em>te transforman</em>
+        </h1>
+        <p class="hero__desc">
+          Diseñamos experiencias únicas y personalizadas para viajeros que buscan algo más que un destino.
+        </p>
+        <div class="hero__actions">
+          <a href="#destinos" class="btn btn--primary">Explorar destinos</a>
+          <a href="#paquetes" class="btn btn--ghost">Ver paquetes</a>
+        </div>
+      </div>
+
+      <div class="hero__search container">
+        <div class="search-bar">
+          <div class="search-bar__field">
+            <label>Destino</label>
+            <input type="text" placeholder="¿A dónde quieres ir?" />
+          </div>
+          <div class="search-bar__divider"></div>
+          <div class="search-bar__field">
+            <label>Fecha</label>
+            <input type="date" />
+          </div>
+          <div class="search-bar__divider"></div>
+          <div class="search-bar__field">
+            <label>Viajeros</label>
+            <select>
+              <option>1 persona</option>
+              <option>2 personas</option>
+              <option>3-5 personas</option>
+              <option>Grupo +6</option>
+            </select>
+          </div>
+          <button class="btn btn--primary search-bar__btn">Buscar</button>
+        </div>
+      </div>
+
+      <div class="hero__scroll">
+        <span>Descubre más</span>
+        <div class="hero__scroll-line"></div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════ STATS ═══════════════════════════════════ -->
+    <section class="stats">
+      <div class="container">
+        <div class="stats__grid">
+          <div class="stats__item">
+            <span class="stats__number" data-target="4800">0</span>
+            <span class="stats__label">Viajeros felices</span>
+          </div>
+          <div class="stats__item">
+            <span class="stats__number" data-target="63">0</span>
+            <span class="stats__label">Destinos activos</span>
+          </div>
+          <div class="stats__item">
+            <span class="stats__number" data-target="12">0</span>
+            <span class="stats__label">Años de experiencia</span>
+          </div>
+          <div class="stats__item">
+            <span class="stats__number" data-target="98">0</span>
+            <span class="stats__label">% satisfacción</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════ DESTINOS ═══════════════════════════════════ -->
+    <section class="section destinos" id="destinos">
+      <div class="container">
+        <div class="section__header">
+          <p class="section__label">Explora el mundo</p>
+          <h2 class="section__title">Destinos destacados</h2>
+          <p class="section__desc">
+            Desde playas paradisíacas hasta ciudades llenas de historia, tenemos el viaje perfecto para ti.
+          </p>
+        </div>
+
+        <div class="destinos__tabs">
+          <button class="tab-btn tab-btn--active" data-tab="todos">Todos</button>
+          <button class="tab-btn" data-tab="europa">Europa</button>
+          <button class="tab-btn" data-tab="asia">Asia</button>
+          <button class="tab-btn" data-tab="america">América</button>
+          <button class="tab-btn" data-tab="africa">África</button>
+        </div>
+
+        <div class="destinos__grid" id="destinos-grid">
+
+          <article class="dest-card dest-card--large" data-category="europa">
+            <div class="dest-card__img-wrap">
+              <img src="https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=900&q=80&auto=format&fit=crop" alt="París" loading="lazy" />
+            </div>
+            <div class="dest-card__body">
+              <span class="dest-card__tag">Europa</span>
+              <h3 class="dest-card__name">París, Francia</h3>
+              <p class="dest-card__text">La ciudad del amor y la luz, con arte, gastronomía y la icónica Torre Eiffel.</p>
+              <div class="dest-card__footer">
+                <span class="dest-card__price">Desde <strong>€ 890</strong></span>
+                <a href="#contacto" class="btn btn--sm btn--primary">Ver más</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dest-card" data-category="asia">
+            <div class="dest-card__img-wrap">
+              <img src="https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=700&q=80&auto=format&fit=crop" alt="Tokio" loading="lazy" />
+            </div>
+            <div class="dest-card__body">
+              <span class="dest-card__tag">Asia</span>
+              <h3 class="dest-card__name">Tokio, Japón</h3>
+              <p class="dest-card__text">Tradición y modernidad en perfecta armonía.</p>
+              <div class="dest-card__footer">
+                <span class="dest-card__price">Desde <strong>€ 1.290</strong></span>
+                <a href="#contacto" class="btn btn--sm btn--primary">Ver más</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dest-card" data-category="america">
+            <div class="dest-card__img-wrap">
+              <img src="https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=700&q=80&auto=format&fit=crop" alt="Buenos Aires" loading="lazy" />
+            </div>
+            <div class="dest-card__body">
+              <span class="dest-card__tag">América</span>
+              <h3 class="dest-card__name">Buenos Aires</h3>
+              <p class="dest-card__text">El tango, la arquitectura europea y la pasión porteña.</p>
+              <div class="dest-card__footer">
+                <span class="dest-card__price">Desde <strong>€ 760</strong></span>
+                <a href="#contacto" class="btn btn--sm btn--primary">Ver más</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dest-card" data-category="asia">
+            <div class="dest-card__img-wrap">
+              <img src="https://images.unsplash.com/photo-1508009603885-50cf7c579365?w=700&q=80&auto=format&fit=crop" alt="Bali" loading="lazy" />
+            </div>
+            <div class="dest-card__body">
+              <span class="dest-card__tag">Asia</span>
+              <h3 class="dest-card__name">Bali, Indonesia</h3>
+              <p class="dest-card__text">Templos, arrozales y playas de ensueño en la isla de los dioses.</p>
+              <div class="dest-card__footer">
+                <span class="dest-card__price">Desde <strong>€ 1.050</strong></span>
+                <a href="#contacto" class="btn btn--sm btn--primary">Ver más</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dest-card" data-category="africa">
+            <div class="dest-card__img-wrap">
+              <img src="https://images.unsplash.com/photo-1516026672322-bc52d61a55d5?w=700&q=80&auto=format&fit=crop" alt="Safari Kenia" loading="lazy" />
+            </div>
+            <div class="dest-card__body">
+              <span class="dest-card__tag">África</span>
+              <h3 class="dest-card__name">Safari, Kenia</h3>
+              <p class="dest-card__text">La gran migración y atardeceres sobre la sabana africana.</p>
+              <div class="dest-card__footer">
+                <span class="dest-card__price">Desde <strong>€ 2.100</strong></span>
+                <a href="#contacto" class="btn btn--sm btn--primary">Ver más</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="dest-card" data-category="europa">
+            <div class="dest-card__img-wrap">
+              <img src="https://images.unsplash.com/photo-1555993539-1732b0258235?w=700&q=80&auto=format&fit=crop" alt="Santorini" loading="lazy" />
+            </div>
+            <div class="dest-card__body">
+              <span class="dest-card__tag">Europa</span>
+              <h3 class="dest-card__name">Santorini, Grecia</h3>
+              <p class="dest-card__text">Casas blancas, puestas de sol y el Mediterráneo en su máximo esplendor.</p>
+              <div class="dest-card__footer">
+                <span class="dest-card__price">Desde <strong>€ 980</strong></span>
+                <a href="#contacto" class="btn btn--sm btn--primary">Ver más</a>
+              </div>
+            </div>
+          </article>
+
+        </div>
+
+        <div class="section__cta">
+          <a href="#contacto" class="btn btn--outline">Ver todos los destinos</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════ PAQUETES ═══════════════════════════════════ -->
+    <section class="section paquetes" id="paquetes">
+      <div class="container">
+        <div class="section__header">
+          <p class="section__label">Nuestras ofertas</p>
+          <h2 class="section__title">Paquetes populares</h2>
+          <p class="section__desc">Todo incluido para que solo te preocupes de disfrutar.</p>
+        </div>
+
+        <div class="paquetes__grid">
+
+          <article class="pkg-card">
+            <div class="pkg-card__badge">Más popular</div>
+            <div class="pkg-card__img-wrap">
+              <img src="https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=700&q=80&auto=format&fit=crop" alt="Maldivas" loading="lazy" />
+              <span class="pkg-card__duration">8 días / 7 noches</span>
+            </div>
+            <div class="pkg-card__body">
+              <div class="pkg-card__tags">
+                <span>✈ Vuelo incluido</span>
+                <span>🏨 Hotel 5★</span>
+                <span>🍽 Todo incluido</span>
+              </div>
+              <h3 class="pkg-card__name">Luna de miel en Maldivas</h3>
+              <p class="pkg-card__text">Villas sobre el agua, arrecifes de coral y privacidad absoluta para dos.</p>
+              <div class="pkg-card__rating">
+                <span class="stars">★★★★★</span>
+                <span class="reviews">(128 reseñas)</span>
+              </div>
+              <div class="pkg-card__footer">
+                <div class="pkg-card__price">
+                  <span class="old-price">€ 3.800</span>
+                  <span class="new-price">€ 2.990</span>
+                  <span class="per-person">por persona</span>
+                </div>
+                <a href="#contacto" class="btn btn--primary">Reservar</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="pkg-card">
+            <div class="pkg-card__img-wrap">
+              <img src="https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=700&q=80&auto=format&fit=crop" alt="Dubái" loading="lazy" />
+              <span class="pkg-card__duration">6 días / 5 noches</span>
+            </div>
+            <div class="pkg-card__body">
+              <div class="pkg-card__tags">
+                <span>✈ Vuelo incluido</span>
+                <span>🏨 Hotel 5★</span>
+                <span>🚌 Excursiones</span>
+              </div>
+              <h3 class="pkg-card__name">Dubái: lujo en el desierto</h3>
+              <p class="pkg-card__text">Rascacielos icónicos, desierto infinito y shopping de lujo en la ciudad del futuro.</p>
+              <div class="pkg-card__rating">
+                <span class="stars">★★★★★</span>
+                <span class="reviews">(94 reseñas)</span>
+              </div>
+              <div class="pkg-card__footer">
+                <div class="pkg-card__price">
+                  <span class="new-price">€ 1.890</span>
+                  <span class="per-person">por persona</span>
+                </div>
+                <a href="#contacto" class="btn btn--primary">Reservar</a>
+              </div>
+            </div>
+          </article>
+
+          <article class="pkg-card">
+            <div class="pkg-card__img-wrap">
+              <img src="https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=700&q=80&auto=format&fit=crop" alt="Costa Rica" loading="lazy" />
+              <span class="pkg-card__duration">10 días / 9 noches</span>
+            </div>
+            <div class="pkg-card__body">
+              <div class="pkg-card__tags">
+                <span>✈ Vuelo incluido</span>
+                <span>🌿 Ecoturismo</span>
+                <span>🏄 Aventura</span>
+              </div>
+              <h3 class="pkg-card__name">Aventura en Costa Rica</h3>
+              <p class="pkg-card__text">Volcanes, selva tropical, playas y biodiversidad única en el corazón de Centroamérica.</p>
+              <div class="pkg-card__rating">
+                <span class="stars">★★★★☆</span>
+                <span class="reviews">(76 reseñas)</span>
+              </div>
+              <div class="pkg-card__footer">
+                <div class="pkg-card__price">
+                  <span class="new-price">€ 2.250</span>
+                  <span class="per-person">por persona</span>
+                </div>
+                <a href="#contacto" class="btn btn--primary">Reservar</a>
+              </div>
+            </div>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════ NOSOTROS ═══════════════════════════════════ -->
+    <section class="section nosotros" id="nosotros">
+      <div class="container nosotros__container">
+        <div class="nosotros__media">
+          <div class="nosotros__img-main">
+            <img src="https://images.unsplash.com/photo-1530789253388-582c481c54b0?w=800&q=80&auto=format&fit=crop" alt="Viajeros felices" loading="lazy" />
+          </div>
+          <div class="nosotros__img-secondary">
+            <img src="https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=500&q=80&auto=format&fit=crop" alt="Destino exótico" loading="lazy" />
+          </div>
+          <div class="nosotros__badge">
+            <strong>+12</strong>
+            <span>años creando<br/>memorias</span>
+          </div>
+        </div>
+
+        <div class="nosotros__content">
+          <p class="section__label">Quiénes somos</p>
+          <h2 class="section__title">Viajamos contigo,<br/><em>no por ti</em></h2>
+          <p class="nosotros__text">
+            Somos una agencia boutique especializada en viajes a medida. Creemos que cada viajero es único y merece una experiencia diseñada específicamente para ellos: sus ritmos, sus intereses, sus sueños.
+          </p>
+          <p class="nosotros__text">
+            Nuestro equipo de expertos viajeros conoce cada destino de primera mano. No vendemos catálogos — construimos itinerarios con alma.
+          </p>
+
+          <ul class="nosotros__features">
+            <li>
+              <div class="feature-icon">🗺</div>
+              <div>
+                <strong>Itinerarios personalizados</strong>
+                <p>Diseñados desde cero según tus preferencias.</p>
+              </div>
+            </li>
+            <li>
+              <div class="feature-icon">🛡</div>
+              <div>
+                <strong>Asistencia 24/7</strong>
+                <p>Siempre disponibles durante tu viaje.</p>
+              </div>
+            </li>
+            <li>
+              <div class="feature-icon">💎</div>
+              <div>
+                <strong>Calidad garantizada</strong>
+                <p>Solo los mejores hoteles, guías y experiencias.</p>
+              </div>
+            </li>
+          </ul>
+
+          <a href="#contacto" class="btn btn--primary">Habla con un experto</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════ EXPERIENCIAS ═══════════════════════════════════ -->
+    <section class="section experiencias">
+      <div class="experiencias__bg">
+        <img src="https://images.unsplash.com/photo-1502791451862-7bd8c1df43a7?w=1920&q=80&auto=format&fit=crop" alt="Experiencia de viaje" />
+        <div class="experiencias__overlay"></div>
+      </div>
+      <div class="container experiencias__content">
+        <p class="section__label section__label--light">Lo que ofrecemos</p>
+        <h2 class="section__title section__title--light">Experiencias que<br/>marcan la diferencia</h2>
+
+        <div class="exp__grid">
+          <div class="exp__item">
+            <div class="exp__icon">🏝</div>
+            <h3>Viajes de lujo</h3>
+            <p>Hotels de 5 estrellas, traslados privados y experiencias exclusivas.</p>
+          </div>
+          <div class="exp__item">
+            <div class="exp__icon">🎒</div>
+            <h3>Aventura y mochilero</h3>
+            <p>Rutas off-the-beaten-path para los que quieren lo auténtico.</p>
+          </div>
+          <div class="exp__item">
+            <div class="exp__icon">💑</div>
+            <h3>Lunas de miel</h3>
+            <p>Momentos románticos e inolvidables para la pareja.</p>
+          </div>
+          <div class="exp__item">
+            <div class="exp__icon">👨‍👩‍👧‍👦</div>
+            <h3>Viajes en familia</h3>
+            <p>Itinerarios pensados para que todos, grandes y pequeños, disfruten.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════ TESTIMONIOS ═══════════════════════════════════ -->
+    <section class="section testimonios">
+      <div class="container">
+        <div class="section__header">
+          <p class="section__label">Lo que dicen</p>
+          <h2 class="section__title">Nuestros viajeros</h2>
+        </div>
+
+        <div class="testimonios__slider" id="testimonios-slider">
+          <div class="testimonios__track" id="testimonios-track">
+
+            <article class="testi-card">
+              <div class="testi-card__stars">★★★★★</div>
+              <blockquote class="testi-card__quote">
+                "El viaje a Japón superó todas mis expectativas. Cada detalle estaba perfectamente organizado. Nómada se encargó de todo y yo solo me dediqué a disfrutar."
+              </blockquote>
+              <div class="testi-card__author">
+                <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=80&h=80&q=80&auto=format&fit=crop&crop=face" alt="Laura M." />
+                <div>
+                  <strong>Laura Martínez</strong>
+                  <span>Tokio, Japón · 2024</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="testi-card">
+              <div class="testi-card__stars">★★★★★</div>
+              <blockquote class="testi-card__quote">
+                "Nuestra luna de miel en Maldivas fue perfecta. Las villas sobre el agua, los atardeceres... Lo recomendamos a todo el mundo. ¡Ya estamos planeando el próximo viaje!"
+              </blockquote>
+              <div class="testi-card__author">
+                <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&q=80&auto=format&fit=crop&crop=face" alt="Carlos y Ana" />
+                <div>
+                  <strong>Carlos y Ana Rodríguez</strong>
+                  <span>Maldivas · 2024</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="testi-card">
+              <div class="testi-card__stars">★★★★★</div>
+              <blockquote class="testi-card__quote">
+                "Viajé sola por primera vez a Costa Rica y gracias a Nómada me sentí segura en todo momento. El itinerario era flexible y los guías locales increíbles."
+              </blockquote>
+              <div class="testi-card__author">
+                <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=80&h=80&q=80&auto=format&fit=crop&crop=face" alt="Sofía L." />
+                <div>
+                  <strong>Sofía López</strong>
+                  <span>Costa Rica · 2025</span>
+                </div>
+              </div>
+            </article>
+
+            <article class="testi-card">
+              <div class="testi-card__stars">★★★★★</div>
+              <blockquote class="testi-card__quote">
+                "El safari en Kenia fue una experiencia transformadora. Ver la gran migración en vivo es algo que no se puede describir con palabras. Gracias Nómada por hacer posible este sueño."
+              </blockquote>
+              <div class="testi-card__author">
+                <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&q=80&auto=format&fit=crop&crop=face" alt="Miguel S." />
+                <div>
+                  <strong>Miguel Sánchez</strong>
+                  <span>Kenia · 2025</span>
+                </div>
+              </div>
+            </article>
+
+          </div>
+        </div>
+
+        <div class="testimonios__controls">
+          <button class="testi-btn" id="testi-prev" aria-label="Anterior">&#8592;</button>
+          <div class="testi-dots" id="testi-dots"></div>
+          <button class="testi-btn" id="testi-next" aria-label="Siguiente">&#8594;</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════ CTA BANNER ═══════════════════════════════════ -->
+    <section class="cta-banner">
+      <div class="container cta-banner__content">
+        <div class="cta-banner__text">
+          <h2>¿Listo para tu próxima aventura?</h2>
+          <p>Cuéntanos tu sueño y nosotros lo convertimos en realidad. Consulta gratuita y sin compromiso.</p>
+        </div>
+        <a href="#contacto" class="btn btn--white btn--lg">Comenzar a planificar</a>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════════ CONTACTO ═══════════════════════════════════ -->
+    <section class="section contacto" id="contacto">
+      <div class="container contacto__container">
+        <div class="contacto__info">
+          <p class="section__label">Escríbenos</p>
+          <h2 class="section__title">Hablemos de<br/>tu viaje ideal</h2>
+          <p class="contacto__desc">Nuestros expertos están listos para ayudarte a crear el itinerario perfecto para ti.</p>
+
+          <ul class="contacto__details">
+            <li>
+              <span class="contacto__icon">📍</span>
+              <div>
+                <strong>Oficina</strong>
+                <p>Calle Gran Vía 45, Madrid, España</p>
+              </div>
+            </li>
+            <li>
+              <span class="contacto__icon">📞</span>
+              <div>
+                <strong>Teléfono</strong>
+                <p>+34 91 123 45 67</p>
+              </div>
+            </li>
+            <li>
+              <span class="contacto__icon">✉</span>
+              <div>
+                <strong>Email</strong>
+                <p>hola@nomadaagencia.com</p>
+              </div>
+            </li>
+            <li>
+              <span class="contacto__icon">🕐</span>
+              <div>
+                <strong>Horario</strong>
+                <p>Lunes – Viernes: 9:00 – 19:00</p>
+              </div>
+            </li>
+          </ul>
+
+          <div class="contacto__social">
+            <a href="#" class="social-btn">Instagram</a>
+            <a href="#" class="social-btn">Facebook</a>
+            <a href="#" class="social-btn">WhatsApp</a>
+          </div>
+        </div>
+
+        <form class="contacto__form" id="contact-form" novalidate>
+          <div class="form__row">
+            <div class="form__group">
+              <label for="nombre">Nombre</label>
+              <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required />
+            </div>
+            <div class="form__group">
+              <label for="email">Email</label>
+              <input type="email" id="email" name="email" placeholder="tu@email.com" required />
+            </div>
+          </div>
+          <div class="form__group">
+            <label for="destino">Destino de interés</label>
+            <select id="destino" name="destino">
+              <option value="">Selecciona un destino</option>
+              <option>Europa</option>
+              <option>Asia</option>
+              <option>América</option>
+              <option>África</option>
+              <option>Oceanía</option>
+              <option>No sé, ¡sorpréndeme!</option>
+            </select>
+          </div>
+          <div class="form__group">
+            <label for="mensaje">Cuéntanos tu sueño</label>
+            <textarea id="mensaje" name="mensaje" rows="5" placeholder="Describe el viaje que siempre quisiste hacer..." required></textarea>
+          </div>
+          <button type="submit" class="btn btn--primary btn--full">Enviar consulta</button>
+          <p class="form__note">Respuesta garantizada en menos de 24 horas.</p>
+        </form>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ═══════════════════════════════════ FOOTER ═══════════════════════════════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer__grid">
+        <div class="footer__brand">
+          <a href="#" class="nav__logo">
+            <span class="nav__logo-icon">✦</span>
+            Nómada
+          </a>
+          <p>Agencia de viajes boutique especializada en experiencias únicas y personalizadas desde 2012.</p>
+          <div class="footer__social">
+            <a href="#" aria-label="Instagram">📷</a>
+            <a href="#" aria-label="Facebook">📘</a>
+            <a href="#" aria-label="TikTok">🎵</a>
+            <a href="#" aria-label="YouTube">▶</a>
+          </div>
+        </div>
+
+        <div class="footer__col">
+          <h4>Destinos</h4>
+          <ul>
+            <li><a href="#">Europa</a></li>
+            <li><a href="#">Asia</a></li>
+            <li><a href="#">América Latina</a></li>
+            <li><a href="#">África</a></li>
+            <li><a href="#">Oceanía</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__col">
+          <h4>Viajes</h4>
+          <ul>
+            <li><a href="#">Viajes de lujo</a></li>
+            <li><a href="#">Lunas de miel</a></li>
+            <li><a href="#">Aventura</a></li>
+            <li><a href="#">Familia</a></li>
+            <li><a href="#">Solo viajero</a></li>
+          </ul>
+        </div>
+
+        <div class="footer__col">
+          <h4>Agencia</h4>
+          <ul>
+            <li><a href="#">Quiénes somos</a></li>
+            <li><a href="#">Blog de viajes</a></li>
+            <li><a href="#">Trabaja con nosotros</a></li>
+            <li><a href="#">Política de privacidad</a></li>
+            <li><a href="#">Términos y condiciones</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="footer__bottom">
+        <p>© 2025 Nómada Agencia. Todos los derechos reservados.</p>
+        <p>Diseñado con ♥ para los viajeros del mundo</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="js/main.js"></script>
+</body>
+</html>
