@@ -3,6 +3,7 @@ import Hero from '../components/Hero'
 import Stats from '../components/Stats'
 import Destinations from '../components/Destinations'
 import Packages from '../components/Packages'
+import Products from '../components/Products'
 import About from '../components/About'
 import Experiences from '../components/Experiences'
 import Testimonials from '../components/Testimonials'
@@ -19,6 +20,7 @@ export default function Home() {
         <Stats />
         <Destinations />
         <Packages />
+        <Products />
         <About />
         <Experiences />
         <Testimonials />
