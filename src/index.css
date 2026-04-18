@@ -4,15 +4,15 @@
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  --clr-primary:   #1a3c5e;
-  --clr-primary-d: #0f2740;
-  --clr-accent:    #e8a838;
-  --clr-accent-d:  #c98a1a;
-  --clr-text:      #1e2a35;
-  --clr-text-2:    #5a6e7f;
-  --clr-bg:        #f7f9fb;
+  --clr-primary:   #7c3d52;
+  --clr-primary-d: #4f2233;
+  --clr-accent:    #c4956a;
+  --clr-accent-d:  #a67850;
+  --clr-text:      #2c1a20;
+  --clr-text-2:    #7a5860;
+  --clr-bg:        #faf7f5;
   --clr-white:     #ffffff;
-  --clr-border:    #dde4ec;
+  --clr-border:    #e8d5d8;
 
   --font-body:  'Inter', sans-serif;
   --font-serif: 'Playfair Display', serif;
@@ -1880,4 +1880,102 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   .adm-header__email { display: none; }
   .adm-table__desc { display: none; }
   .adm-toolbar { align-items: flex-start; flex-wrap: wrap; }
+}
+
+/* ═══════════════════════════════════════════════════
+   HERO SLIDESHOW
+═══════════════════════════════════════════════════ */
+.hero__slide {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.hero__slide--in {
+  animation: slideIn 0.9s ease forwards;
+  z-index: 1;
+}
+
+.hero__slide--out {
+  animation: slideOut 0.9s ease forwards;
+  z-index: 0;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: scale(1.04); }
+  to   { opacity: 1; transform: scale(1.05); }
+}
+
+@keyframes slideOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+.hero__overlay { z-index: 2; }
+.hero__content,
+.hero__search,
+.hero__scroll { z-index: 3; }
+
+/* Dots */
+.hero__dots {
+  position: absolute;
+  bottom: 7.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  gap: .5rem;
+}
+
+.hero__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.4);
+  border: none;
+  cursor: pointer;
+  transition: background var(--transition), width var(--transition);
+  padding: 0;
+}
+
+.hero__dot--active {
+  background: var(--clr-accent);
+  width: 24px;
+  border-radius: 4px;
+}
+
+/* Flechas */
+.hero__arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.15);
+  border: 1.5px solid rgba(255,255,255,.4);
+  color: var(--clr-white);
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  backdrop-filter: blur(6px);
+  transition: background var(--transition), transform var(--transition);
+}
+
+.hero__arrow:hover {
+  background: rgba(255,255,255,.3);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.hero__arrow--prev { left: 1.5rem; }
+.hero__arrow--next { right: 1.5rem; }
+
+@media (max-width: 768px) {
+  .hero__arrow { display: none; }
+  .hero__dots  { bottom: 13rem; }
 }
