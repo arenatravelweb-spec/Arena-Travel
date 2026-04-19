@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react'
+import AnimatedButton from './AnimatedButton'
 
 const SLIDES = [
   'https://i.pinimg.com/736x/bd/36/58/bd3658daca9df60f29769f02e3259c65.jpg',
@@ -35,53 +36,42 @@ export default function Hero() {
 
       <div className="hero__bg">
         {prev !== null && (
-          <img key={`prev-${prev}`} src={SLIDES[prev]} alt="" className="hero__slide hero__slide--out" />
+          <img
+            key={`prev-${prev}`}
+            src={SLIDES[prev]}
+            alt=""
+            className="hero__slide hero__slide--out"
+            style={SLIDES[prev].includes('48277a45') || SLIDES[prev].includes('663d64') ? { objectPosition: 'center 20%' } : undefined}
+          />
         )}
-        <img key={`cur-${current}`} src={SLIDES[current]} alt="Viajera explorando el mundo" className="hero__slide hero__slide--in" />
+        <img
+          key={`cur-${current}`}
+          src={SLIDES[current]}
+          alt="Viajera explorando el mundo"
+          className="hero__slide hero__slide--in"
+          style={SLIDES[current].includes('48277a45') || SLIDES[current].includes('663d64') ? { objectPosition: 'center 20%' } : undefined}
+        />
         <div className="hero__overlay" />
       </div>
 
       <div className="hero__content container">
-        <p className="hero__label">Viajes diseñados para mujeres que se atreven</p>
+        <p className="hero__label">Agencia de turismo en Tucumán, Argentina</p>
         <h1 className="hero__title">
-          El mundo es tuyo,<br />
+          El mundo es tuyo,
+          <br />
           <em>atrévete a vivirlo</em>
         </h1>
         <p className="hero__desc">
-          Experiencias seguras, auténticas y transformadoras, diseñadas especialmente para mujeres como tú.
+          Somos una agencia de turismo dedicada a crear experiencias únicas para cada viajero. Te ofrecemos asesoramiento personalizado, paquetes nacionales e internacionales.
         </p>
         <div className="hero__actions">
-          <a href="#destinos" className="btn btn--primary">Explorar destinos</a>
-          <a href="#paquetes" className="btn btn--ghost">Ver paquetes</a>
+          <AnimatedButton text="Explorar destinos" href="#productos" color="var(--color-accent)" />
+          <AnimatedButton text="Escribinos" href="https://wa.me/5493815477147" color="var(--color-secondary)" />
         </div>
       </div>
 
-      <div className="hero__search container">
-        <div className="search-bar">
-          <div className="search-bar__field">
-            <label>Destino</label>
-            <input type="text" placeholder="¿A dónde quieres ir?" />
-          </div>
-          <div className="search-bar__divider" />
-          <div className="search-bar__field">
-            <label>Fecha</label>
-            <input type="date" />
-          </div>
-          <div className="search-bar__divider" />
-          <div className="search-bar__field">
-            <label>Viajeras</label>
-            <select>
-              <option>1 persona</option>
-              <option>2 personas</option>
-              <option>3-5 personas</option>
-              <option>Grupo +6</option>
-            </select>
-          </div>
-          <button className="btn btn--primary search-bar__btn">Buscar</button>
-        </div>
-      </div>
 
-      <div className="hero__dots">
+<div className="hero__dots">
         {SLIDES.map((_, i) => (
           <button
             key={i}
