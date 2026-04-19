@@ -38,7 +38,7 @@ export default function AdminLogin() {
         <div className="al-hero__overlay" />
         <div className="al-hero__content">
           <div className="al-hero__logo">
-            <span style={{ color: 'var(--clr-accent)' }}>✦</span>
+            <span style={{ color: 'var(--color-primary)' }}>✦</span>
             Nómada
           </div>
           <p className="al-hero__agency">Agencia de viajes boutique</p>

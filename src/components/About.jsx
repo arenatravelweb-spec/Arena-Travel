@@ -1,7 +1,10 @@
+import { HiShieldCheck, HiUserGroup, HiHeart } from 'react-icons/hi2'
+import AnimatedButton from './AnimatedButton'
+
 const FEATURES = [
-  { icon: '🗺', title: 'Itinerarios personalizados', desc: 'Diseñados desde cero según tus preferencias.' },
-  { icon: '🛡', title: 'Asistencia 24/7',            desc: 'Siempre disponibles durante tu viaje.' },
-  { icon: '💎', title: 'Calidad garantizada',         desc: 'Solo los mejores hoteles, guías y experiencias.' },
+  { Icon: HiShieldCheck, title: 'Viajes 100% seguros para ellas',  desc: 'Destinos verificados y acompañamiento real en cada etapa del viaje.' },
+  { Icon: HiUserGroup,   title: 'Equipo femenino especializado',    desc: 'Te asesoramos mujeres viajeras que entienden lo que necesitás.' },
+  { Icon: HiHeart,       title: 'Comunidad de viajeras',           desc: 'Unite a miles de mujeres que ya descubrieron el mundo con nosotras.' },
 ]
 
 export default function About() {
@@ -9,40 +12,36 @@ export default function About() {
     <section className="section nosotros" id="nosotros">
       <div className="container nosotros__container">
         <div className="nosotros__media reveal">
-          <div className="nosotros__img-main">
+          <div className="nosotros__img-main nos-card">
             <img
-              src="https://images.unsplash.com/photo-1530789253388-582c481c54b0?w=800&q=80&auto=format&fit=crop"
-              alt="Viajeros felices"
+              src="https://i.pinimg.com/1200x/aa/6c/55/aa6c55b5dcaef3fcaae68b3ad2a69ac6.jpg"
+              alt="Viajeras felices"
               loading="lazy"
             />
           </div>
-          <div className="nosotros__img-secondary">
+          <div className="nosotros__img-secondary nos-card">
             <img
-              src="https://images.unsplash.com/photo-1501555088652-021faa106b9b?w=500&q=80&auto=format&fit=crop"
-              alt="Destino exótico"
+              src="https://i.pinimg.com/1200x/69/cb/82/69cb82251583cd5497127cd7b077836e.jpg"
+              alt="Mujer viajando sola"
               loading="lazy"
             />
-          </div>
-          <div className="nosotros__badge">
-            <strong>+12</strong>
-            <span>años creando<br />memorias</span>
           </div>
         </div>
 
         <div className="nosotros__content reveal">
           <p className="section__label">Quiénes somos</p>
-          <h2 className="section__title">Viajamos contigo,<br /><em>no por ti</em></h2>
+          <h2 className="section__title">Creadas por mujeres,<br /><em>para mujeres</em></h2>
           <p className="nosotros__text">
-            Somos una agencia boutique especializada en viajes a medida. Creemos que cada viajero es único y merece una experiencia diseñada específicamente para ellos: sus ritmos, sus intereses, sus sueños.
+            Somos una agencia fundada por mujeres viajeras. Sabemos lo que significa querer explorar el mundo con libertad, seguridad y autenticidad — porque nosotras también lo vivimos.
           </p>
           <p className="nosotros__text">
-            Nuestro equipo de expertos viajeros conoce cada destino de primera mano. No vendemos catálogos — construimos itinerarios con alma.
+            No vendemos paquetes genéricos. Diseñamos cada itinerario pensando en vos: tus ritmos, tus intereses, tus sueños. Porque viajar es un acto de valentía, y merecés hacerlo en las mejores condiciones.
           </p>
 
           <ul className="nosotros__features">
-            {FEATURES.map(({ icon, title, desc }) => (
+            {FEATURES.map(({ Icon, title, desc }) => (
               <li key={title}>
-                <div className="feature-icon">{icon}</div>
+                <div className="feature-icon"><Icon /></div>
                 <div>
                   <strong>{title}</strong>
                   <p>{desc}</p>
@@ -51,7 +50,7 @@ export default function About() {
             ))}
           </ul>
 
-          <a href="#contacto" className="btn btn--primary">Habla con un experto</a>
+          <AnimatedButton text="Hablá con nosotras" href="https://wa.me/5493815477147" />
         </div>
       </div>
     </section>

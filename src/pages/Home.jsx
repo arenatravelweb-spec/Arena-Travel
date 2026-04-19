@@ -1,8 +1,6 @@
 import Navbar from '../components/Navbar'
 import Hero from '../components/Hero'
 import Stats from '../components/Stats'
-import Destinations from '../components/Destinations'
-import Packages from '../components/Packages'
 import Products from '../components/Products'
 import About from '../components/About'
 import Experiences from '../components/Experiences'
@@ -18,8 +16,6 @@ export default function Home() {
       <main>
         <Hero />
         <Stats />
-        <Destinations />
-        <Packages />
         <Products />
         <About />
         <Experiences />

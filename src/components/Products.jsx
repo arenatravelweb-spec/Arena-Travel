@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { supabase } from '../lib/supabase'
+import AnimatedButton from './AnimatedButton'
 
 export default function Products() {
   const [products, setProducts] = useState([])
@@ -42,32 +43,27 @@ export default function Products() {
         <div className="section__header reveal">
           <p className="section__label">Catálogo</p>
           <h2 className="section__title">Nuestros productos</h2>
-          <p className="section__desc">
-            Descubre nuestra selección de experiencias y paquetes de viaje.
-          </p>
+          <p className="section__desc">Descubrí nuestra selección de experiencias y paquetes de viaje.</p>
         </div>
 
-        <div className="paquetes__grid">
+        <div className="prod-grid">
           {products.map(p => (
-            <article key={p.id} className="pkg-card reveal">
-              <div className="pkg-card__img-wrap">
-                {p.imagen_url
-                  ? <img src={p.imagen_url} alt={p.nombre} loading="lazy" />
-                  : <div className="pkg-card__img-placeholder" aria-hidden="true" />
-                }
-              </div>
-              <div className="pkg-card__body">
-                <h3 className="pkg-card__name">{p.nombre}</h3>
-                {p.descripcion && <p className="pkg-card__text">{p.descripcion}</p>}
-                <div className="pkg-card__footer">
-                  <div className="pkg-card__price">
-                    <span className="new-price">
-                      € {Number(p.precio).toLocaleString('es-ES', { minimumFractionDigits: 2 })}
-                    </span>
-                    <span className="per-person">por persona</span>
-                  </div>
-                  <a href="#contacto" className="btn btn--primary btn--sm">Reservar</a>
-                </div>
+            <article
+              key={p.id}
+              className="prod-card reveal"
+              style={p.imagen_url ? { '--img': `url(${p.imagen_url})` } : undefined}
+            >
+              {p.imagen_url && <img src={p.imagen_url} alt={p.nombre} loading="lazy" className="prod-card__img" />}
+
+              <h3 className="prod-card__title">{p.nombre}</h3>
+
+              <div className="prod-card__details">
+                {p.descripcion && <p className="prod-card__desc">{p.descripcion}</p>}
+                <p className="prod-card__price">
+                  € {Number(p.precio).toLocaleString('es-ES', { minimumFractionDigits: 2 })}
+                  <span> / persona</span>
+                </p>
+                <AnimatedButton text="Reservar" href="https://wa.me/5493815477147" size="sm" color="var(--color-accent)" />
               </div>
             </article>
           ))}

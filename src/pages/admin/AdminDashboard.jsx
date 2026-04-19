@@ -156,7 +156,7 @@ export default function AdminDashboard() {
                           <td className="adm-table__desc">
                             {p.descripcion
                               ? p.descripcion.slice(0, 72) + (p.descripcion.length > 72 ? '…' : '')
-                              : <span style={{ color: 'var(--clr-text-2)', fontStyle: 'italic' }}>—</span>}
+                              : <span style={{ color: 'var(--color-text-light)', fontStyle: 'italic' }}>—</span>}
                           </td>
                           <td>
                             <div className="adm-table__actions">
