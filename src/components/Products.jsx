@@ -1,16 +1,24 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import AnimatedButton from './AnimatedButton'
 
+const TABS = [
+  { id: 'nacional',      label: 'Nacionales' },
+  { id: 'internacional', label: 'Internacionales' },
+]
+
 export default function Products() {
   const [products, setProducts] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState('')
+  const [loading, setLoading]   = useState(true)
+  const [error, setError]       = useState('')
+  const [active, setActive]     = useState('nacional')
+  const [indicator, setIndicator] = useState({ width: 0, left: 0 })
+  const tabsRef = useRef(null)
 
   useEffect(() => {
     supabase
       .from('productos')
-      .select('id, nombre, precio, descripcion, imagen_url')
+      .select('*')
       .order('created_at', { ascending: false })
       .then(({ data, error: dbErr }) => {
         if (dbErr) setError(dbErr.message)
@@ -18,6 +26,14 @@ export default function Products() {
         setLoading(false)
       })
   }, [])
+
+  useEffect(() => {
+    if (!tabsRef.current) return
+    const el = tabsRef.current.querySelector(`[data-tab="${active}"]`)
+    if (el) setIndicator({ width: el.offsetWidth, left: el.offsetLeft })
+  }, [active])
+
+  const filtered = products.filter(p => p.categoria === active)
 
   if (loading) return (
     <section className="section productos" id="productos">
@@ -46,28 +62,49 @@ export default function Products() {
           <p className="section__desc">Descubrí nuestra selección de experiencias y paquetes de viaje.</p>
         </div>
 
-        <div className="prod-grid">
-          {products.map(p => (
-            <article
-              key={p.id}
-              className="prod-card reveal"
-              style={p.imagen_url ? { '--img': `url(${p.imagen_url})` } : undefined}
-            >
-              {p.imagen_url && <img src={p.imagen_url} alt={p.nombre} loading="lazy" className="prod-card__img" />}
-
-              <h3 className="prod-card__title">{p.nombre}</h3>
-
-              <div className="prod-card__details">
-                {p.descripcion && <p className="prod-card__desc">{p.descripcion}</p>}
-                <p className="prod-card__price">
-                  € {Number(p.precio).toLocaleString('es-ES', { minimumFractionDigits: 2 })}
-                  <span> / persona</span>
-                </p>
-                <AnimatedButton text="Reservar" href="https://wa.me/5493815477147" size="sm" color="var(--color-accent)" />
-              </div>
-            </article>
-          ))}
+        <div className="prod-filter reveal">
+          <div className="prod-pill" ref={tabsRef}>
+            {TABS.map(({ id, label }) => (
+              <button
+                key={id}
+                data-tab={id}
+                className={`prod-pill__btn${active === id ? ' active' : ''}`}
+                onClick={() => setActive(id)}
+              >
+                {label}
+              </button>
+            ))}
+            <span
+              className="prod-pill__indicator"
+              style={{ width: indicator.width, transform: `translateX(${indicator.left}px)` }}
+            />
+          </div>
         </div>
+
+        {filtered.length === 0 ? (
+          <p className="productos__status">No hay productos en esta categoría todavía.</p>
+        ) : (
+          <div className="prod-grid">
+            {filtered.map(p => (
+              <article
+                key={p.id}
+                className="prod-card reveal"
+                style={p.imagen_url ? { '--img': `url(${p.imagen_url})` } : undefined}
+              >
+                {p.imagen_url && <img src={p.imagen_url} alt={p.nombre} loading="lazy" className="prod-card__img" />}
+                <h3 className="prod-card__title">{p.nombre}</h3>
+                <div className="prod-card__details">
+                  {p.descripcion && <p className="prod-card__desc">{p.descripcion}</p>}
+                  <p className="prod-card__price">
+                    € {Number(p.precio).toLocaleString('es-ES', { minimumFractionDigits: 2 })}
+                    <span> / persona</span>
+                  </p>
+                  <AnimatedButton text="Reservar" href="https://wa.me/5493815477147" size="sm" color="var(--color-accent)" />
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
       </div>
     </section>
   )

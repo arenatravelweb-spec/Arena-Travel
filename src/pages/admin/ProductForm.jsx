@@ -1,14 +1,15 @@
 import { useState } from 'react'
 import { uploadToCloudinary } from '../../lib/cloudinary'
 
-const EMPTY = { nombre: '', precio: '', descripcion: '', imagen_url: '' }
+const EMPTY = { nombre: '', precio: '', descripcion: '', imagen_url: '', categoria: 'nacional' }
 
 export default function ProductForm({ initial, onSave, onCancel }) {
   const [form, setForm] = useState(initial ? {
-    nombre: initial.nombre,
-    precio: initial.precio,
+    nombre:     initial.nombre,
+    precio:     initial.precio,
     descripcion: initial.descripcion ?? '',
     imagen_url: initial.imagen_url ?? '',
+    categoria:  initial.categoria ?? 'nacional',
   } : EMPTY)
   const [file, setFile] = useState(null)
   const [preview, setPreview] = useState(initial?.imagen_url ?? '')
@@ -85,6 +86,14 @@ export default function ProductForm({ initial, onSave, onCancel }) {
           className={errors.precio ? 'error' : ''}
         />
         {errors.precio && <span className="product-form__field-error">Introduce un precio válido</span>}
+      </div>
+
+      <div className="form__group">
+        <label htmlFor="pf-categoria">Categoría *</label>
+        <select id="pf-categoria" name="categoria" value={form.categoria} onChange={handleChange}>
+          <option value="nacional">Nacional</option>
+          <option value="internacional">Internacional</option>
+        </select>
       </div>
 
       <div className="form__group">
