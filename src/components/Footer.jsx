@@ -24,7 +24,7 @@ export default function Footer() {
           ))}
         </nav>
 
-        <p className="footer__copy">© 2025 Arena Travel. Todos los derechos reservados.</p>
+        <p className="footer__copy">© 2026 Arena Travel. Todos los derechos reservados.</p>
       </div>
     </footer>
   )
