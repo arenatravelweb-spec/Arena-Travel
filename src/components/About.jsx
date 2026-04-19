@@ -1,0 +1,58 @@
+import { HiShieldCheck, HiUserGroup, HiHeart } from 'react-icons/hi2'
+import AnimatedButton from './AnimatedButton'
+
+const FEATURES = [
+  { Icon: HiShieldCheck, title: 'Viajes 100% seguros para ellas',  desc: 'Destinos verificados y acompañamiento real en cada etapa del viaje.' },
+  { Icon: HiUserGroup,   title: 'Equipo femenino especializado',    desc: 'Te asesoramos mujeres viajeras que entienden lo que necesitás.' },
+  { Icon: HiHeart,       title: 'Comunidad de viajeras',           desc: 'Unite a miles de mujeres que ya descubrieron el mundo con nosotras.' },
+]
+
+export default function About() {
+  return (
+    <section className="section nosotros" id="nosotros">
+      <div className="container nosotros__container">
+        <div className="nosotros__media reveal">
+          <div className="nosotros__img-main nos-card">
+            <img
+              src="https://i.pinimg.com/1200x/aa/6c/55/aa6c55b5dcaef3fcaae68b3ad2a69ac6.jpg"
+              alt="Viajeras felices"
+              loading="lazy"
+            />
+          </div>
+          <div className="nosotros__img-secondary nos-card">
+            <img
+              src="https://i.pinimg.com/1200x/69/cb/82/69cb82251583cd5497127cd7b077836e.jpg"
+              alt="Mujer viajando sola"
+              loading="lazy"
+            />
+          </div>
+        </div>
+
+        <div className="nosotros__content reveal">
+          <p className="section__label">Quiénes somos</p>
+          <h2 className="section__title">Creadas por mujeres,<br /><em>para mujeres</em></h2>
+          <p className="nosotros__text">
+            Somos una agencia fundada por mujeres viajeras. Sabemos lo que significa querer explorar el mundo con libertad, seguridad y autenticidad — porque nosotras también lo vivimos.
+          </p>
+          <p className="nosotros__text">
+            No vendemos paquetes genéricos. Diseñamos cada itinerario pensando en vos: tus ritmos, tus intereses, tus sueños. Porque viajar es un acto de valentía, y merecés hacerlo en las mejores condiciones.
+          </p>
+
+          <ul className="nosotros__features">
+            {FEATURES.map(({ Icon, title, desc }) => (
+              <li key={title}>
+                <div className="feature-icon"><Icon /></div>
+                <div>
+                  <strong>{title}</strong>
+                  <p>{desc}</p>
+                </div>
+              </li>
+            ))}
+          </ul>
+
+          <AnimatedButton text="Hablá con nosotras" href="https://wa.me/5493815477147" />
+        </div>
+      </div>
+    </section>
+  )
+}
