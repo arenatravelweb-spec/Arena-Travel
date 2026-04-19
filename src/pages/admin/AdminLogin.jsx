@@ -31,7 +31,7 @@ export default function AdminLogin() {
       {/* ── Panel izquierdo: imagen de marca ── */}
       <div className="al-hero">
         <img
-          src="https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1200&q=80&auto=format&fit=crop"
+          src="https://i.pinimg.com/736x/52/46/c8/5246c823117c5689f8527064e126de9f.jpg"
           alt=""
           className="al-hero__img"
         />
@@ -39,9 +39,9 @@ export default function AdminLogin() {
         <div className="al-hero__content">
           <div className="al-hero__logo">
             <span style={{ color: 'var(--color-primary)' }}>✦</span>
-            Nómada
+            Arena Travel
           </div>
-          <p className="al-hero__agency">Agencia de viajes boutique</p>
+          <p className="al-hero__agency">Agencia de viajes</p>
           <div className="al-hero__divider" />
           <p className="al-hero__text">
             Gestiona destinos, paquetes y experiencias desde el panel de administración.

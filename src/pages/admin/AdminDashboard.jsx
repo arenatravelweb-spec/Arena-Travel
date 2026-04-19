@@ -1,8 +1,21 @@
 import { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import Swal from 'sweetalert2'
 import { supabase } from '../../lib/supabase'
 import { useAuth } from '../../context/AuthContext'
 import ProductForm from './ProductForm'
+
+const swalBase = {
+  confirmButtonColor: '#F7931E',
+  cancelButtonColor:  '#6B6B6B',
+  background:         '#FFFDF8',
+  color:              '#1A1A1A',
+  customClass: {
+    confirmButton: 'swal-btn-confirm',
+    cancelButton:  'swal-btn-cancel',
+    popup:         'swal-popup-arena',
+  },
+}
 
 export default function AdminDashboard() {
   const { user, signOut } = useAuth()
@@ -28,6 +41,16 @@ export default function AdminDashboard() {
   useEffect(() => { fetchProducts() }, [])
 
   const handleSignOut = async () => {
+    const result = await Swal.fire({
+      ...swalBase,
+      title:              '¿Cerrás sesión?',
+      text:               'Vas a salir del panel de administración.',
+      icon:               'question',
+      showCancelButton:   true,
+      confirmButtonText:  'Sí, salir',
+      cancelButtonText:   'Cancelar',
+    })
+    if (!result.isConfirmed) return
     await signOut()
     navigate('/admin/login')
   }
@@ -36,11 +59,35 @@ export default function AdminDashboard() {
     if (mode === 'edit') {
       const { error: dbErr } = await supabase
         .from('productos').update(productData).eq('id', editing.id)
-      if (dbErr) { alert('Error al actualizar: ' + dbErr.message); return }
+      if (dbErr) {
+        Swal.fire({ ...swalBase, icon: 'error', title: 'Error', text: dbErr.message })
+        return
+      }
+      await Swal.fire({
+        ...swalBase,
+        icon:              'success',
+        title:             '¡Producto actualizado!',
+        text:              `"${productData.nombre}" fue guardado correctamente.`,
+        confirmButtonText: 'Aceptar',
+        timer:             2500,
+        timerProgressBar:  true,
+      })
     } else {
       const { error: dbErr } = await supabase
         .from('productos').insert([productData])
-      if (dbErr) { alert('Error al crear: ' + dbErr.message); return }
+      if (dbErr) {
+        Swal.fire({ ...swalBase, icon: 'error', title: 'Error', text: dbErr.message })
+        return
+      }
+      await Swal.fire({
+        ...swalBase,
+        icon:              'success',
+        title:             '¡Producto creado!',
+        text:              `"${productData.nombre}" fue agregado al catálogo.`,
+        confirmButtonText: 'Aceptar',
+        timer:             2500,
+        timerProgressBar:  true,
+      })
     }
     setMode('list')
     setEditing(null)
@@ -51,9 +98,22 @@ export default function AdminDashboard() {
   const handleCancel = () => { setMode('list'); setEditing(null) }
 
   const handleDelete = async (p) => {
-    if (!window.confirm(`¿Eliminar "${p.nombre}"? Esta acción no se puede deshacer.`)) return
+    const result = await Swal.fire({
+      ...swalBase,
+      title:              `¿Eliminás "${p.nombre}"?`,
+      text:               'Esta acción no se puede deshacer.',
+      icon:               'warning',
+      showCancelButton:   true,
+      confirmButtonText:  'Sí, eliminar',
+      cancelButtonText:   'Cancelar',
+      confirmButtonColor: '#e53e3e',
+    })
+    if (!result.isConfirmed) return
     const { error: dbErr } = await supabase.from('productos').delete().eq('id', p.id)
-    if (dbErr) { alert('Error al eliminar: ' + dbErr.message); return }
+    if (dbErr) {
+      Swal.fire({ ...swalBase, icon: 'error', title: 'Error', text: dbErr.message })
+      return
+    }
     fetchProducts()
   }
 
@@ -65,7 +125,7 @@ export default function AdminDashboard() {
         <div className="adm-header__left">
           <a href="/" className="adm-header__logo">
             <span className="nav__logo-icon">✦</span>
-            Nómada
+            Arena Travel
           </a>
           <span className="adm-header__sep" aria-hidden="true">·</span>
           <span className="adm-header__area">Administración</span>
