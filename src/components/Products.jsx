@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { supabase } from '../lib/supabase'
 import AnimatedButton from './AnimatedButton'
 
@@ -27,11 +27,11 @@ export default function Products() {
       })
   }, [])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (!tabsRef.current) return
     const el = tabsRef.current.querySelector(`[data-tab="${active}"]`)
     if (el) setIndicator({ width: el.offsetWidth, left: el.offsetLeft })
-  }, [active])
+  }, [active, loading])
 
   const filtered = products.filter(p => p.categoria === active)
 
@@ -62,7 +62,7 @@ export default function Products() {
           <p className="section__desc">Descubrí nuestra selección de experiencias y paquetes de viaje.</p>
         </div>
 
-        <div className="prod-filter reveal">
+        <div className="prod-filter">
           <div className="prod-pill" ref={tabsRef}>
             {TABS.map(({ id, label }) => (
               <button
@@ -88,7 +88,7 @@ export default function Products() {
             {filtered.map(p => (
               <article
                 key={p.id}
-                className="prod-card reveal"
+                className="prod-card"
                 style={p.imagen_url ? { '--img': `url(${p.imagen_url})` } : undefined}
               >
                 {p.imagen_url && <img src={p.imagen_url} alt={p.nombre} loading="lazy" className="prod-card__img" />}
