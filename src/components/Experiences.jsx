@@ -1,16 +1,16 @@
 const EXPERIENCES = [
-  { icon: '🏝',          title: 'Viajes de lujo',        text: 'Hotels de 5 estrellas, traslados privados y experiencias exclusivas.' },
-  { icon: '🎒',          title: 'Aventura y mochilero',  text: 'Rutas off-the-beaten-path para los que quieren lo auténtico.' },
-  { icon: '💑',          title: 'Lunas de miel',         text: 'Momentos románticos e inolvidables para la pareja.' },
-  { icon: '👨‍👩‍👧‍👦', title: 'Viajes en familia',      text: 'Itinerarios pensados para que todos, grandes y pequeños, disfruten.' },
+  { title: 'Viaje de 15',         text: 'Viaje grupal exclusivo para quinceañeras. Una celebración única e inolvidable para comenzar una nueva etapa.' },
+  { title: 'Viajes de mujeres',   text: 'Escapadas diseñadas para mujeres que quieren explorar el mundo con libertad, seguridad y buena compañía.' },
+  { title: 'Viajes en pareja',    text: 'Momentos románticos e inolvidables. Destinos soñados para compartir con quien más querés.' },
+  { title: 'Viajes en familia',   text: 'Itinerarios pensados para que todos, grandes y pequeños, vivan aventuras juntos.' },
 ]
 
 export default function Experiences() {
   return (
-    <section className="section experiencias">
+    <section className="section experiencias" id="experiencias">
       <div className="experiencias__bg">
         <img
-          src="https://images.unsplash.com/photo-1502791451862-7bd8c1df43a7?w=1920&q=80&auto=format&fit=crop"
+          src="https://i.pinimg.com/1200x/ea/96/2d/ea962d969c383e5576b3d2bdfd9821fc.jpg"
           alt="Experiencia de viaje"
         />
         <div className="experiencias__overlay"></div>
@@ -22,11 +22,12 @@ export default function Experiences() {
         </h2>
 
         <div className="exp__grid">
-          {EXPERIENCES.map(({ icon, title, text }) => (
-            <div key={title} className="exp__item reveal">
-              <div className="exp__icon">{icon}</div>
-              <h3>{title}</h3>
-              <p>{text}</p>
+          {EXPERIENCES.map(({ title, text }) => (
+            <div key={title} className="exp__card reveal">
+              <div className="exp__card-glow" />
+              <div className="exp__card-borderglow" />
+              <p className="exp__card-title">{title}</p>
+              <p className="exp__card-body">{text}</p>
             </div>
           ))}
         </div>
