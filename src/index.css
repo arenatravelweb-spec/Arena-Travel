@@ -771,7 +771,7 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   display: flex;
   flex-direction: column;
   gap: 6px;
-  transform: translateY(95%);
+  transform: translateY(115px);
   transition: transform .5s ease;
 }
 
@@ -784,6 +784,10 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   font-size: .8rem;
   opacity: .85;
   line-height: 1.5;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .prod-card__price {
@@ -1966,6 +1970,27 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   .al-wrap { grid-template-columns: 1fr; }
   .al-hero { display: none; }
   .al-form-side { min-height: 100svh; padding: 2.5rem 1.5rem; }
+}
+
+/* ═══════════════════════════════════════════════════
+   SWEETALERT2 — overrides Arena Travel
+═══════════════════════════════════════════════════ */
+.swal-popup-arena {
+  border-radius: 18px !important;
+  font-family: var(--font-body) !important;
+  box-shadow: var(--shadow-lg) !important;
+}
+.swal-popup-arena .swal2-title {
+  font-family: var(--font-serif) !important;
+  font-size: 1.4rem !important;
+  color: var(--color-text) !important;
+}
+.swal-popup-arena .swal2-html-container {
+  color: var(--color-text-light) !important;
+  font-size: .95rem !important;
+}
+.swal-popup-arena .swal2-timer-progress-bar {
+  background: var(--color-primary) !important;
 }
 
 /* ═══════════════════════════════════════════════════
