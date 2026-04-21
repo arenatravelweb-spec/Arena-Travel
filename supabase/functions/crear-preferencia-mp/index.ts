@@ -67,8 +67,13 @@ serve(async (req) => {
     })
 
     const mpData = await mpRes.json()
+    console.log('MP response status:', mpRes.status)
+    console.log('MP response body:', JSON.stringify(mpData))
 
-    return new Response(JSON.stringify({ init_point: mpData.init_point }), {
+    const isSandbox = Deno.env.get('MP_SANDBOX') === 'true'
+    const url = isSandbox ? mpData.sandbox_init_point : mpData.init_point
+
+    return new Response(JSON.stringify({ init_point: url }), {
       headers: { ...CORS, 'Content-Type': 'application/json' },
     })
 
