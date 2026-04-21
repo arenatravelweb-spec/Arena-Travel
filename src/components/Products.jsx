@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { supabase } from '../lib/supabase'
 import AnimatedButton from './AnimatedButton'
+import CompraModal from './CompraModal'
 
 const WA = 'https://wa.me/5493815477147'
 
@@ -10,8 +11,8 @@ const TABS = [
   { id: 'internacional', label: 'Internacionales' },
 ]
 
-async function iniciarPagoMP(producto, setPagando) {
-  setPagando(producto.id)
+async function iniciarPagoMP(producto, comprador, setPagando) {
+  setPagando(true)
   try {
     const res = await fetch(
       `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/crear-preferencia-mp`,
@@ -25,6 +26,7 @@ async function iniciarPagoMP(producto, setPagando) {
           nombre:      producto.nombre,
           precio:      producto.precio,
           descripcion: producto.descripcion ?? '',
+          comprador,
         }),
       }
     )
@@ -32,22 +34,22 @@ async function iniciarPagoMP(producto, setPagando) {
     if (data.init_point) {
       window.location.href = data.init_point
     } else {
-      throw new Error('No se recibió el link de pago')
+      throw new Error(data.error || 'No se recibió el link de pago')
     }
   } catch {
     toast.error('No se pudo iniciar el pago. Escribinos por WhatsApp.', { duration: 5000 })
-  } finally {
-    setPagando(null)
+    setPagando(false)
   }
 }
 
 export default function Products() {
-  const [products, setProducts]   = useState([])
-  const [loading, setLoading]     = useState(true)
-  const [error, setError]         = useState('')
-  const [active, setActive]       = useState('nacional')
-  const [indicator, setIndicator] = useState({ width: 0, left: 0 })
-  const [pagando, setPagando]     = useState(null)
+  const [products, setProducts]       = useState([])
+  const [loading, setLoading]         = useState(true)
+  const [error, setError]             = useState('')
+  const [active, setActive]           = useState('nacional')
+  const [indicator, setIndicator]     = useState({ width: 0, left: 0 })
+  const [modalProducto, setModal]     = useState(null)
+  const [pagando, setPagando]         = useState(false)
   const tabsRef = useRef(null)
 
   useEffect(() => {
@@ -138,11 +140,10 @@ export default function Products() {
                   </p>
                   {p.categoria === 'nacional'
                     ? <AnimatedButton
-                        text={pagando === p.id ? 'Procesando…' : 'Comprar'}
+                        text="Comprar"
                         size="sm"
                         color="var(--color-accent)"
-                        disabled={pagando === p.id}
-                        onClick={() => iniciarPagoMP(p, setPagando)}
+                        onClick={() => setModal(p)}
                       />
                     : <AnimatedButton
                         text="Reservar"
@@ -157,6 +158,15 @@ export default function Products() {
           </div>
         )}
       </div>
+
+      {modalProducto && (
+        <CompraModal
+          producto={modalProducto}
+          loading={pagando}
+          onClose={() => { if (!pagando) setModal(null) }}
+          onConfirm={comprador => iniciarPagoMP(modalProducto, comprador, setPagando)}
+        />
+      )}
     </section>
   )
 }
