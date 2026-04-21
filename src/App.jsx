@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useSearchParams } from 'react-router-dom'
+import { Toaster, toast } from 'sonner'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import Home from './pages/Home'
@@ -38,13 +39,40 @@ function ScrollReveal() {
   return null
 }
 
+function PagoToast() {
+  const [params, setParams] = useSearchParams()
+
+  useEffect(() => {
+    const pago = params.get('pago')
+    if (!pago) return
+    if (pago === 'exitoso')  toast.success('¡Pago realizado con éxito! Te contactaremos pronto.', { duration: 6000 })
+    if (pago === 'fallido')  toast.error('Hubo un problema con el pago. Intentá de nuevo.', { duration: 6000 })
+    if (pago === 'pendiente') toast.info('Tu pago está siendo procesado. Te avisaremos cuando se confirme.', { duration: 6000 })
+    params.delete('pago')
+    setParams(params, { replace: true })
+  }, [])
+
+  return null
+}
+
 export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
         <ScrollReveal />
+        <Toaster
+          position="top-center"
+          toastOptions={{
+            style: {
+              fontFamily: 'Inter, sans-serif',
+              borderRadius: '12px',
+              fontSize: '0.95rem',
+            },
+            success: { style: { background: '#F7931E', color: '#fff' } },
+          }}
+        />
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<><PagoToast /><Home /></>} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route
             path="/admin"
