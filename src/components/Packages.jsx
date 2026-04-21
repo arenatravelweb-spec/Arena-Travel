@@ -1,41 +1,24 @@
-const PACKAGES = [
-  {
-    id: 1,
-    badge: 'Más popular',
-    img: 'https://images.unsplash.com/photo-1552465011-b4e21bf6e79a?w=700&q=80&auto=format&fit=crop',
-    alt: 'Maldivas',
-    duration: '8 días / 7 noches',
-    tags: ['✈ Vuelo incluido', '🏨 Hotel 5★', '🍽 Todo incluido'],
-    name: 'Luna de miel en Maldivas',
-    text: 'Villas sobre el agua, arrecifes de coral y privacidad absoluta para dos.',
-    stars: '★★★★★', reviews: '(128 reseñas)',
-    oldPrice: '€ 3.800', newPrice: '€ 2.990',
-  },
-  {
-    id: 2,
-    img: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=700&q=80&auto=format&fit=crop',
-    alt: 'Dubái',
-    duration: '6 días / 5 noches',
-    tags: ['✈ Vuelo incluido', '🏨 Hotel 5★', '🚌 Excursiones'],
-    name: 'Dubái: lujo en el desierto',
-    text: 'Rascacielos icónicos, desierto infinito y shopping de lujo en la ciudad del futuro.',
-    stars: '★★★★★', reviews: '(94 reseñas)',
-    newPrice: '€ 1.890',
-  },
-  {
-    id: 3,
-    img: 'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=700&q=80&auto=format&fit=crop',
-    alt: 'Costa Rica',
-    duration: '10 días / 9 noches',
-    tags: ['✈ Vuelo incluido', '🌿 Ecoturismo', '🏄 Aventura'],
-    name: 'Aventura en Costa Rica',
-    text: 'Volcanes, selva tropical, playas y biodiversidad única en el corazón de Centroamérica.',
-    stars: '★★★★☆', reviews: '(76 reseñas)',
-    newPrice: '€ 2.250',
-  },
-]
+import { useEffect, useState } from 'react'
+import { supabase } from '../lib/supabase'
 
 export default function Packages() {
+  const [packages, setPackages] = useState([])
+  const [loading, setLoading]   = useState(true)
+
+  useEffect(() => {
+    supabase
+      .from('productos')
+      .select('*')
+      .eq('categoria', 'nacional')
+      .order('created_at', { ascending: false })
+      .then(({ data }) => {
+        setPackages(data ?? [])
+        setLoading(false)
+      })
+  }, [])
+
+  if (loading || packages.length === 0) return null
+
   return (
     <section className="section paquetes" id="paquetes">
       <div className="container">
@@ -46,30 +29,25 @@ export default function Packages() {
         </div>
 
         <div className="paquetes__grid">
-          {PACKAGES.map(pkg => (
+          {packages.map(pkg => (
             <article key={pkg.id} className="pkg-card reveal">
-              {pkg.badge && <div className="pkg-card__badge">{pkg.badge}</div>}
               <div className="pkg-card__img-wrap">
-                <img src={pkg.img} alt={pkg.alt} loading="lazy" />
-                <span className="pkg-card__duration">{pkg.duration}</span>
+                {pkg.imagen_url
+                  ? <img src={pkg.imagen_url} alt={pkg.nombre} loading="lazy" />
+                  : <div className="pkg-card__img-placeholder" />
+                }
               </div>
               <div className="pkg-card__body">
-                <div className="pkg-card__tags">
-                  {pkg.tags.map(tag => <span key={tag}>{tag}</span>)}
-                </div>
-                <h3 className="pkg-card__name">{pkg.name}</h3>
-                <p className="pkg-card__text">{pkg.text}</p>
-                <div className="pkg-card__rating">
-                  <span className="stars">{pkg.stars}</span>
-                  <span className="reviews">{pkg.reviews}</span>
-                </div>
+                <h3 className="pkg-card__name">{pkg.nombre}</h3>
+                {pkg.descripcion && <p className="pkg-card__text">{pkg.descripcion}</p>}
                 <div className="pkg-card__footer">
                   <div className="pkg-card__price">
-                    {pkg.oldPrice && <span className="old-price">{pkg.oldPrice}</span>}
-                    <span className="new-price">{pkg.newPrice}</span>
+                    <span className="new-price">
+                      $ {Number(pkg.precio).toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+                    </span>
                     <span className="per-person">por persona</span>
                   </div>
-                  <a href="#contacto" className="btn btn--primary">Reservar</a>
+                  <a href="#productos" className="btn btn--primary">Ver más</a>
                 </div>
               </div>
             </article>

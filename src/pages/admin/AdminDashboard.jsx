@@ -181,7 +181,7 @@ export default function AdminDashboard() {
                             <tr key={p.id}>
                               <td>{p.imagen_url ? <img src={p.imagen_url} alt={p.nombre} className="adm-table__thumb" /> : <div className="adm-table__no-img">sin img</div>}</td>
                               <td className="adm-table__name">{p.nombre}</td>
-                              <td className="adm-table__price">$ {Number(p.precio).toFixed(2)}</td>
+                              <td className="adm-table__price">$ {Number(p.precio).toLocaleString('es-AR', { minimumFractionDigits: 2 })}</td>
                               <td className="adm-table__desc">{p.descripcion ? p.descripcion.slice(0, 72) + (p.descripcion.length > 72 ? '…' : '') : <span style={{ color: 'var(--color-text-light)', fontStyle: 'italic' }}>—</span>}</td>
                               <td>
                                 <div className="adm-table__actions">

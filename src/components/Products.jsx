@@ -134,10 +134,12 @@ export default function Products() {
                 <h3 className="prod-card__title">{p.nombre}</h3>
                 <div className="prod-card__details">
                   {p.descripcion && <p className="prod-card__desc">{p.descripcion}</p>}
-                  <p className="prod-card__price">
-                    $ {Number(p.precio).toLocaleString('es-AR', { minimumFractionDigits: 2 })}
-                    <span> / persona</span>
-                  </p>
+                  {p.categoria === 'nacional' && (
+                    <p className="prod-card__price">
+                      $ {Number(p.precio).toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+                      <span> / persona</span>
+                    </p>
+                  )}
                   {p.categoria === 'nacional'
                     ? <AnimatedButton
                         text="Comprar"
