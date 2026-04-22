@@ -71,7 +71,7 @@ serve(async (req) => {
     const isSandbox = Deno.env.get('MP_SANDBOX') === 'true'
     const url = isSandbox ? mpData.sandbox_init_point : mpData.init_point
 
-    return new Response(JSON.stringify({ init_point: url }), {
+    return new Response(JSON.stringify({ preference_id: mpData.id, init_point: url }), {
       headers: { ...CORS, 'Content-Type': 'application/json' },
     })
 
