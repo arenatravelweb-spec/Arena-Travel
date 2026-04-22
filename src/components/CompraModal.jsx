@@ -1,6 +1,9 @@
 import { useState } from 'react'
+import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
 
-export default function CompraModal({ producto, onConfirm, onClose, loading }) {
+initMercadoPago(import.meta.env.VITE_MP_PUBLIC_KEY, { locale: 'es-AR' })
+
+export default function CompraModal({ producto, onConfirm, onClose, loading, preferenceId }) {
   const [form, setForm]     = useState({ nombre: '', email: '', telefono: '' })
   const [errors, setErrors] = useState({})
 
@@ -30,39 +33,49 @@ export default function CompraModal({ producto, onConfirm, onClose, loading }) {
           $ {Number(producto.precio).toLocaleString('es-AR')} <span>/ persona</span>
         </p>
 
-        <form onSubmit={handleSubmit} noValidate>
-          <div className="form__group">
-            <label htmlFor="cm-nombre">Nombre completo *</label>
-            <input
-              id="cm-nombre" name="nombre" type="text"
-              placeholder="Tu nombre"
-              value={form.nombre} onChange={handleChange}
-              className={errors.nombre ? 'error' : ''}
+        {preferenceId ? (
+          <div className="modal-wallet">
+            <p className="modal-note">Tu pago está listo. Hacé clic para continuar con Mercado Pago.</p>
+            <Wallet
+              initialization={{ preferenceId }}
+              customization={{ texts: { valueProp: 'smart_option' } }}
             />
           </div>
-          <div className="form__group">
-            <label htmlFor="cm-email">Email *</label>
-            <input
-              id="cm-email" name="email" type="email"
-              placeholder="tu@email.com"
-              value={form.email} onChange={handleChange}
-              className={errors.email ? 'error' : ''}
-            />
-          </div>
-          <div className="form__group">
-            <label htmlFor="cm-tel">Teléfono</label>
-            <input
-              id="cm-tel" name="telefono" type="tel"
-              placeholder="+54 9 381 000-0000"
-              value={form.telefono} onChange={handleChange}
-            />
-          </div>
+        ) : (
+          <form onSubmit={handleSubmit} noValidate>
+            <div className="form__group">
+              <label htmlFor="cm-nombre">Nombre completo *</label>
+              <input
+                id="cm-nombre" name="nombre" type="text"
+                placeholder="Tu nombre"
+                value={form.nombre} onChange={handleChange}
+                className={errors.nombre ? 'error' : ''}
+              />
+            </div>
+            <div className="form__group">
+              <label htmlFor="cm-email">Email *</label>
+              <input
+                id="cm-email" name="email" type="email"
+                placeholder="tu@email.com"
+                value={form.email} onChange={handleChange}
+                className={errors.email ? 'error' : ''}
+              />
+            </div>
+            <div className="form__group">
+              <label htmlFor="cm-tel">Teléfono</label>
+              <input
+                id="cm-tel" name="telefono" type="tel"
+                placeholder="+54 9 381 000-0000"
+                value={form.telefono} onChange={handleChange}
+              />
+            </div>
 
-          <button type="submit" className="btn btn--primary btn--full" disabled={loading}>
-            {loading ? 'Procesando…' : 'Continuar al pago →'}
-          </button>
-          <p className="modal-note">Vas a ser redirigida a Mercado Pago para completar el pago.</p>
-        </form>
+            <button type="submit" className="btn btn--primary btn--full" disabled={loading}>
+              {loading ? 'Procesando…' : 'Continuar al pago →'}
+            </button>
+            <p className="modal-note">Vas a ser redirigida a Mercado Pago para completar el pago.</p>
+          </form>
+        )}
       </div>
     </div>
   )

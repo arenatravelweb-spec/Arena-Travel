@@ -11,7 +11,7 @@ const TABS = [
   { id: 'internacional', label: 'Internacionales' },
 ]
 
-async function iniciarPagoMP(producto, comprador, setPagando) {
+async function crearPreferenciaMP(producto, comprador, setPagando, setPreferenceId) {
   setPagando(true)
   try {
     const res = await fetch(
@@ -31,13 +31,14 @@ async function iniciarPagoMP(producto, comprador, setPagando) {
       }
     )
     const data = await res.json()
-    if (data.init_point) {
-      window.location.href = data.init_point
+    if (data.preference_id) {
+      setPreferenceId(data.preference_id)
     } else {
-      throw new Error(data.error || 'No se recibió el link de pago')
+      throw new Error(data.error || 'No se recibió la preferencia de pago')
     }
   } catch {
     toast.error('No se pudo iniciar el pago. Escribinos por WhatsApp.', { duration: 5000 })
+  } finally {
     setPagando(false)
   }
 }
@@ -50,6 +51,7 @@ export default function Products() {
   const [indicator, setIndicator]     = useState({ width: 0, left: 0 })
   const [modalProducto, setModal]     = useState(null)
   const [pagando, setPagando]         = useState(false)
+  const [preferenceId, setPreferenceId] = useState(null)
   const tabsRef = useRef(null)
 
   useEffect(() => {
@@ -165,8 +167,9 @@ export default function Products() {
         <CompraModal
           producto={modalProducto}
           loading={pagando}
-          onClose={() => { if (!pagando) setModal(null) }}
-          onConfirm={comprador => iniciarPagoMP(modalProducto, comprador, setPagando)}
+          preferenceId={preferenceId}
+          onClose={() => { if (!pagando) { setModal(null); setPreferenceId(null) } }}
+          onConfirm={comprador => crearPreferenciaMP(modalProducto, comprador, setPagando, setPreferenceId)}
         />
       )}
     </section>
