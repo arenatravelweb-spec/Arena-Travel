@@ -2,12 +2,24 @@ import { useState, useEffect } from 'react'
 import AnimatedButton from './AnimatedButton'
 
 const SLIDES = [
-  'https://i.pinimg.com/736x/bd/36/58/bd3658daca9df60f29769f02e3259c65.jpg',
-  'https://i.pinimg.com/1200x/70/31/5c/70315cdf5b5388dfb6926723734e6fc3.jpg',
-  'https://i.pinimg.com/736x/28/7c/20/287c20d2d3fc875477ad4fe8312e3487.jpg',
-  'https://i.pinimg.com/736x/48/27/7a/48277a45a728554cb3d3fd5b62137655.jpg',
-  'https://i.pinimg.com/1200x/ee/fd/6f/eefd6fb704c0e7d208a7f53cda0564c4.jpg',
-  'https://i.pinimg.com/1200x/ea/96/2d/ea962d969c383e5576b3d2bdfd9821fc.jpg',
+  {
+    src:       'https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto,w_1920/v1776866005/IMG_0493_vleqvb.jpg',
+    mobileSrc: 'https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto,w_750/v1776866005/IMG_0493_vleqvb.jpg',
+    pos:       'center 30%',
+    mobilePos: 'center 25%',
+  },
+  {
+    src:       'https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto,w_1920/v1776865977/IMG_1085_vzp1bq.jpg',
+    mobileSrc: 'https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto,w_750,h_1334,c_fill,g_center/v1776865977/IMG_1085_vzp1bq.jpg',
+    pos:       'center 55%',
+    mobilePos: 'center center',
+  },
+  {
+    src:       'https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto,w_1920/v1776865965/IMG_1086_zyqmnf.jpg',
+    mobileSrc: 'https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto,w_750/v1776865965/IMG_1086_zyqmnf.jpg',
+    pos:       'center 35%',
+    mobilePos: 'center 30%',
+  },
 ]
 
 const INTERVAL = 5000
@@ -16,6 +28,14 @@ export default function Hero() {
   const [current, setCurrent] = useState(0)
   const [prev, setPrev] = useState(null)
   const [transitioning, setTransitioning] = useState(false)
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 768)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 768px)')
+    const update = () => setIsMobile(mq.matches)
+    mq.addEventListener('change', update)
+    return () => mq.removeEventListener('change', update)
+  }, [])
 
   useEffect(() => {
     const id = setInterval(() => advance(1), INTERVAL)
@@ -31,6 +51,10 @@ export default function Hero() {
     setTimeout(() => { setPrev(null); setTransitioning(false) }, 900)
   }
 
+  const slideStyle = (slide) => ({
+    objectPosition: isMobile ? slide.mobilePos : slide.pos,
+  })
+
   return (
     <section className="hero" id="inicio">
 
@@ -38,18 +62,18 @@ export default function Hero() {
         {prev !== null && (
           <img
             key={`prev-${prev}`}
-            src={SLIDES[prev]}
+            src={isMobile ? SLIDES[prev].mobileSrc : SLIDES[prev].src}
             alt=""
             className="hero__slide hero__slide--out"
-            style={SLIDES[prev].includes('48277a45') || SLIDES[prev].includes('663d64') ? { objectPosition: 'center 20%' } : undefined}
+            style={slideStyle(SLIDES[prev])}
           />
         )}
         <img
           key={`cur-${current}`}
-          src={SLIDES[current]}
+          src={isMobile ? SLIDES[current].mobileSrc : SLIDES[current].src}
           alt="Viajera explorando el mundo"
           className="hero__slide hero__slide--in"
-          style={SLIDES[current].includes('48277a45') || SLIDES[current].includes('663d64') ? { objectPosition: 'center 20%' } : undefined}
+          style={slideStyle(SLIDES[current])}
         />
         <div className="hero__overlay" />
       </div>
@@ -70,8 +94,7 @@ export default function Hero() {
         </div>
       </div>
 
-
-<div className="hero__dots">
+      <div className="hero__dots">
         {SLIDES.map((_, i) => (
           <button
             key={i}

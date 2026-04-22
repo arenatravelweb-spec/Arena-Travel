@@ -33,7 +33,10 @@
   --max-w: 1200px;
 }
 
-html { scroll-behavior: smooth; font-size: 16px; }
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
 
 body {
   font-family: var(--font-body);
@@ -41,6 +44,7 @@ body {
   background: var(--color-white);
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 img { display: block; max-width: 100%; height: auto; }
@@ -900,10 +904,10 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   position: absolute;
   bottom: -3rem;
   right: -3rem;
-  width: 55%;
+  width: 45%;
   border-radius: var(--radius-md);
   overflow: hidden;
-  aspect-ratio: 4/3;
+  aspect-ratio: 3/4;
   border: 5px solid var(--color-white);
   box-shadow: var(--shadow-md);
 }
@@ -1190,7 +1194,7 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem 1rem 3.5rem;
+  padding: 1rem;
   color: transparent;
   font-size: .75rem;
   font-style: italic;
@@ -1262,6 +1266,23 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   justify-content: space-between;
   gap: 3rem;
   flex-wrap: wrap;
+}
+
+.cta-banner__logo {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 3px solid rgba(255,255,255,.55);
+  box-shadow: 0 0 0 6px rgba(255,255,255,.12), 0 12px 32px rgba(0,0,0,.18);
+  mix-blend-mode: luminosity;
+  filter: brightness(1.08) contrast(1.05);
+}
+
+
+.cta-banner__content .anim-btn {
+  align-self: center;
 }
 
 .cta-banner__text h2 {
@@ -1647,6 +1668,8 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   .nosotros__media { max-width: 500px; margin-inline: auto; }
   .nosotros__content .section__title { text-align: center; }
   .nosotros__content .section__label { display: block; text-align: center; }
+  .nosotros__img-secondary { right: 0; bottom: -2rem; }
+  .nosotros__badge { right: 0; }
 
   .exp__grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
 
@@ -1712,14 +1735,13 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 
   .nosotros__container { text-align: center; }
   .nosotros__features li { text-align: left; }
-  .nosotros__img-secondary { display: block; }
+  .nosotros__img-secondary { display: block; right: 0; bottom: -1.5rem; width: 42%; }
   .nosotros__badge { right: 0; }
   .nosotros__content .anim-btn { align-self: center; }
 
   .exp__grid { grid-template-columns: 1fr 1fr; }
 
-  .cta-banner__content { flex-direction: column; text-align: center; }
-  .cta-banner__content .anim-btn { align-self: center; }
+  .cta-banner__logo { width: 88px; height: 88px; }
 
   .form__row { grid-template-columns: 1fr; }
 
@@ -1745,9 +1767,9 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 @media (max-width: 480px) {
   .section { padding-block: 4rem; }
   .exp__grid { grid-template-columns: 1fr; }
-  .nosotros__img-secondary { display: block; }
+  .nosotros__img-secondary { display: block; right: 0; bottom: -1rem; width: 38%; }
   .nosotros__badge { position: static; display: inline-flex; margin-top: 1rem; }
-  .nosotros__media { max-width: 100%; }
+  .nosotros__media { max-width: 100%; padding-bottom: 3rem; }
 }
 
 /* ═══════════════════════════════════════════════════
@@ -2052,6 +2074,110 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   .al-wrap { grid-template-columns: 1fr; }
   .al-hero { display: none; }
   .al-form-side { min-height: 100svh; padding: 2.5rem 1.5rem; }
+}
+
+/* ═══════════════════════════════════════════════════
+   MODAL COMPRA
+═══════════════════════════════════════════════════ */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+  background: rgba(0,0,0,.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  backdrop-filter: blur(4px);
+}
+
+.modal-box {
+  background: var(--color-white);
+  border-radius: var(--radius-lg);
+  padding: 2rem;
+  width: 100%;
+  max-width: 440px;
+  position: relative;
+  box-shadow: var(--shadow-lg);
+}
+
+.modal-close {
+  position: absolute;
+  top: 1rem; right: 1rem;
+  background: none; border: none;
+  font-size: 1.1rem;
+  color: var(--color-text-light);
+  cursor: pointer;
+  line-height: 1;
+  transition: color var(--transition);
+}
+.modal-close:hover { color: var(--color-text); }
+
+.modal-label {
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--color-primary);
+  margin-bottom: .5rem;
+}
+
+.modal-title {
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+  color: var(--color-text);
+  margin-bottom: .25rem;
+}
+
+.modal-price {
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--color-primary-dark);
+  margin-bottom: 1.5rem;
+}
+.modal-price span { font-weight: 400; font-size: .85rem; color: var(--color-text-light); }
+
+.modal-note {
+  font-size: .78rem;
+  color: var(--color-text-light);
+  text-align: center;
+  margin-top: .75rem;
+}
+
+/* ── Admin tabs ── */
+.adm-tabs {
+  display: flex;
+  gap: .5rem;
+  margin-bottom: 2rem;
+  border-bottom: 2px solid var(--color-border);
+  padding-bottom: 0;
+}
+
+.adm-tab {
+  padding: .6rem 1.5rem;
+  border: none;
+  background: none;
+  font-family: var(--font-body);
+  font-size: .95rem;
+  font-weight: 600;
+  color: var(--color-text-light);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -2px;
+  transition: color var(--transition), border-color var(--transition);
+}
+.adm-tab:hover  { color: var(--color-primary); }
+.adm-tab.active { color: var(--color-primary); border-bottom-color: var(--color-primary); }
+
+/* ── Admin badge estado ── */
+.adm-badge {
+  display: inline-block;
+  padding: .25rem .75rem;
+  border-radius: 2rem;
+  font-size: .75rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--badge-color, #6b7280);
 }
 
 /* ═══════════════════════════════════════════════════

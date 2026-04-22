@@ -1,34 +1,22 @@
 const TESTIMONIALS = [
   {
     id: 1,
-    img: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=300&h=300&q=80&auto=format&fit=crop&crop=face',
-    name: 'Laura Martínez',
-    trip: 'Río de Janeiro',
-    quote: 'El viaje superó todas mis expectativas. Cada detalle perfectamente organizado.',
+    quote: 'Me gustó mucho el detalle y el acompañamiento de la empresa. Primera vez que viajé tan lejos y me sentí confiada y segura.',
     r: -15,
   },
   {
     id: 2,
-    img: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=300&h=300&q=80&auto=format&fit=crop&crop=face',
-    name: 'Sofía López',
-    trip: 'Punta Cana',
-    quote: 'Viajé sola por primera vez y me sentí segura en todo momento. ¡Increíble!',
+    quote: 'Un viaje inolvidable. Llegué con dudas e indecisa, pero la calidez y amabilidad de Verónica fue suficiente para lanzarme a la aventura. La organización de Vero y Nadia hicieron de esto unas hermosas vacaciones. ¡Lo volvería hacer!',
     r: -5,
   },
   {
     id: 3,
-    img: 'https://images.unsplash.com/photo-1489424731084-a5d8b219a5bb?w=300&h=300&q=80&auto=format&fit=crop&crop=face',
-    name: 'Ana Rodríguez',
-    trip: 'Mar del Plata',
-    quote: 'Las villas sobre el agua, los atardeceres... Una luna de miel perfecta.',
+    quote: 'Excelente experiencia en Punta Cana con las chicas de Arena Travel. Súper recomendable, la amabilidad y buen trato hacen que quieras seguir viajando con ellas.',
     r: 5,
   },
   {
     id: 4,
-    img: 'https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=300&h=300&q=80&auto=format&fit=crop&crop=face',
-    name: 'Valeria Gómez',
-    trip: 'Cancún',
-    quote: 'Ver la gran migración en vivo es algo que no se puede describir con palabras.',
+    quote: 'El viaje a Mar del Plata fue una hermosa experiencia. El hotel muy bueno con media pensión, la cena abundante, rica y saludable, y el desayuno completo.',
     r: 15,
   },
 ]
@@ -43,17 +31,13 @@ export default function Testimonials() {
         </div>
 
         <div className="testi-fan">
-          {TESTIMONIALS.map(({ id, img, name, trip, quote, r }) => (
+          {TESTIMONIALS.map(({ id, quote, r }) => (
             <div
               key={id}
               className="testi-fan__card"
-              style={{ '--r': r, '--img': `url(${img})` }}
+              style={{ '--r': r }}
             >
               <div className="testi-fan__quote">"{quote}"</div>
-              <div className="testi-fan__label">
-                <strong>{name}</strong>
-                <span>{trip}</span>
-              </div>
             </div>
           ))}
         </div>

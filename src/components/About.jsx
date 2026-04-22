@@ -14,16 +14,18 @@ export default function About() {
         <div className="nosotros__media reveal">
           <div className="nosotros__img-main nos-card">
             <img
-              src="https://i.pinimg.com/1200x/aa/6c/55/aa6c55b5dcaef3fcaae68b3ad2a69ac6.jpg"
+              src="https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto,w_900/v1776865965/IMG_1086_zyqmnf.jpg"
               alt="Viajeras felices"
               loading="lazy"
+              style={{ objectPosition: 'center 25%' }}
             />
           </div>
           <div className="nosotros__img-secondary nos-card">
             <img
-              src="https://i.pinimg.com/1200x/69/cb/82/69cb82251583cd5497127cd7b077836e.jpg"
+              src="https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto,w_500/v1776865988/IMG_1804.JPG_wbbqys.jpg"
               alt="Mujer viajando sola"
               loading="lazy"
+              style={{ objectPosition: 'center 55%' }}
             />
           </div>
         </div>
