@@ -13,7 +13,7 @@ serve(async (req) => {
     const { nombre, precio, descripcion, comprador } = await req.json()
 
     const accessToken = Deno.env.get('MP_ACCESS_TOKEN')!
-    const baseUrl     = req.headers.get('origin') || 'http://localhost:5173'
+    const baseUrl     = Deno.env.get('APP_URL') || req.headers.get('origin') || 'http://localhost:5173'
 
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL')!,
@@ -67,8 +67,6 @@ serve(async (req) => {
     })
 
     const mpData = await mpRes.json()
-    console.log('MP response status:', mpRes.status)
-    console.log('MP response body:', JSON.stringify(mpData))
 
     const isSandbox = Deno.env.get('MP_SANDBOX') === 'true'
     const url = isSandbox ? mpData.sandbox_init_point : mpData.init_point
