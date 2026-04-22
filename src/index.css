@@ -33,7 +33,10 @@
   --max-w: 1200px;
 }
 
-html { scroll-behavior: smooth; font-size: 16px; }
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
 
 body {
   font-family: var(--font-body);
@@ -41,6 +44,7 @@ body {
   background: var(--color-white);
   line-height: 1.65;
   -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
 }
 
 img { display: block; max-width: 100%; height: auto; }
@@ -900,10 +904,10 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   position: absolute;
   bottom: -3rem;
   right: -3rem;
-  width: 55%;
+  width: 45%;
   border-radius: var(--radius-md);
   overflow: hidden;
-  aspect-ratio: 4/3;
+  aspect-ratio: 3/4;
   border: 5px solid var(--color-white);
   box-shadow: var(--shadow-md);
 }
@@ -1190,7 +1194,7 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem 1rem 3.5rem;
+  padding: 1rem;
   color: transparent;
   font-size: .75rem;
   font-style: italic;
@@ -1647,6 +1651,8 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   .nosotros__media { max-width: 500px; margin-inline: auto; }
   .nosotros__content .section__title { text-align: center; }
   .nosotros__content .section__label { display: block; text-align: center; }
+  .nosotros__img-secondary { right: 0; bottom: -2rem; }
+  .nosotros__badge { right: 0; }
 
   .exp__grid { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
 
@@ -1712,7 +1718,7 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 
   .nosotros__container { text-align: center; }
   .nosotros__features li { text-align: left; }
-  .nosotros__img-secondary { display: block; }
+  .nosotros__img-secondary { display: block; right: 0; bottom: -1.5rem; width: 42%; }
   .nosotros__badge { right: 0; }
   .nosotros__content .anim-btn { align-self: center; }
 
@@ -1745,9 +1751,9 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 @media (max-width: 480px) {
   .section { padding-block: 4rem; }
   .exp__grid { grid-template-columns: 1fr; }
-  .nosotros__img-secondary { display: block; }
+  .nosotros__img-secondary { display: block; right: 0; bottom: -1rem; width: 38%; }
   .nosotros__badge { position: static; display: inline-flex; margin-top: 1rem; }
-  .nosotros__media { max-width: 100%; }
+  .nosotros__media { max-width: 100%; padding-bottom: 3rem; }
 }
 
 /* ═══════════════════════════════════════════════════
