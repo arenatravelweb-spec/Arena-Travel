@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import emailjs from '@emailjs/browser'
 import AnimatedButton from './AnimatedButton'
 
 const WA = 'https://wa.me/5493815477147'
@@ -47,11 +48,27 @@ export default function Contact() {
     if (Object.keys(newErrors).length) { setErrors(newErrors); return }
 
     setStatus('sending')
-    setTimeout(() => {
-      setStatus('sent')
-      setForm({ nombre: '', email: '', destino: '', mensaje: '' })
-      setTimeout(() => setStatus('idle'), 4000)
-    }, 1200)
+
+    emailjs.send(
+      import.meta.env.VITE_EMAILJS_SERVICE_ID,
+      import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+      {
+        nombre:  form.nombre,
+        email:   form.email,
+        destino: form.destino || 'No especificado',
+        mensaje: form.mensaje,
+      },
+      import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+    )
+      .then(() => {
+        setStatus('sent')
+        setForm({ nombre: '', email: '', destino: '', mensaje: '' })
+        setTimeout(() => setStatus('idle'), 4000)
+      })
+      .catch(() => {
+        setStatus('error')
+        setTimeout(() => setStatus('idle'), 4000)
+      })
   }
 
   return (
@@ -139,7 +156,12 @@ export default function Contact() {
 
           <AnimatedButton
             type="submit"
-            text={status === 'sending' ? 'Enviando…' : status === 'sent' ? '¡Mensaje enviado! ✓' : 'Enviar consulta'}
+            text={
+              status === 'sending' ? 'Enviando…' :
+              status === 'sent'    ? '¡Mensaje enviado! ✓' :
+              status === 'error'   ? 'Error al enviar, reintentá' :
+              'Enviar consulta'
+            }
             disabled={status === 'sending'}
             style={{ width: '100%', textAlign: 'center' }}
           />
