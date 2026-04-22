@@ -1268,6 +1268,23 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   flex-wrap: wrap;
 }
 
+.cta-banner__logo {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 3px solid rgba(255,255,255,.55);
+  box-shadow: 0 0 0 6px rgba(255,255,255,.12), 0 12px 32px rgba(0,0,0,.18);
+  mix-blend-mode: luminosity;
+  filter: brightness(1.08) contrast(1.05);
+}
+
+
+.cta-banner__content .anim-btn {
+  align-self: center;
+}
+
 .cta-banner__text h2 {
   font-family: var(--font-serif);
   font-size: clamp(1.75rem, 3vw, 2.5rem);
@@ -1724,8 +1741,7 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 
   .exp__grid { grid-template-columns: 1fr 1fr; }
 
-  .cta-banner__content { flex-direction: column; text-align: center; }
-  .cta-banner__content .anim-btn { align-self: center; }
+  .cta-banner__logo { width: 88px; height: 88px; }
 
   .form__row { grid-template-columns: 1fr; }
 
