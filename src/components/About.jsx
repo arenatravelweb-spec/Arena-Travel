@@ -32,7 +32,7 @@ export default function About() {
 
         <div className="nosotros__content reveal">
           <p className="section__label">Quiénes somos</p>
-          <h2 className="section__title">Creadas por mujeres,<br /><em>para mujeres</em></h2>
+          <h2 className="section__title">Creada por mujeres,<br /><em>para mujeres</em></h2>
           <p className="nosotros__text">
             Somos una agencia fundada por mujeres viajeras. Sabemos lo que significa querer explorar el mundo con libertad, seguridad y autenticidad — porque nosotras también lo vivimos.
           </p>

@@ -5,19 +5,19 @@ const SLIDES = [
   {
     src:       'https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto,w_1920/v1776866005/IMG_0493_vleqvb.jpg',
     mobileSrc: 'https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto,w_750/v1776866005/IMG_0493_vleqvb.jpg',
-    pos:       'center 30%',
+    pos:       'center 28%',
     mobilePos: 'center 25%',
   },
   {
     src:       'https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto,w_1920/v1776865977/IMG_1085_vzp1bq.jpg',
     mobileSrc: 'https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto,w_750,h_1334,c_fill,g_center/v1776865977/IMG_1085_vzp1bq.jpg',
-    pos:       'center 55%',
+    pos:       'center 40%',
     mobilePos: 'center center',
   },
   {
     src:       'https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto,w_1920/v1776865965/IMG_1086_zyqmnf.jpg',
     mobileSrc: 'https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto,w_750/v1776865965/IMG_1086_zyqmnf.jpg',
-    pos:       'center 35%',
+    pos:       'center 30%',
     mobilePos: 'center 30%',
   },
 ]
@@ -104,9 +104,6 @@ export default function Hero() {
           />
         ))}
       </div>
-
-      <button className="hero__arrow hero__arrow--prev" aria-label="Anterior" onClick={() => advance(-1)}>&#8592;</button>
-      <button className="hero__arrow hero__arrow--next" aria-label="Siguiente" onClick={() => advance(1)}>&#8594;</button>
 
       <div className="hero__scroll">
         <span>Descubre más</span>
