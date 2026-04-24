@@ -173,14 +173,16 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   position: fixed;
   top: 0; left: 0; right: 0;
   z-index: 1000;
-  padding-block: 2rem;
+  padding-top: 2.8rem;
+  padding-bottom: 2rem;
   transition: background var(--transition), box-shadow var(--transition), padding var(--transition);
 }
 
 .header.scrolled {
   background: var(--color-white);
   box-shadow: var(--shadow-sm);
-  padding-block: .85rem;
+  padding-top: 1.4rem;
+  padding-bottom: .85rem;
 }
 
 .header.scrolled .nav__link { color: var(--color-text); }
@@ -379,12 +381,17 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 .hero__overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    135deg,
-    rgba(15,39,64,.85) 0%,
-    rgba(26,60,94,.6)  50%,
-    rgba(15,39,64,.3)  100%
-  );
+  background:
+    linear-gradient(to top,
+      rgba(6,16,38,.90) 0%,
+      rgba(6,16,38,.58) 35%,
+      rgba(6,16,38,.18) 62%,
+      rgba(6,16,38,.06) 100%
+    ),
+    linear-gradient(to right,
+      rgba(6,16,38,.32) 0%,
+      transparent 52%
+    );
 }
 
 .hero__content {
@@ -1011,6 +1018,12 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   justify-content: center;
   flex-shrink: 0;
   box-shadow: 0 4px 14px rgba(247,147,30,.35);
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.nosotros__features li:hover .feature-icon {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 24px rgba(247,147,30,.50);
 }
 
 .nosotros__features strong {
@@ -1205,36 +1218,6 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 
 .testi-fan:hover .testi-fan__quote {
   color: var(--color-text-light);
-}
-
-.testi-fan__label {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 52px;
-  background: var(--color-sand);
-  border-top: 1px solid var(--color-border);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding-inline: .75rem;
-}
-
-.testi-fan__label strong {
-  color: var(--color-primary);
-  font-size: .78rem;
-  font-weight: 700;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-}
-
-.testi-fan__label span {
-  color: var(--color-text-light);
-  font-size: .68rem;
-  font-weight: 500;
 }
 
 @media (max-width: 768px) {
@@ -2137,6 +2120,10 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 }
 .modal-price span { font-weight: 400; font-size: .85rem; color: var(--color-text-light); }
 
+.modal-box form .btn--full {
+  margin-top: 1.5rem;
+}
+
 .modal-note {
   font-size: .78rem;
   color: var(--color-text-light);
@@ -2393,26 +2380,28 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   height: 100%;
   object-fit: cover;
   object-position: center end;
+  filter: brightness(0.90) saturate(1.10);
 }
 
 .hero__slide--in {
-  animation: slideIn 1.1s ease forwards;
+  animation: heroEnter 5.2s ease-in-out forwards;
   z-index: 1;
 }
 
 .hero__slide--out {
-  animation: slideOut 1.1s ease forwards;
+  animation: heroExit 1.1s ease forwards;
   z-index: 0;
 }
 
-@keyframes slideIn {
-  from { opacity: 0; transform: scale(1.02); }
-  to   { opacity: 1; transform: scale(1.05); }
+@keyframes heroEnter {
+  0%   { opacity: 0; transform: scale(1.00); }
+  18%  { opacity: 1; transform: scale(1.03); }
+  100% { opacity: 1; transform: scale(1.13); }
 }
 
-@keyframes slideOut {
-  from { opacity: 1; }
-  to   { opacity: 0; }
+@keyframes heroExit {
+  from { opacity: 1; transform: scale(1.10); }
+  to   { opacity: 0; transform: scale(1.13); }
 }
 
 .hero__overlay { z-index: 2; }
@@ -2448,36 +2437,6 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   border-radius: 4px;
 }
 
-/* Flechas */
-.hero__arrow {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  z-index: 3;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: rgba(255,255,255,.15);
-  border: 1.5px solid rgba(255,255,255,.4);
-  color: var(--color-white);
-  font-size: 1.1rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  backdrop-filter: blur(6px);
-  transition: background var(--transition), transform var(--transition);
-}
-
-.hero__arrow:hover {
-  background: rgba(255,255,255,.3);
-  transform: translateY(-50%) scale(1.08);
-}
-
-.hero__arrow--prev { left: 1.5rem; }
-.hero__arrow--next { right: 1.5rem; }
-
 @media (max-width: 768px) {
-  .hero__arrow { display: none; }
-  .hero__dots  { bottom: 13rem; }
+  .hero__dots { bottom: 13rem; }
 }
