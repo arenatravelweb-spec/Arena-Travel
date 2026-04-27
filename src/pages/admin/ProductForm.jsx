@@ -1,15 +1,16 @@
 import { useState } from 'react'
 import { uploadToCloudinary } from '../../lib/cloudinary'
 
-const EMPTY = { nombre: '', precio: '', descripcion: '', imagen_url: '', categoria: 'nacional' }
+const EMPTY = { nombre: '', precio: '', precio_desde: '', descripcion: '', imagen_url: '', categoria: 'nacional' }
 
 export default function ProductForm({ initial, onSave, onCancel }) {
   const [form, setForm] = useState(initial ? {
-    nombre:     initial.nombre,
-    precio:     initial.precio,
-    descripcion: initial.descripcion ?? '',
-    imagen_url: initial.imagen_url ?? '',
-    categoria:  initial.categoria ?? 'nacional',
+    nombre:       initial.nombre,
+    precio:       initial.precio ?? '',
+    precio_desde: initial.precio_desde ?? '',
+    descripcion:  initial.descripcion ?? '',
+    imagen_url:   initial.imagen_url ?? '',
+    categoria:    initial.categoria ?? 'nacional',
   } : EMPTY)
   const [file, setFile] = useState(null)
   const [preview, setPreview] = useState(initial?.imagen_url ?? '')
@@ -31,10 +32,19 @@ export default function ProductForm({ initial, onSave, onCancel }) {
     setForm(prev => ({ ...prev, imagen_url: '' }))
   }
 
+  const parsePrice = str => {
+    // Acepta formato argentino "85.000,50" y también "85000"
+    const cleaned = String(str).trim().replace(/\./g, '').replace(',', '.')
+    return Number(cleaned)
+  }
+
   const validate = () => {
     const errs = {}
     if (!form.nombre.trim()) errs.nombre = true
-    if (!form.precio || isNaN(Number(form.precio)) || Number(form.precio) <= 0) errs.precio = true
+    if (form.categoria === 'nacional') {
+      const n = parsePrice(form.precio)
+      if (!form.precio || isNaN(n) || n <= 0) errs.precio = true
+    }
     return errs
   }
 
@@ -58,7 +68,11 @@ export default function ProductForm({ initial, onSave, onCancel }) {
     }
 
     setSaving(true)
-    await onSave({ ...form, precio: Number(form.precio), imagen_url: imageUrl })
+    await onSave({
+      ...form,
+      precio:     form.categoria === 'nacional' ? parsePrice(form.precio) : 0,
+      imagen_url: imageUrl,
+    })
     setSaving(false)
   }
 
@@ -78,23 +92,36 @@ export default function ProductForm({ initial, onSave, onCancel }) {
       </div>
 
       <div className="form__group">
-        <label htmlFor="pf-precio">Precio (€) *</label>
-        <input
-          id="pf-precio" name="precio" type="number"
-          min="0" step="0.01" placeholder="1290.00"
-          value={form.precio} onChange={handleChange}
-          className={errors.precio ? 'error' : ''}
-        />
-        {errors.precio && <span className="product-form__field-error">Introduce un precio válido</span>}
-      </div>
-
-      <div className="form__group">
         <label htmlFor="pf-categoria">Categoría *</label>
         <select id="pf-categoria" name="categoria" value={form.categoria} onChange={handleChange}>
           <option value="nacional">Nacional</option>
           <option value="internacional">Internacional</option>
         </select>
       </div>
+
+      {form.categoria === 'nacional' ? (
+        <div className="form__group">
+          <label htmlFor="pf-precio">Precio en pesos (ARS) *</label>
+          <input
+            id="pf-precio" name="precio" type="text"
+            inputMode="numeric"
+            placeholder="ej: 85000 o 85.000"
+            value={form.precio} onChange={handleChange}
+            className={errors.precio ? 'error' : ''}
+          />
+          {errors.precio && <span className="product-form__field-error">Introduce un precio válido en pesos</span>}
+        </div>
+      ) : (
+        <div className="form__group">
+          <label htmlFor="pf-precio-desde">Precio desde (opcional)</label>
+          <input
+            id="pf-precio-desde" name="precio_desde" type="text"
+            placeholder="ej: USD 1.200 por persona"
+            value={form.precio_desde} onChange={handleChange}
+          />
+          <span className="product-form__hint">Este texto se mostrará como "Precio: desde …" en la web.</span>
+        </div>
+      )}
 
       <div className="form__group">
         <label htmlFor="pf-desc">Descripción</label>

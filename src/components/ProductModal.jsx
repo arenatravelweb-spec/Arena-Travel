@@ -162,7 +162,11 @@ export default function ProductModal({ producto, onClose, onComprar }) {
           {producto.descripcion && (
             <div className="pmodal__section">
               <p className="pmodal__section-label">Qué incluye</p>
-              <p className="pmodal__desc">{producto.descripcion}</p>
+              <p className="pmodal__desc">
+                {producto.descripcion.split('\n').map((line, i, arr) => (
+                  <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
+                ))}
+              </p>
             </div>
           )}
 
@@ -173,10 +177,16 @@ export default function ProductModal({ producto, onClose, onComprar }) {
             </p>
           )}
 
+          {producto.categoria === 'internacional' && producto.precio_desde && (
+            <p className="pmodal__price">
+              Precio: desde {producto.precio_desde}
+            </p>
+          )}
+
           <div className="pmodal__actions">
             {producto.categoria === 'nacional'
               ? <AnimatedButton text="Comprar ahora" onClick={onComprar} color="var(--color-accent)" />
-              : <AnimatedButton text="Reservar por WhatsApp" href={WA} color="var(--color-accent)" />
+              : <AnimatedButton text="Consultar" href={WA} color="var(--color-accent)" />
             }
           </div>
         </div>

@@ -1287,6 +1287,58 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   color: rgba(255,255,255,.4);
 }
 
+.footer__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 2rem;
+  padding-bottom: 2rem;
+}
+
+.footer__logo .nav__logo-img { height: 44px; width: auto; }
+
+.footer__nav {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.footer__nav a {
+  color: rgba(255,255,255,.7);
+  font-size: .875rem;
+  transition: color var(--transition);
+}
+
+.footer__nav a:hover { color: var(--clr-accent); }
+
+.footer__copy {
+  font-size: .8rem;
+  color: rgba(255,255,255,.4);
+}
+
+.footer__qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  text-align: center;
+}
+
+.footer__qr-img {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-sm);
+  object-fit: cover;
+}
+
+.footer__qr-label {
+  font-size: .72rem;
+  color: rgba(255,255,255,.55);
+  text-align: center;
+  line-height: 1.4;
+}
+
 /* ═══════════════════════════════════════════════════
    SCROLL REVEAL
 ═══════════════════════════════════════════════════ */
@@ -1379,6 +1431,17 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   .footer__grid { grid-template-columns: 1fr; }
   .footer__brand { grid-column: auto; }
   .footer__bottom { flex-direction: column; text-align: center; }
+
+  .footer__inner {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+  .footer__nav { justify-content: center; }
+  .footer__qr {
+    align-items: center;
+    text-align: center;
+  }
 
   .hero__scroll { display: none; }
 
