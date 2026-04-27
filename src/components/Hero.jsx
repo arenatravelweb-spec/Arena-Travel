@@ -3,20 +3,20 @@ import AnimatedButton from './AnimatedButton'
 
 const SLIDES = [
   {
-    src:       'https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto,w_1920/v1776866005/IMG_0493_vleqvb.jpg',
-    mobileSrc: 'https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto,w_750/v1776866005/IMG_0493_vleqvb.jpg',
+    src:       'https://res.cloudinary.com/doxubzldn/image/upload/v1777320637/va4qzpfhbya8oibygvww.webp',
+    mobileSrc: 'https://res.cloudinary.com/doxubzldn/image/upload/v1777320637/va4qzpfhbya8oibygvww.webp',
     pos:       'center 28%',
     mobilePos: 'center 25%',
   },
   {
-    src:       'https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto,w_1920/v1776865977/IMG_1085_vzp1bq.jpg',
-    mobileSrc: 'https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto,w_750,h_1334,c_fill,g_center/v1776865977/IMG_1085_vzp1bq.jpg',
+    src:       'https://res.cloudinary.com/doxubzldn/image/upload/v1777320638/nwziq899fqtheqrgyuag.webp',
+    mobileSrc: 'https://res.cloudinary.com/doxubzldn/image/upload/v1777320638/nwziq899fqtheqrgyuag.webp',
     pos:       'center 40%',
     mobilePos: 'center center',
   },
   {
-    src:       'https://res.cloudinary.com/dabikk5ei/image/upload/v1776865965/IMG_1086_zyqmnf.jpg',
-    mobileSrc: 'https://res.cloudinary.com/dabikk5ei/image/upload/v1776865965/IMG_1086_zyqmnf.jpg',
+    src:       'https://res.cloudinary.com/doxubzldn/image/upload/v1777320639/v49qkykt4gluze1eznho.jpg',
+    mobileSrc: 'https://res.cloudinary.com/doxubzldn/image/upload/v1777320639/v49qkykt4gluze1eznho.jpg',
     pos:       'center 30%',
     mobilePos: 'center 30%',
   },

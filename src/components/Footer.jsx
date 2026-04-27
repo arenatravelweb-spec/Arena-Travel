@@ -12,7 +12,7 @@ export default function Footer() {
       <div className="container footer__inner">
         <a href="#inicio" className="nav__logo footer__logo">
           <img
-            src="https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto/v1776605663/Dise%C3%B1o_sin_t%C3%ADtulo_8_phoytl.png"
+            src="https://res.cloudinary.com/doxubzldn/image/upload/v1777320635/os9hwfzbwqdghhqrzfgz.webp"
             alt="Arena Travel"
             className="nav__logo-img"
           />
@@ -28,11 +28,11 @@ export default function Footer() {
 
         <div className="footer__qr">
           <img
-            src="https://res.cloudinary.com/dabikk5ei/image/upload/v1777293826/Dise%C3%B1o_sin_t%C3%ADtulo_12_bsvdry.png"
+            src="https://res.cloudinary.com/doxubzldn/image/upload/v1777320643/m0vn50bnamnbpgjbsfqk.png"
             alt="QR Arena Travel"
             className="footer__qr-img"
           />
-          <p className="footer__qr-label">Agencia registrada<br />leg. 20593</p>
+          <p className="footer__qr-label">Agencia registrada con leg. 20593</p>
         </div>
       </div>
     </footer>
