@@ -25,6 +25,15 @@ export default function Footer() {
         </nav>
 
         <p className="footer__copy">© 2026 Arena Travel. Todos los derechos reservados.</p>
+
+        <div className="footer__qr">
+          <img
+            src="https://res.cloudinary.com/dabikk5ei/image/upload/v1777293826/Dise%C3%B1o_sin_t%C3%ADtulo_12_bsvdry.png"
+            alt="QR Arena Travel"
+            className="footer__qr-img"
+          />
+          <p className="footer__qr-label">Agencia registrada<br />leg. 20593</p>
+        </div>
       </div>
     </footer>
   )

@@ -3,6 +3,7 @@ import { toast } from 'sonner'
 import { supabase } from '../lib/supabase'
 import AnimatedButton from './AnimatedButton'
 import CompraModal from './CompraModal'
+import ProductModal from './ProductModal'
 
 const WA = 'https://wa.me/5493815477147'
 
@@ -49,8 +50,9 @@ export default function Products() {
   const [error, setError]             = useState('')
   const [active, setActive]           = useState('nacional')
   const [indicator, setIndicator]     = useState({ width: 0, left: 0 })
-  const [modalProducto, setModal]     = useState(null)
-  const [pagando, setPagando]         = useState(false)
+  const [modalProducto, setModal]       = useState(null)
+  const [detailProducto, setDetail]     = useState(null)
+  const [pagando, setPagando]           = useState(false)
   const [preferenceId, setPreferenceId] = useState(null)
   const tabsRef = useRef(null)
 
@@ -142,26 +144,26 @@ export default function Products() {
                       <span> / persona</span>
                     </p>
                   )}
-                  {p.categoria === 'nacional'
-                    ? <AnimatedButton
-                        text="Comprar"
-                        size="sm"
-                        color="var(--color-accent)"
-                        onClick={() => setModal(p)}
-                      />
-                    : <AnimatedButton
-                        text="Reservar"
-                        href={WA}
-                        size="sm"
-                        color="var(--color-accent)"
-                      />
-                  }
+                  <AnimatedButton
+                    text="Ver destino"
+                    size="sm"
+                    color="var(--color-accent)"
+                    onClick={e => { e.stopPropagation(); setDetail(p) }}
+                  />
                 </div>
               </article>
             ))}
           </div>
         )}
       </div>
+
+      {detailProducto && (
+        <ProductModal
+          producto={detailProducto}
+          onClose={() => setDetail(null)}
+          onComprar={() => { setModal(detailProducto); setDetail(null) }}
+        />
+      )}
 
       {modalProducto && (
         <CompraModal
