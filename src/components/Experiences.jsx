@@ -1,5 +1,5 @@
 const EXPERIENCES = [
-  { title: 'Viaje de amigos',      text: 'Aventuras grupales para vivir con tus amigos. Nuevos destinos, risas compartidas y recuerdos que duran para siempre.' },
+  { title: 'Viajes de amigos',      text: 'Aventuras grupales para vivir con tus amigos. Nuevos destinos, risas compartidas y recuerdos que duran para siempre.' },
   { title: 'Viajes de mujeres',   text: 'Escapadas diseñadas para mujeres que quieren explorar el mundo con libertad, seguridad y buena compañía.' },
   { title: 'Viajes en pareja',    text: 'Momentos románticos e inolvidables. Destinos soñados para compartir con quien más querés.' },
   { title: 'Viajes en familia',   text: 'Itinerarios pensados para que todos, grandes y pequeños, vivan aventuras juntos.' },

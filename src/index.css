@@ -1464,6 +1464,13 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 
 .footer__logo { color: var(--color-white) !important; font-size: 1.2rem; }
 
+.footer__logo .nav__logo-img {
+  height: 80px;
+  width: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 .footer__copy {
   font-size: .78rem;
   color: rgba(255,255,255,.4);
@@ -1573,9 +1580,11 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 
 .footer__qr {
   display: flex;
+  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: .75rem;
+  gap: .5rem;
+  text-align: center;
 }
 
 .footer__qr-img {
@@ -2182,7 +2191,8 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   display: flex;
   flex-direction: column;
   gap: .6rem;
-  overflow: hidden;
+  overflow-y: auto;
+  flex: 1;
 }
 
 .pmodal__badge {
@@ -2229,18 +2239,29 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 }
 
 .pmodal__price {
+  font-size: .72rem;
   font-weight: 700;
-  font-size: 1.3rem;
-  color: var(--color-primary-dark);
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: var(--color-primary);
   margin: 0;
 }
 .pmodal__price span {
   font-weight: 400;
-  font-size: .85rem;
+  letter-spacing: 0;
+  text-transform: none;
   color: var(--color-text-light);
 }
 
-.pmodal__actions { padding-top: .4rem; }
+.pmodal__actions {
+  padding-top: .4rem;
+  padding-bottom: .25rem;
+  margin-top: auto;
+  flex-shrink: 0;
+  position: sticky;
+  bottom: 0;
+  background: var(--color-white);
+}
 
 @media (max-width: 600px) {
   .pmodal__media { height: 160px; }
