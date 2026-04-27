@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import AnimatedButton from './AnimatedButton'
 
 const SLIDES = [
@@ -15,20 +15,20 @@ const SLIDES = [
     mobilePos: 'center center',
   },
   {
-    src:       'https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto,w_1920/v1776865965/IMG_1086_zyqmnf.jpg',
-    mobileSrc: 'https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto,w_750/v1776865965/IMG_1086_zyqmnf.jpg',
+    src:       'https://res.cloudinary.com/dabikk5ei/image/upload/v1776865965/IMG_1086_zyqmnf.jpg',
+    mobileSrc: 'https://res.cloudinary.com/dabikk5ei/image/upload/v1776865965/IMG_1086_zyqmnf.jpg',
     pos:       'center 30%',
     mobilePos: 'center 30%',
   },
 ]
 
-const INTERVAL = 5000
+const INTERVAL = 3500
 
 export default function Hero() {
   const [current, setCurrent] = useState(0)
-  const [prev, setPrev] = useState(null)
-  const [transitioning, setTransitioning] = useState(false)
+  const [prev, setPrev]       = useState(null)
   const [isMobile, setIsMobile] = useState(() => window.innerWidth <= 768)
+  const currentRef = useRef(0)
 
   useEffect(() => {
     const mq = window.matchMedia('(max-width: 768px)')
@@ -38,18 +38,15 @@ export default function Hero() {
   }, [])
 
   useEffect(() => {
-    const id = setInterval(() => advance(1), INTERVAL)
+    const id = setInterval(() => {
+      const next = (currentRef.current + 1) % SLIDES.length
+      setPrev(currentRef.current)
+      setCurrent(next)
+      currentRef.current = next
+      setTimeout(() => setPrev(null), 750)
+    }, INTERVAL)
     return () => clearInterval(id)
-  }, [current])
-
-  const advance = (dir) => {
-    if (transitioning) return
-    const next = (current + dir + SLIDES.length) % SLIDES.length
-    setPrev(current)
-    setCurrent(next)
-    setTransitioning(true)
-    setTimeout(() => { setPrev(null); setTransitioning(false) }, 900)
-  }
+  }, [])
 
   const slideStyle = (slide) => ({
     objectPosition: isMobile ? slide.mobilePos : slide.pos,
@@ -92,17 +89,6 @@ export default function Hero() {
           <AnimatedButton text="Explorar destinos" href="#productos" color="var(--color-accent)" />
           <AnimatedButton text="Escribinos" href="https://wa.me/5493815477147" color="var(--color-secondary)" />
         </div>
-      </div>
-
-      <div className="hero__dots">
-        {SLIDES.map((_, i) => (
-          <button
-            key={i}
-            className={`hero__dot${i === current ? ' hero__dot--active' : ''}`}
-            aria-label={`Imagen ${i + 1}`}
-            onClick={() => advance(i - current)}
-          />
-        ))}
       </div>
 
       <div className="hero__scroll">
