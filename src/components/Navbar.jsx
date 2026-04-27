@@ -48,7 +48,7 @@ export default function Navbar() {
           <div className={`nav__pill${scrolled ? ' nav__pill--scrolled' : ''}`} ref={pillRef}>
             <a href="#inicio" className="nav__pill-logo">
               <img
-                src="https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto/v1776605663/Dise%C3%B1o_sin_t%C3%ADtulo_8_phoytl.png"
+                src="https://res.cloudinary.com/doxubzldn/image/upload/v1777320634/apzzfj3pru1mif6c84yk.webp"
                 alt="Arena Travel"
                 className="nav__logo-img"
               />

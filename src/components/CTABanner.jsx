@@ -1,6 +1,6 @@
 import AnimatedButton from './AnimatedButton'
 
-const LOGO = 'https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto,w_220/v1776865905/logoAT_adrvvs.jpg'
+const LOGO = 'https://res.cloudinary.com/doxubzldn/image/upload/v1777320635/os9hwfzbwqdghhqrzfgz.webp'
 
 export default function CTABanner() {
   return (

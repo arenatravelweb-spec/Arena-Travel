@@ -14,7 +14,7 @@ export default function About() {
         <div className="nosotros__media reveal">
           <div className="nosotros__img-main nos-card">
             <img
-              src="https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto,w_900/v1776865965/IMG_1086_zyqmnf.jpg"
+              src="https://res.cloudinary.com/doxubzldn/image/upload/v1777320641/ssssaw7izgvfdursw9oe.webp"
               alt="Viajeras felices"
               loading="lazy"
               style={{ objectPosition: 'center 25%' }}
@@ -22,7 +22,7 @@ export default function About() {
           </div>
           <div className="nosotros__img-secondary nos-card">
             <img
-              src="https://res.cloudinary.com/dabikk5ei/image/upload/f_webp,q_auto,w_500/v1776865988/IMG_1804.JPG_wbbqys.jpg"
+              src="https://res.cloudinary.com/doxubzldn/image/upload/v1777320642/lsvvrqlkjum3mlyg1k9r.webp"
               alt="Mujer viajando sola"
               loading="lazy"
               style={{ objectPosition: 'center 55%' }}
