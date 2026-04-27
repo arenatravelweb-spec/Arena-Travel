@@ -4,13 +4,24 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 const CORS = {
   'Access-Control-Allow-Origin':  '*',
   'Access-Control-Allow-Headers': 'authorization, content-type',
+  'Access-Control-Allow-Methods': 'POST, OPTIONS',
 }
 
 serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: CORS })
 
+  let body: any
   try {
-    const { nombre, precio, descripcion, comprador } = await req.json()
+    body = await req.json()
+  } catch {
+    return new Response(JSON.stringify({ error: 'Invalid JSON body' }), {
+      status: 400,
+      headers: { ...CORS, 'Content-Type': 'application/json' },
+    })
+  }
+
+  try {
+    const { nombre, precio, descripcion, comprador } = body
 
     const accessToken = Deno.env.get('MP_ACCESS_TOKEN')!
     const baseUrl     = Deno.env.get('APP_URL') || req.headers.get('origin') || 'http://localhost:5173'
@@ -82,4 +93,3 @@ serve(async (req) => {
     })
   }
 })
-// hola

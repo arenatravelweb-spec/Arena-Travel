@@ -15,22 +15,16 @@ const TABS = [
 async function crearPreferenciaMP(producto, comprador, setPagando, setPreferenceId) {
   setPagando(true)
   try {
-    const res = await fetch(
-      `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/crear-preferencia-mp`,
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type':  'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_SUPABASE_ANON_KEY}`,
-        },
-        body: JSON.stringify({
-          nombre:      producto.nombre,
-          precio:      producto.precio,
-          descripcion: producto.descripcion ?? '',
-          comprador,
-        }),
-      }
-    )
+    const res = await fetch('/api/crear-preferencia', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        nombre:      producto.nombre,
+        precio:      producto.precio,
+        descripcion: producto.descripcion ?? '',
+        comprador,
+      }),
+    })
     const data = await res.json()
     if (data.preference_id) {
       setPreferenceId(data.preference_id)
