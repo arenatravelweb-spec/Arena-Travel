@@ -26,12 +26,14 @@ async function crearPreferenciaMP(producto, comprador, setPagando, setPreference
       }),
     })
     const data = await res.json()
+    console.log('Respuesta API pago:', data)
     if (data.preference_id) {
       setPreferenceId(data.preference_id)
     } else {
       throw new Error(data.error || 'No se recibió la preferencia de pago')
     }
-  } catch {
+  } catch (err) {
+    console.error('Error pago:', err)
     toast.error('No se pudo iniciar el pago. Escribinos por WhatsApp.', { duration: 5000 })
   } finally {
     setPagando(false)

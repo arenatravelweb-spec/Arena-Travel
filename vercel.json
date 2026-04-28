@@ -1,4 +1,7 @@
 {
+  "buildCommand": "vite build",
+  "devCommand": "vite",
+  "outputDirectory": "dist",
   "rewrites": [
     { "source": "/((?!api/).*)", "destination": "/index.html" }
   ]

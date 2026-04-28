@@ -32,6 +32,7 @@ export default async function handler(req, res) {
     if (dbErr) throw new Error(dbErr.message)
 
     const origin = req.headers.origin || process.env.APP_URL || ''
+    const isProd  = origin && !origin.includes('localhost')
 
     const mpRes = await fetch('https://api.mercadopago.com/checkout/preferences', {
       method: 'POST',
@@ -52,12 +53,14 @@ export default async function handler(req, res) {
           email: comprador.email,
         },
         external_reference: String(compra.id),
-        back_urls: {
-          success: `${origin}/?pago=exitoso`,
-          failure: `${origin}/?pago=fallido`,
-          pending: `${origin}/?pago=pendiente`,
-        },
-        auto_return: 'approved',
+        ...(isProd && {
+          back_urls: {
+            success: `${origin}/?pago=exitoso`,
+            failure: `${origin}/?pago=fallido`,
+            pending: `${origin}/?pago=pendiente`,
+          },
+          auto_return: 'approved',
+        }),
       }),
     })
 
