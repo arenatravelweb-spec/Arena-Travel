@@ -106,15 +106,14 @@ function getDestInfo(nombre, categoria) {
   return FALLBACK[categoria] ?? FALLBACK.internacional
 }
 
-function toEmbedUrl(url) {
+function getYouTubeEmbed(url) {
   if (!url) return null
   const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/)
-  if (m) return `https://www.youtube.com/embed/${m[1]}?autoplay=1&mute=1`
-  return url
+  return m ? `https://www.youtube.com/embed/${m[1]}?autoplay=1&mute=1` : null
 }
 
 export default function ProductModal({ producto, onClose, onComprar }) {
-  const embedUrl = toEmbedUrl(producto.video_url)
+  const youtubeEmbed = getYouTubeEmbed(producto.video_url)
   const destInfo = getDestInfo(producto.nombre, producto.categoria)
 
   useEffect(() => {
@@ -133,14 +132,25 @@ export default function ProductModal({ producto, onClose, onComprar }) {
       <div className="pmodal" onClick={e => e.stopPropagation()}>
         <button className="pmodal__close" onClick={onClose} aria-label="Cerrar">✕</button>
 
-        <div className="pmodal__media">
-          {embedUrl ? (
-            <iframe
-              src={embedUrl}
-              allow="autoplay; encrypted-media"
-              allowFullScreen
-              title={producto.nombre}
-            />
+        <div className={`pmodal__media${producto.video_url ? ' pmodal__media--video' : ''}`}>
+          {producto.video_url ? (
+            youtubeEmbed ? (
+              <iframe
+                src={youtubeEmbed}
+                allow="autoplay; encrypted-media"
+                allowFullScreen
+                title={producto.nombre}
+              />
+            ) : (
+              <video
+                src={producto.video_url}
+                controls
+                muted
+                playsInline
+                preload="metadata"
+                aria-label={producto.nombre}
+              />
+            )
           ) : producto.imagen_url ? (
             <img src={producto.imagen_url} alt={producto.nombre} />
           ) : (

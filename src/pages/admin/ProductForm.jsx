@@ -1,7 +1,7 @@
 import { useState } from 'react'
-import { uploadToCloudinary } from '../../lib/cloudinary'
+import { uploadToCloudinary, uploadVideoToCloudinary, VIDEO_MAX_BYTES } from '../../lib/cloudinary'
 
-const EMPTY = { nombre: '', precio: '', precio_desde: '', descripcion: '', imagen_url: '', categoria: 'nacional' }
+const EMPTY = { nombre: '', precio: '', precio_desde: '', descripcion: '', imagen_url: '', video_url: '', categoria: 'nacional' }
 
 export default function ProductForm({ initial, onSave, onCancel }) {
   const [form, setForm] = useState(initial ? {
@@ -10,11 +10,15 @@ export default function ProductForm({ initial, onSave, onCancel }) {
     precio_desde: initial.precio_desde ?? '',
     descripcion:  initial.descripcion ?? '',
     imagen_url:   initial.imagen_url ?? '',
+    video_url:    initial.video_url ?? '',
     categoria:    initial.categoria ?? 'nacional',
   } : EMPTY)
   const [file, setFile] = useState(null)
   const [preview, setPreview] = useState(initial?.imagen_url ?? '')
   const [uploading, setUploading] = useState(false)
+  const [videoFile, setVideoFile] = useState(null)
+  const [videoPreview, setVideoPreview] = useState(initial?.video_url ?? '')
+  const [uploadingVideo, setUploadingVideo] = useState(false)
   const [saving, setSaving] = useState(false)
   const [errors, setErrors] = useState({})
 
@@ -30,6 +34,25 @@ export default function ProductForm({ initial, onSave, onCancel }) {
     setFile(selected)
     setPreview(URL.createObjectURL(selected))
     setForm(prev => ({ ...prev, imagen_url: '' }))
+  }
+
+  const handleVideoFile = e => {
+    const selected = e.target.files[0]
+    if (!selected) return
+    if (selected.size > VIDEO_MAX_BYTES) {
+      setErrors(prev => ({ ...prev, video: 'El video supera el tamaño máximo de 100 MB' }))
+      return
+    }
+    setErrors(prev => ({ ...prev, video: false }))
+    setVideoFile(selected)
+    setVideoPreview(URL.createObjectURL(selected))
+    setForm(prev => ({ ...prev, video_url: '' }))
+  }
+
+  const clearVideo = () => {
+    setVideoFile(null)
+    setVideoPreview('')
+    setForm(prev => ({ ...prev, video_url: '' }))
   }
 
   const parsePrice = str => {
@@ -54,6 +77,7 @@ export default function ProductForm({ initial, onSave, onCancel }) {
     if (Object.keys(errs).length) { setErrors(errs); return }
 
     let imageUrl = form.imagen_url
+    let videoUrl = form.video_url
 
     if (file) {
       setUploading(true)
@@ -67,16 +91,29 @@ export default function ProductForm({ initial, onSave, onCancel }) {
       setUploading(false)
     }
 
+    if (videoFile) {
+      setUploadingVideo(true)
+      try {
+        videoUrl = await uploadVideoToCloudinary(videoFile)
+      } catch (err) {
+        setErrors(prev => ({ ...prev, video: err.message }))
+        setUploadingVideo(false)
+        return
+      }
+      setUploadingVideo(false)
+    }
+
     setSaving(true)
     await onSave({
       ...form,
       precio:     form.categoria === 'nacional' ? parsePrice(form.precio) : 0,
       imagen_url: imageUrl,
+      video_url:  videoUrl,
     })
     setSaving(false)
   }
 
-  const busy = uploading || saving
+  const busy = uploading || uploadingVideo || saving
 
   return (
     <form className="product-form" onSubmit={handleSubmit} noValidate>
@@ -159,6 +196,40 @@ export default function ProductForm({ initial, onSave, onCancel }) {
       {preview && (
         <div className="product-form__preview">
           <img src={preview} alt="Vista previa" />
+        </div>
+      )}
+
+      <div className="form__group">
+        <label htmlFor="pf-video-url">URL de video (opcional)</label>
+        <input
+          id="pf-video-url" name="video_url" type="url"
+          placeholder="https://youtube.com/watch?v=... o URL directa"
+          value={form.video_url}
+          onChange={e => {
+            handleChange(e)
+            if (e.target.value) { setVideoPreview(e.target.value); setVideoFile(null) }
+            else { setVideoPreview('') }
+          }}
+        />
+      </div>
+
+      <div className="form__group">
+        <label htmlFor="pf-video-file">O sube un video — MP4, WebM (máx. 100 MB)</label>
+        <input
+          id="pf-video-file" type="file" accept="video/mp4,video/webm,video/*"
+          onChange={handleVideoFile}
+          className="product-form__file-input"
+        />
+        {uploadingVideo && <p className="product-form__status">Subiendo video a Cloudinary…</p>}
+        {errors.video && <span className="product-form__field-error">{errors.video}</span>}
+      </div>
+
+      {videoPreview && (
+        <div className="product-form__preview product-form__preview--video">
+          <video src={videoPreview} controls muted preload="metadata" />
+          <button type="button" className="product-form__clear-media" onClick={clearVideo}>
+            Quitar video
+          </button>
         </div>
       )}
 
