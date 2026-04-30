@@ -58,6 +58,7 @@ export default async function handler(req, res) {
           email: comprador.email,
         },
         external_reference: String(compra.id),
+        notification_url: `${process.env.SUPABASE_URL}/functions/v1/mp-webhook`,
         ...(isProd && {
           back_urls: {
             success: `${origin}/?pago=exitoso`,
