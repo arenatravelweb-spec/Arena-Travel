@@ -13,7 +13,10 @@ serve(async (req) => {
     const paymentId = body.data?.id
     if (!paymentId) return new Response('ok', { status: 200 })
 
-    const accessToken = Deno.env.get('MP_ACCESS_TOKEN')!
+    const isSandbox   = Deno.env.get('MP_SANDBOX') === 'true'
+    const accessToken = isSandbox
+      ? Deno.env.get('MP_ACCESS_TOKEN_TEST')!
+      : Deno.env.get('MP_ACCESS_TOKEN')!
 
     // Obtener detalles del pago desde MP
     const paymentRes = await fetch(

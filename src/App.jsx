@@ -43,12 +43,27 @@ function PagoToast() {
   const [params, setParams] = useSearchParams()
 
   useEffect(() => {
-    const pago = params.get('pago')
+    const pago       = params.get('pago')
+    const paymentId  = params.get('payment_id')
     if (!pago) return
-    if (pago === 'exitoso')  toast.success('¡Pago realizado con éxito! Te contactaremos pronto.', { duration: 6000 })
-    if (pago === 'fallido')  toast.error('Hubo un problema con el pago. Intentá de nuevo.', { duration: 6000 })
+
+    if (pago === 'exitoso') {
+      toast.success('¡Pago realizado con éxito! Te contactaremos pronto.', { duration: 6000 })
+      if (paymentId) {
+        fetch('/api/verificar-pago', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ payment_id: paymentId }),
+        }).catch(() => {})
+      }
+    }
+    if (pago === 'fallido')   toast.error('Hubo un problema con el pago. Intentá de nuevo.', { duration: 6000 })
     if (pago === 'pendiente') toast.info('Tu pago está siendo procesado. Te avisaremos cuando se confirme.', { duration: 6000 })
+
     params.delete('pago')
+    params.delete('payment_id')
+    params.delete('status')
+    params.delete('merchant_order_id')
     setParams(params, { replace: true })
   }, [])
 
