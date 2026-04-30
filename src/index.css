@@ -1438,6 +1438,13 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   border-color: #f87171;
 }
 
+.form__error {
+  display: block;
+  font-size: .78rem;
+  color: #c53030;
+  margin-top: .25rem;
+}
+
 .form__note {
   text-align: center;
   font-size: .8rem;
