@@ -49,12 +49,21 @@ function PagoToast() {
 
     if (pago === 'exitoso') {
       toast.success('¡Pago realizado con éxito! Te contactaremos pronto.', { duration: 6000 })
-      if (paymentId) {
-        fetch('/api/verificar-pago', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ payment_id: paymentId }),
-        }).catch(() => {})
+      const collectionId = paymentId || params.get('collection_id')
+      console.log('[Pago] payment_id:', collectionId, '| todos los params:', window.location.search)
+      if (collectionId) {
+        setTimeout(() => {
+          fetch('/api/verificar-pago', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ payment_id: collectionId }),
+          })
+            .then(r => r.json())
+            .then(d => console.log('[verificar-pago] respuesta:', d))
+            .catch(e => console.error('[verificar-pago] error:', e))
+        }, 4000)
+      } else {
+        console.warn('[Pago] No se encontró payment_id en la URL')
       }
     }
     if (pago === 'fallido')   toast.error('Hubo un problema con el pago. Intentá de nuevo.', { duration: 6000 })
