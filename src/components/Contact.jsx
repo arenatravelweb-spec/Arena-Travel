@@ -1,4 +1,6 @@
 import { useState } from 'react'
+import { z } from 'zod'
+import { toast } from 'sonner'
 import emailjs from '@emailjs/browser'
 import AnimatedButton from './AnimatedButton'
 
@@ -28,7 +30,23 @@ const SOCIALS = [
   },
 ]
 
-const REQUIRED_FIELDS = ['nombre', 'email', 'mensaje']
+const contactSchema = z.object({
+  nombre: z
+    .string()
+    .min(3,  'El nombre debe tener al menos 3 caracteres')
+    .max(50, 'El nombre no puede superar los 50 caracteres')
+    .regex(/^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\s'-]+$/, 'El nombre solo puede contener letras'),
+  email: z
+    .string()
+    .min(1, 'El email es obligatorio')
+    .max(100, 'El email no puede superar los 100 caracteres')
+    .email('Ingresá un email válido'),
+  destino: z.string().optional(),
+  mensaje: z
+    .string()
+    .min(10,  'El mensaje debe tener al menos 10 caracteres')
+    .max(500, 'El mensaje no puede superar los 500 caracteres'),
+})
 
 export default function Contact() {
   const [form, setForm] = useState({ nombre: '', email: '', destino: '', mensaje: '' })
@@ -38,14 +56,26 @@ export default function Contact() {
   const handleChange = e => {
     const { name, value } = e.target
     setForm(prev => ({ ...prev, [name]: value }))
-    if (errors[name]) setErrors(prev => ({ ...prev, [name]: false }))
+    if (errors[name]) setErrors(prev => ({ ...prev, [name]: undefined }))
   }
 
   const handleSubmit = e => {
     e.preventDefault()
-    const newErrors = {}
-    REQUIRED_FIELDS.forEach(f => { if (!form[f].trim()) newErrors[f] = true })
-    if (Object.keys(newErrors).length) { setErrors(newErrors); return }
+    const result = contactSchema.safeParse(form)
+    if (!result.success) {
+      const fieldErrors = {}
+      result.error.issues.forEach(err => {
+        const field = err.path[0]
+        if (!fieldErrors[field]) fieldErrors[field] = err.message
+      })
+      setErrors(fieldErrors)
+      toast.error('Por favor completá correctamente todos los campos requeridos.', {
+        style: { background: '#7f1d1d', color: '#fff' },
+        duration: 4000,
+      })
+      return
+    }
+    setErrors({})
 
     setStatus('sending')
 
@@ -63,10 +93,15 @@ export default function Contact() {
       .then(() => {
         setStatus('sent')
         setForm({ nombre: '', email: '', destino: '', mensaje: '' })
+        toast.success('¡Mensaje enviado! Te respondemos a la brevedad.', { duration: 5000 })
         setTimeout(() => setStatus('idle'), 4000)
       })
       .catch(() => {
         setStatus('error')
+        toast.error('No pudimos enviar tu mensaje. Intentá de nuevo o escribinos por WhatsApp.', {
+          style: { background: '#7f1d1d', color: '#fff' },
+          duration: 6000,
+        })
         setTimeout(() => setStatus('idle'), 4000)
       })
   }
@@ -119,6 +154,7 @@ export default function Contact() {
                 value={form.nombre} onChange={handleChange}
                 className={errors.nombre ? 'error' : ''}
               />
+              {errors.nombre && <span className="form__error">{errors.nombre}</span>}
             </div>
             <div className="form__group">
               <label htmlFor="email">Email</label>
@@ -128,6 +164,7 @@ export default function Contact() {
                 value={form.email} onChange={handleChange}
                 className={errors.email ? 'error' : ''}
               />
+              {errors.email && <span className="form__error">{errors.email}</span>}
             </div>
           </div>
 
@@ -152,6 +189,7 @@ export default function Contact() {
               value={form.mensaje} onChange={handleChange}
               className={errors.mensaje ? 'error' : ''}
             />
+            {errors.mensaje && <span className="form__error">{errors.mensaje}</span>}
           </div>
 
           <AnimatedButton
