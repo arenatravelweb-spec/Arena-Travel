@@ -33,11 +33,16 @@ export default async function handler(req, res) {
 
     const origin = req.headers.origin || process.env.APP_URL || ''
 
+    const isSandbox   = process.env.MP_SANDBOX === 'true'
+    const accessToken = isSandbox
+      ? process.env.MP_ACCESS_TOKEN_TEST
+      : process.env.MP_ACCESS_TOKEN
+
     const mpRes = await fetch('https://api.mercadopago.com/checkout/preferences', {
       method: 'POST',
       headers: {
         'Content-Type':  'application/json',
-        'Authorization': `Bearer ${process.env.MP_ACCESS_TOKEN}`,
+        'Authorization': `Bearer ${accessToken}`,
       },
       body: JSON.stringify({
         items: [{
@@ -65,7 +70,8 @@ export default async function handler(req, res) {
 
     if (!mpData.id) throw new Error(mpData.message || 'Error al crear preferencia en MercadoPago')
 
-    return res.status(200).json({ preference_id: mpData.id, init_point: mpData.init_point })
+    const initPoint = isSandbox ? mpData.sandbox_init_point : mpData.init_point
+    return res.status(200).json({ preference_id: mpData.id, init_point: initPoint })
   } catch (err) {
     return res.status(500).json({ error: err.message })
   }
