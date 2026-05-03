@@ -10,6 +10,7 @@ const WA = 'https://wa.me/5493815477147'
 const TABS = [
   { id: 'nacional',      label: 'Nacionales' },
   { id: 'internacional', label: 'Internacionales' },
+  { id: 'egresados',     label: 'Viajes de Egresados' },
 ]
 
 async function crearPreferenciaMP(producto, comprador, setPagando, setPreferenceId) {
@@ -40,17 +41,25 @@ async function crearPreferenciaMP(producto, comprador, setPagando, setPreference
   }
 }
 
+const SUBCATS = [
+  { id: 'primario',   label: 'Primario' },
+  { id: 'secundario', label: 'Secundario' },
+]
+
 export default function Products() {
-  const [products, setProducts]       = useState([])
-  const [loading, setLoading]         = useState(true)
-  const [error, setError]             = useState('')
-  const [active, setActive]           = useState('nacional')
-  const [indicator, setIndicator]     = useState({ width: 0, left: 0 })
-  const [modalProducto, setModal]       = useState(null)
-  const [detailProducto, setDetail]     = useState(null)
-  const [pagando, setPagando]           = useState(false)
-  const [preferenceId, setPreferenceId] = useState(null)
-  const tabsRef = useRef(null)
+  const [products, setProducts]           = useState([])
+  const [loading, setLoading]             = useState(true)
+  const [error, setError]                 = useState('')
+  const [active, setActive]               = useState('nacional')
+  const [indicator, setIndicator]         = useState({ width: 0, left: 0 })
+  const [subcat, setSubcat]               = useState('primario')
+  const [subcatIndicator, setSubcatInd]   = useState({ width: 0, left: 0 })
+  const [modalProducto, setModal]         = useState(null)
+  const [detailProducto, setDetail]       = useState(null)
+  const [pagando, setPagando]             = useState(false)
+  const [preferenceId, setPreferenceId]   = useState(null)
+  const tabsRef   = useRef(null)
+  const subcatRef = useRef(null)
 
   useEffect(() => {
     supabase
@@ -64,13 +73,34 @@ export default function Products() {
       })
   }, [])
 
-  useLayoutEffect(() => {
-    if (!tabsRef.current) return
-    const el = tabsRef.current.querySelector(`[data-tab="${active}"]`)
-    if (el) setIndicator({ width: el.offsetWidth, left: el.offsetLeft })
-  }, [active, loading])
+  const recalcIndicator = () => {
+    if (tabsRef.current) {
+      const el = tabsRef.current.querySelector(`[data-tab="${active}"]`)
+      if (el) setIndicator({ width: el.offsetWidth, left: el.offsetLeft })
+    }
+    if (subcatRef.current && active === 'egresados') {
+      const el = subcatRef.current.querySelector(`[data-subtab="${subcat}"]`)
+      if (el) setSubcatInd({ width: el.offsetWidth, left: el.offsetLeft })
+    }
+  }
 
-  const filtered = products.filter(p => p.categoria === active)
+  useLayoutEffect(() => { recalcIndicator() }, [active, subcat, loading])
+
+  useEffect(() => {
+    window.addEventListener('resize', recalcIndicator)
+    return () => window.removeEventListener('resize', recalcIndicator)
+  }, [active, subcat])
+
+  const handleTabChange = id => {
+    setActive(id)
+    if (id === 'egresados') setSubcat('primario')
+  }
+
+  const filtered = products.filter(p => {
+    if (p.categoria !== active) return false
+    if (active === 'egresados') return p.subcategoria === subcat
+    return true
+  })
 
   if (loading) return (
     <section className="section productos" id="productos">
@@ -106,7 +136,7 @@ export default function Products() {
                 key={id}
                 data-tab={id}
                 className={`prod-pill__btn${active === id ? ' active' : ''}`}
-                onClick={() => setActive(id)}
+                onClick={() => handleTabChange(id)}
               >
                 {label}
               </button>
@@ -116,6 +146,26 @@ export default function Products() {
               style={{ width: indicator.width, transform: `translateX(${indicator.left}px)` }}
             />
           </div>
+
+          {active === 'egresados' && (
+            <div className="prod-subpill" ref={subcatRef}>
+              {SUBCATS.map(({ id, label }) => (
+                <button
+                  key={id}
+                  data-subtab={id}
+                  className={`prod-subpill__btn${subcat === id ? ' active' : ''}`}
+                  onClick={() => setSubcat(id)}
+                >
+                  {label}
+                </button>
+              ))}
+              <span
+                className="prod-subpill__indicator"
+                style={{ width: subcatIndicator.width, transform: `translateX(${subcatIndicator.left}px)` }}
+              />
+            </div>
+          )}
+
         </div>
 
         {filtered.length === 0 ? (

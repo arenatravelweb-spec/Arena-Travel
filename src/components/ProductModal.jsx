@@ -89,7 +89,9 @@ const DEST_INFO = {
   'el calafate':   'Puerta de entrada al Parque Nacional Los Glaciares, El Calafate ofrece la maravilla del Perito Moreno: un glaciar activo de 5 km de frente que avanza, truena y se quiebra ante tus ojos.',
   'ushuaia':       'El Fin del Mundo. Ushuaia es la ciudad más austral del planeta, rodeada del Canal de Beagle, los Andes patagónicos, el Parque Nacional Tierra del Fuego y una naturaleza salvaje única.',
   'puerto madryn': 'La capital de la naturaleza patagónica. Ballenas jorobadas, pingüinos de Magallanes, lobos marinos y orcas hacen de Puerto Madryn y la Península Valdés un destino de vida silvestre único.',
-  'neuquén':       'La capital del petróleo y el vino patagónico. Neuquén es puerta de entrada a los Lagos Meliquina, Aluminé y Lolog, los yacimientos de dinosaurios más importantes del mundo.',
+  'neuquén':          'La capital del petróleo y el vino patagónico. Neuquén es puerta de entrada a los Lagos Meliquina, Aluminé y Lolog, los yacimientos de dinosaurios más importantes del mundo.',
+  'triángulo serrano':'Triángulo Serrano es un recorrido turístico por algunos de los paisajes más encantadores de las sierras argentinas, donde se combinan naturaleza, aire puro, ríos cristalinos, pueblos pintorescos y postales serranas únicas. Ideal para quienes buscan descansar, recorrer y disfrutar de la magia de las sierras en un solo viaje.',
+  'triangulo serrano':'Triángulo Serrano es un recorrido turístico por algunos de los paisajes más encantadores de las sierras argentinas, donde se combinan naturaleza, aire puro, ríos cristalinos, pueblos pintorescos y postales serranas únicas. Ideal para quienes buscan descansar, recorrer y disfrutar de la magia de las sierras en un solo viaje.',
 }
 
 const FALLBACK = {
@@ -160,18 +162,24 @@ export default function ProductModal({ producto, onClose, onComprar }) {
 
         <div className="pmodal__body">
           <span className="pmodal__badge">
-            {producto.categoria === 'nacional' ? 'Nacional' : 'Internacional'}
+            {producto.categoria === 'nacional' ? 'Nacional'
+              : producto.categoria === 'egresados' ? 'Viajes de Egresados'
+              : 'Internacional'}
           </span>
           <h2 className="pmodal__title">{producto.nombre}</h2>
 
-          <div className="pmodal__section">
-            <p className="pmodal__section-label">Sobre el destino</p>
-            <p className="pmodal__desc">{destInfo}</p>
-          </div>
+          {producto.categoria !== 'egresados' && (
+            <div className="pmodal__section">
+              <p className="pmodal__section-label">Sobre el destino</p>
+              <p className="pmodal__desc">{destInfo}</p>
+            </div>
+          )}
 
           {producto.descripcion && (
             <div className="pmodal__section">
-              <p className="pmodal__section-label">Qué incluye</p>
+              {producto.categoria !== 'egresados' && (
+                <p className="pmodal__section-label">Qué incluye</p>
+              )}
               <p className="pmodal__desc">
                 {producto.descripcion.split('\n').map((line, i, arr) => (
                   <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
@@ -199,6 +207,16 @@ export default function ProductModal({ producto, onClose, onComprar }) {
               : <AnimatedButton text="Consultar" href={WA} color="var(--color-accent)" />
             }
           </div>
+
+          {producto.categoria === 'egresados' && (
+            <div className="pmodal__egresados-brand">
+              <img
+                src="https://res.cloudinary.com/doxubzldn/image/upload/v1777823916/LOGO-BLANCO-CELESTE_uh6bnv.png"
+                alt="Viajes de Egresados"
+                className="pmodal__egresados-logo"
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
