@@ -10,7 +10,7 @@ const WA = 'https://wa.me/5493815477147'
 const TABS = [
   { id: 'nacional',      label: 'Nacionales' },
   { id: 'internacional', label: 'Internacionales' },
-  { id: 'egresados',     label: 'Viajes de Egresados' },
+  { id: 'egresados',     label: 'Egresados' },
 ]
 
 async function crearPreferenciaMP(producto, comprador, setPagando, setPreferenceId) {
