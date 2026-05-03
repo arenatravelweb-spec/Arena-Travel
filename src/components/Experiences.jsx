@@ -1,8 +1,9 @@
 const EXPERIENCES = [
   { title: 'Viajes de amigos',      text: 'Aventuras grupales para vivir con tus amigos. Nuevos destinos, risas compartidas y recuerdos que duran para siempre.' },
-  { title: 'Viajes de mujeres',   text: 'Escapadas diseñadas para mujeres que quieren explorar el mundo con libertad, seguridad y buena compañía.' },
-  { title: 'Viajes en pareja',    text: 'Momentos románticos e inolvidables. Destinos soñados para compartir con quien más querés.' },
-  { title: 'Viajes en familia',   text: 'Itinerarios pensados para que todos, grandes y pequeños, vivan aventuras juntos.' },
+  { title: 'Viajes de mujeres',     text: 'Escapadas diseñadas para mujeres que quieren explorar el mundo con libertad, seguridad y buena compañía.' },
+  { title: 'Viajes en pareja',      text: 'Momentos románticos e inolvidables. Destinos soñados para compartir con quien más querés.' },
+  { title: 'Viajes en familia',     text: 'Itinerarios pensados para que todos, grandes y pequeños, vivan aventuras juntos.' },
+  { title: 'Viajes de Egresados',   text: 'Experiencias únicas para cerrar una etapa inolvidable, combinando diversión, aventura y momentos que quedan para toda la vida.', logo: null },
 ]
 
 export default function Experiences() {
@@ -22,10 +23,11 @@ export default function Experiences() {
         </h2>
 
         <div className="exp__grid">
-          {EXPERIENCES.map(({ title, text }) => (
+          {EXPERIENCES.map(({ title, text, logo }) => (
             <div key={title} className="exp__card reveal">
               <div className="exp__card-glow" />
               <div className="exp__card-borderglow" />
+              {logo && <img src={logo} alt={title} className="exp__card-logo" />}
               <p className="exp__card-title">{title}</p>
               <p className="exp__card-body">{text}</p>
             </div>

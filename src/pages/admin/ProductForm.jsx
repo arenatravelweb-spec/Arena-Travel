@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { uploadToCloudinary, uploadVideoToCloudinary, VIDEO_MAX_BYTES } from '../../lib/cloudinary'
 
-const EMPTY = { nombre: '', precio: '', precio_desde: '', descripcion: '', imagen_url: '', video_url: '', categoria: 'nacional' }
+const EMPTY = { nombre: '', precio: '', precio_desde: '', descripcion: '', imagen_url: '', video_url: '', categoria: 'nacional', subcategoria: '' }
 
 export default function ProductForm({ initial, onSave, onCancel }) {
   const [form, setForm] = useState(initial ? {
@@ -12,6 +12,7 @@ export default function ProductForm({ initial, onSave, onCancel }) {
     imagen_url:   initial.imagen_url ?? '',
     video_url:    initial.video_url ?? '',
     categoria:    initial.categoria ?? 'nacional',
+    subcategoria: initial.subcategoria ?? '',
   } : EMPTY)
   const [file, setFile] = useState(null)
   const [preview, setPreview] = useState(initial?.imagen_url ?? '')
@@ -64,10 +65,11 @@ export default function ProductForm({ initial, onSave, onCancel }) {
   const validate = () => {
     const errs = {}
     if (!form.nombre.trim()) errs.nombre = true
-    if (form.categoria === 'nacional') {
+    if (form.categoria === 'nacional' || form.categoria === 'egresados') {
       const n = parsePrice(form.precio)
       if (!form.precio || isNaN(n) || n <= 0) errs.precio = true
     }
+    if (form.categoria === 'egresados' && !form.subcategoria) errs.subcategoria = true
     return errs
   }
 
@@ -106,7 +108,7 @@ export default function ProductForm({ initial, onSave, onCancel }) {
     setSaving(true)
     await onSave({
       ...form,
-      precio:     form.categoria === 'nacional' ? parsePrice(form.precio) : 0,
+      precio:     (form.categoria === 'nacional' || form.categoria === 'egresados') ? parsePrice(form.precio) : 0,
       imagen_url: imageUrl,
       video_url:  videoUrl,
     })
@@ -133,10 +135,23 @@ export default function ProductForm({ initial, onSave, onCancel }) {
         <select id="pf-categoria" name="categoria" value={form.categoria} onChange={handleChange}>
           <option value="nacional">Nacional</option>
           <option value="internacional">Internacional</option>
+          <option value="egresados">Viajes de Egresados</option>
         </select>
       </div>
 
-      {form.categoria === 'nacional' ? (
+      {form.categoria === 'egresados' && (
+        <div className="form__group">
+          <label htmlFor="pf-subcategoria">Nivel *</label>
+          <select id="pf-subcategoria" name="subcategoria" value={form.subcategoria} onChange={handleChange}>
+            <option value="">— Seleccioná un nivel —</option>
+            <option value="primario">Primario</option>
+            <option value="secundario">Secundario</option>
+          </select>
+          {errors.subcategoria && <span className="product-form__field-error">Seleccioná un nivel</span>}
+        </div>
+      )}
+
+      {(form.categoria === 'nacional' || form.categoria === 'egresados') ? (
         <div className="form__group">
           <label htmlFor="pf-precio">Precio en pesos (ARS) *</label>
           <input
