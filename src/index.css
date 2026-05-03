@@ -719,8 +719,6 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   position: relative;
   display: flex;
   align-items: center;
-  flex-wrap: wrap;
-  justify-content: center;
   background: var(--color-white);
   border: 2px solid var(--color-border);
   border-radius: 3rem;
@@ -740,6 +738,7 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   font-family: var(--font-body);
   font-weight: 600;
   font-size: .9rem;
+  white-space: nowrap;
   color: var(--color-text-light);
   transition: color .3s ease;
 }
@@ -757,6 +756,21 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   z-index: 1;
   transition: width .3s ease, transform .3s ease;
   pointer-events: none;
+}
+
+/* ── Egresados provider brand ── */
+.egresados-brand {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.egresados-brand__logo {
+  height: 60px;
+  width: auto;
+  object-fit: contain;
+  display: block;
+  filter: drop-shadow(0 6px 18px rgba(0,0,0,.28)) drop-shadow(0 2px 6px rgba(0,0,0,.18));
 }
 
 /* ── Sub-filter (Egresados: Primario / Secundario) ── */
@@ -1866,6 +1880,7 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   .cta-banner__logo { width: 88px; height: 88px; }
   .cta-banner__text { align-items: center; }
   .cta-banner__text p { max-width: 100%; }
+  .cta-banner__text .anim-btn { align-self: center; }
   .cta-banner__qr-img { width: 90px; height: 90px; }
 
   .form__row { grid-template-columns: 1fr; }
@@ -1899,6 +1914,13 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   .nosotros__img-secondary { display: block; right: 0; bottom: -1rem; width: 38%; }
   .nosotros__badge { position: static; display: inline-flex; margin-top: 1rem; }
   .nosotros__media { max-width: 100%; padding-bottom: 3rem; }
+
+  .prod-filter { overflow-x: auto; align-items: stretch; scrollbar-width: none; }
+  .prod-filter::-webkit-scrollbar { display: none; }
+  .prod-pill   { white-space: nowrap; }
+  .prod-pill__btn { padding: .5rem .9rem; font-size: .78rem; }
+  .prod-subpill   { white-space: nowrap; align-self: center; }
+  .prod-subpill__btn { padding: .38rem .9rem; font-size: .76rem; }
 }
 
 /* ═══════════════════════════════════════════════════
@@ -2328,6 +2350,19 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   color: var(--color-text);
   margin: 0;
   line-height: 1.2;
+}
+
+.pmodal__egresados-brand {
+  display: flex;
+  justify-content: flex-end;
+  padding: .25rem 0;
+}
+
+.pmodal__egresados-logo {
+  height: 48px;
+  width: auto;
+  object-fit: contain;
+  filter: drop-shadow(0 4px 12px rgba(0,0,0,.2)) drop-shadow(0 1px 4px rgba(0,0,0,.12));
 }
 
 .pmodal__section {
