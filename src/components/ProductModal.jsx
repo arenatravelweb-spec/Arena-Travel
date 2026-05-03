@@ -89,7 +89,9 @@ const DEST_INFO = {
   'el calafate':   'Puerta de entrada al Parque Nacional Los Glaciares, El Calafate ofrece la maravilla del Perito Moreno: un glaciar activo de 5 km de frente que avanza, truena y se quiebra ante tus ojos.',
   'ushuaia':       'El Fin del Mundo. Ushuaia es la ciudad más austral del planeta, rodeada del Canal de Beagle, los Andes patagónicos, el Parque Nacional Tierra del Fuego y una naturaleza salvaje única.',
   'puerto madryn': 'La capital de la naturaleza patagónica. Ballenas jorobadas, pingüinos de Magallanes, lobos marinos y orcas hacen de Puerto Madryn y la Península Valdés un destino de vida silvestre único.',
-  'neuquén':       'La capital del petróleo y el vino patagónico. Neuquén es puerta de entrada a los Lagos Meliquina, Aluminé y Lolog, los yacimientos de dinosaurios más importantes del mundo.',
+  'neuquén':          'La capital del petróleo y el vino patagónico. Neuquén es puerta de entrada a los Lagos Meliquina, Aluminé y Lolog, los yacimientos de dinosaurios más importantes del mundo.',
+  'triángulo serrano':'Triángulo Serrano es un recorrido turístico por algunos de los paisajes más encantadores de las sierras argentinas, donde se combinan naturaleza, aire puro, ríos cristalinos, pueblos pintorescos y postales serranas únicas. Ideal para quienes buscan descansar, recorrer y disfrutar de la magia de las sierras en un solo viaje.',
+  'triangulo serrano':'Triángulo Serrano es un recorrido turístico por algunos de los paisajes más encantadores de las sierras argentinas, donde se combinan naturaleza, aire puro, ríos cristalinos, pueblos pintorescos y postales serranas únicas. Ideal para quienes buscan descansar, recorrer y disfrutar de la magia de las sierras en un solo viaje.',
 }
 
 const FALLBACK = {
@@ -160,7 +162,9 @@ export default function ProductModal({ producto, onClose, onComprar }) {
 
         <div className="pmodal__body">
           <span className="pmodal__badge">
-            {producto.categoria === 'nacional' ? 'Nacional' : 'Internacional'}
+            {producto.categoria === 'nacional' ? 'Nacional'
+              : producto.categoria === 'egresados' ? 'Viajes de Egresados'
+              : 'Internacional'}
           </span>
           <h2 className="pmodal__title">{producto.nombre}</h2>
 
@@ -180,7 +184,7 @@ export default function ProductModal({ producto, onClose, onComprar }) {
             </div>
           )}
 
-          {producto.categoria === 'nacional' && producto.precio && (
+          {(producto.categoria === 'nacional' || producto.categoria === 'egresados') && producto.precio && (
             <p className="pmodal__price">
               $ {Number(producto.precio).toLocaleString('es-AR', { minimumFractionDigits: 2 })}
               <span> / persona</span>
