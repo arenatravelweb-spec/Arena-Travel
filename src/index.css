@@ -709,7 +709,9 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 /* ── Product filter pill ── */
 .prod-filter {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: .75rem;
   margin-bottom: 2.5rem;
 }
 
@@ -717,6 +719,8 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   position: relative;
   display: flex;
   align-items: center;
+  flex-wrap: wrap;
+  justify-content: center;
   background: var(--color-white);
   border: 2px solid var(--color-border);
   border-radius: 3rem;
@@ -753,6 +757,50 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   z-index: 1;
   transition: width .3s ease, transform .3s ease;
   pointer-events: none;
+}
+
+/* ── Sub-filter (Egresados: Primario / Secundario) ── */
+.prod-subpill {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: rgba(var(--color-primary-rgb, 30, 80, 160), .07);
+  border: 1.5px solid var(--color-border);
+  border-radius: 3rem;
+  padding: .3rem;
+  gap: .2rem;
+  margin-top: .75rem;
+}
+
+.prod-subpill__btn {
+  position: relative;
+  z-index: 2;
+  padding: .4rem 1.2rem;
+  border: none;
+  background: transparent;
+  border-radius: 3rem;
+  font-size: .82rem;
+  font-weight: 500;
+  color: var(--color-text-light);
+  cursor: pointer;
+  transition: color .3s ease;
+  white-space: nowrap;
+}
+
+.prod-subpill__btn:hover  { color: var(--color-primary); }
+.prod-subpill__btn.active { color: var(--color-white); }
+
+.prod-subpill__indicator {
+  position: absolute;
+  top: .3rem;
+  left: 0;
+  height: calc(100% - .6rem);
+  background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+  border-radius: 3rem;
+  z-index: 1;
+  transition: width .3s ease, transform .3s ease;
+  pointer-events: none;
+  opacity: .85;
 }
 
 /* ── Product cards ── */
@@ -1080,7 +1128,7 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 
 .exp__grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 1.5rem;
 }
 
@@ -1121,6 +1169,15 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 
 .exp__card:hover::after {
   transform: translateX(0.15rem);
+}
+
+.exp__card-logo {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  margin: 1rem 0 0 1.25rem;
+  position: relative;
+  z-index: 3;
 }
 
 .exp__card-title {
@@ -1277,21 +1334,49 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 }
 
 
-.cta-banner__content .anim-btn {
-  align-self: center;
+.cta-banner__text {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
 }
 
 .cta-banner__text h2 {
   font-family: var(--font-serif);
   font-size: clamp(1.75rem, 3vw, 2.5rem);
   color: var(--color-white);
-  margin-bottom: .75rem;
+  margin-bottom: 0;
 }
 
 .cta-banner__text p {
   color: rgba(255,255,255,.75);
   max-width: 520px;
   font-size: 1.05rem;
+  margin-bottom: 0;
+}
+
+.cta-banner__qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: .5rem;
+  flex-shrink: 0;
+}
+
+.cta-banner__qr-img {
+  width: 110px;
+  height: 110px;
+  border-radius: var(--radius-sm);
+  background: var(--color-white);
+  padding: 6px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.25);
+}
+
+.cta-banner__qr-label {
+  font-size: .7rem;
+  color: rgba(255,255,255,.55);
+  text-align: center;
+  line-height: 1.55;
 }
 
 /* ═══════════════════════════════════════════════════
@@ -1779,7 +1864,9 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
     gap: 2rem;
   }
   .cta-banner__logo { width: 88px; height: 88px; }
+  .cta-banner__text { align-items: center; }
   .cta-banner__text p { max-width: 100%; }
+  .cta-banner__qr-img { width: 90px; height: 90px; }
 
   .form__row { grid-template-columns: 1fr; }
 
