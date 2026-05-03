@@ -73,17 +73,23 @@ export default function Products() {
       })
   }, [])
 
-  useLayoutEffect(() => {
-    if (!tabsRef.current) return
-    const el = tabsRef.current.querySelector(`[data-tab="${active}"]`)
-    if (el) setIndicator({ width: el.offsetWidth, left: el.offsetLeft })
-  }, [active, loading])
+  const recalcIndicator = () => {
+    if (tabsRef.current) {
+      const el = tabsRef.current.querySelector(`[data-tab="${active}"]`)
+      if (el) setIndicator({ width: el.offsetWidth, left: el.offsetLeft })
+    }
+    if (subcatRef.current && active === 'egresados') {
+      const el = subcatRef.current.querySelector(`[data-subtab="${subcat}"]`)
+      if (el) setSubcatInd({ width: el.offsetWidth, left: el.offsetLeft })
+    }
+  }
 
-  useLayoutEffect(() => {
-    if (!subcatRef.current || active !== 'egresados') return
-    const el = subcatRef.current.querySelector(`[data-subtab="${subcat}"]`)
-    if (el) setSubcatInd({ width: el.offsetWidth, left: el.offsetLeft })
-  }, [subcat, active, loading])
+  useLayoutEffect(() => { recalcIndicator() }, [active, subcat, loading])
+
+  useEffect(() => {
+    window.addEventListener('resize', recalcIndicator)
+    return () => window.removeEventListener('resize', recalcIndicator)
+  }, [active, subcat])
 
   const handleTabChange = id => {
     setActive(id)
@@ -159,6 +165,7 @@ export default function Products() {
               />
             </div>
           )}
+
         </div>
 
         {filtered.length === 0 ? (
@@ -177,7 +184,7 @@ export default function Products() {
                 <h3 className="prod-card__title">{p.nombre}</h3>
                 <div className="prod-card__details">
                   {p.descripcion && <p className="prod-card__desc">{p.descripcion}</p>}
-                  {(p.categoria === 'nacional' || p.categoria === 'egresados') && p.precio && (
+                  {p.categoria === 'nacional' && p.precio && (
                     <p className="prod-card__price">
                       $ {Number(p.precio).toLocaleString('es-AR', { minimumFractionDigits: 2 })}
                       <span> / persona</span>

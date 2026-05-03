@@ -168,14 +168,18 @@ export default function ProductModal({ producto, onClose, onComprar }) {
           </span>
           <h2 className="pmodal__title">{producto.nombre}</h2>
 
-          <div className="pmodal__section">
-            <p className="pmodal__section-label">Sobre el destino</p>
-            <p className="pmodal__desc">{destInfo}</p>
-          </div>
+          {producto.categoria !== 'egresados' && (
+            <div className="pmodal__section">
+              <p className="pmodal__section-label">Sobre el destino</p>
+              <p className="pmodal__desc">{destInfo}</p>
+            </div>
+          )}
 
           {producto.descripcion && (
             <div className="pmodal__section">
-              <p className="pmodal__section-label">Qué incluye</p>
+              {producto.categoria !== 'egresados' && (
+                <p className="pmodal__section-label">Qué incluye</p>
+              )}
               <p className="pmodal__desc">
                 {producto.descripcion.split('\n').map((line, i, arr) => (
                   <span key={i}>{line}{i < arr.length - 1 && <br />}</span>
@@ -184,7 +188,7 @@ export default function ProductModal({ producto, onClose, onComprar }) {
             </div>
           )}
 
-          {(producto.categoria === 'nacional' || producto.categoria === 'egresados') && producto.precio && (
+          {producto.categoria === 'nacional' && producto.precio && (
             <p className="pmodal__price">
               $ {Number(producto.precio).toLocaleString('es-AR', { minimumFractionDigits: 2 })}
               <span> / persona</span>
@@ -203,6 +207,16 @@ export default function ProductModal({ producto, onClose, onComprar }) {
               : <AnimatedButton text="Consultar" href={WA} color="var(--color-accent)" />
             }
           </div>
+
+          {producto.categoria === 'egresados' && (
+            <div className="pmodal__egresados-brand">
+              <img
+                src="https://res.cloudinary.com/doxubzldn/image/upload/v1777823916/LOGO-BLANCO-CELESTE_uh6bnv.png"
+                alt="Viajes de Egresados"
+                className="pmodal__egresados-logo"
+              />
+            </div>
+          )}
         </div>
       </div>
     </div>
