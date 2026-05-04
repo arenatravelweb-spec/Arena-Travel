@@ -1,6 +1,6 @@
 import AnimatedButton from './AnimatedButton'
 
-const LOGO = 'https://res.cloudinary.com/doxubzldn/image/upload/v1777320635/os9hwfzbwqdghhqrzfgz.webp'
+const LOGO = 'https://res.cloudinary.com/doxubzldn/image/upload/v1777911701/IMG_1469_ddi4a7.png'
 const QR   = 'https://res.cloudinary.com/doxubzldn/image/upload/v1777320643/m0vn50bnamnbpgjbsfqk.png'
 
 export default function CTABanner() {

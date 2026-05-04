@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { uploadToCloudinary, uploadVideoToCloudinary, VIDEO_MAX_BYTES } from '../../lib/cloudinary'
+import { getMoneda } from '../../lib/pricing'
 
 const EMPTY = { nombre: '', precio: '', precio_desde: '', descripcion: '', imagen_url: '', video_url: '', categoria: 'nacional', subcategoria: '' }
 
@@ -165,13 +166,27 @@ export default function ProductForm({ initial, onSave, onCancel }) {
         </div>
       ) : (
         <div className="form__group">
-          <label htmlFor="pf-precio-desde">Precio desde (opcional)</label>
-          <input
-            id="pf-precio-desde" name="precio_desde" type="text"
-            placeholder="ej: USD 1.200 por persona"
-            value={form.precio_desde} onChange={handleChange}
-          />
-          <span className="product-form__hint">Este texto se mostrará como "Precio: desde …" en la web.</span>
+          {getMoneda(form.nombre) === 'USD' ? (
+            <>
+              <label htmlFor="pf-precio-desde">Precio (USD)</label>
+              <input
+                id="pf-precio-desde" name="precio_desde" type="text"
+                placeholder="ej: 1.200"
+                value={form.precio_desde} onChange={handleChange}
+              />
+              <span className="product-form__hint">No escribas USD — se agrega automáticamente según el destino.</span>
+            </>
+          ) : (
+            <>
+              <label htmlFor="pf-precio-desde">Precio desde (opcional)</label>
+              <input
+                id="pf-precio-desde" name="precio_desde" type="text"
+                placeholder="ej: 1.200.000"
+                value={form.precio_desde} onChange={handleChange}
+              />
+              <span className="product-form__hint">No escribas $ — se agrega automáticamente.</span>
+            </>
+          )}
         </div>
       )}
 

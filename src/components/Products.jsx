@@ -1,6 +1,7 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { toast } from 'sonner'
 import { supabase } from '../lib/supabase'
+import { formatPrecioDesde } from '../lib/pricing'
 import AnimatedButton from './AnimatedButton'
 import CompraModal from './CompraModal'
 import ProductModal from './ProductModal'
@@ -191,7 +192,7 @@ export default function Products() {
                     </p>
                   )}
                   {p.categoria === 'internacional' && p.precio_desde && (
-                    <p className="prod-card__price">Precio: desde {p.precio_desde}</p>
+                    <p className="prod-card__price">Precio: desde {formatPrecioDesde(p.nombre, p.precio_desde)}</p>
                   )}
                   <AnimatedButton
                     text="Ver destino"
