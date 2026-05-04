@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import AnimatedButton from './AnimatedButton'
+import { formatPrecioDesde } from '../lib/pricing'
 
 const WA = 'https://wa.me/5493815477147'
 
@@ -7,7 +8,7 @@ const DEST_INFO = {
   /* ── Destinos del catálogo ── */
   'canasvieiras':       'Canasvieiras es una de las playas más queridas de la isla de Florianópolis, en Santa Catarina. Con aguas tranquilas ideales para el baño, una animada costanera repleta de restaurantes y bares, y un ambiente vibrante y cosmopolita, es el destino favorito de los argentinos en Brasil.',
   'ferrugem':           'Ferrugem es una pequeña y encantadora playa de Garopaba, en Santa Catarina. Rodeada de vegetación nativa y con su característica laguna de aguas calmas, olas ideales para el surf y un ambiente bohemio y relajado, es un refugio auténtico lejos del turismo masivo.',
-  'camboriú':           'Balneário Camboriú es la joya del litoral sur de Brasil. Conocida como la "Riviera Brasileña", deslumbra con playas de arena fina, un moderno skyline, el teleférico Unipraias con vistas panorámicas al mar y una vibrante vida nocturna sin igual.',
+  'camboriú':           'Camboriú es el destino soñado para festejar el egreso. Conocida como la "Miami de Brasil", esta ciudad vibra con sus playas espectaculares, beach clubs que no paran, la montaña rusa sobre el mar y una vida nocturna legendaria. El cierre de etapa perfecto: sol, fiesta, adrenalina y momentos que van a recordar para siempre.',
   'garopaba':           'Garopaba es un pintoresco pueblo de pescadores convertido en el paraíso del surf en Santa Catarina. Sus playas salvajes, dunas de arena, cascadas y el avistaje de ballenas francas australes entre junio y noviembre la convierten en un destino único y auténtico.',
   'jureré':             'Jurerê Internacional es la playa más exclusiva y sofisticada de Florianópolis. Famosa por sus beach clubs de lujo, arena blanca impecable y un ambiente refinado, es uno de los destinos más glamorosos de Brasil y un clásico para quienes buscan lo mejor.',
   'jurere':             'Jurerê Internacional es la playa más exclusiva y sofisticada de Florianópolis. Famosa por sus beach clubs de lujo, arena blanca impecable y un ambiente refinado, es uno de los destinos más glamorosos de Brasil y un clásico para quienes buscan lo mejor.',
@@ -197,7 +198,7 @@ export default function ProductModal({ producto, onClose, onComprar }) {
 
           {producto.categoria === 'internacional' && producto.precio_desde && (
             <p className="pmodal__price">
-              Precio: desde {producto.precio_desde}
+              Precio: desde {formatPrecioDesde(producto.nombre, producto.precio_desde)}
             </p>
           )}
 
