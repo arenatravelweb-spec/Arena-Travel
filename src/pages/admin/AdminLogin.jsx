@@ -3,15 +3,16 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../../context/AuthContext'
 
 export default function AdminLogin() {
-  const { signIn, session } = useAuth()
+  const { signIn, session, role } = useAuth()
   const navigate = useNavigate()
   const [form, setForm] = useState({ email: '', password: '' })
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
-    if (session) navigate('/admin', { replace: true })
-  }, [session, navigate])
+    if (!session) return
+    navigate(role === 'cliente' ? '/cliente' : '/admin', { replace: true })
+  }, [session, role, navigate])
 
   const handleChange = e =>
     setForm(prev => ({ ...prev, [e.target.name]: e.target.value }))
