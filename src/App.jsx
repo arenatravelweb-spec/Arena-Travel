@@ -6,6 +6,7 @@ import ProtectedRoute from './components/ProtectedRoute'
 import Home from './pages/Home'
 import AdminLogin from './pages/admin/AdminLogin'
 import AdminDashboard from './pages/admin/AdminDashboard'
+import ClienteDashboard from './pages/admin/ClienteDashboard'
 
 function ScrollReveal() {
   useEffect(() => {
@@ -101,8 +102,16 @@ export default function App() {
           <Route
             path="/admin"
             element={
-              <ProtectedRoute>
+              <ProtectedRoute requiredRole="developer">
                 <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/cliente"
+            element={
+              <ProtectedRoute requiredRole="cliente">
+                <ClienteDashboard />
               </ProtectedRoute>
             }
           />
