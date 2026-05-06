@@ -25,8 +25,11 @@ export function AuthProvider({ children }) {
 
   const signOut = () => supabase.auth.signOut()
 
+  const user = session?.user ?? null
+  const role = user?.user_metadata?.role ?? null
+
   return (
-    <AuthContext.Provider value={{ session, user: session?.user ?? null, loading, signIn, signOut }}>
+    <AuthContext.Provider value={{ session, user, role, loading, signIn, signOut }}>
       {children}
     </AuthContext.Provider>
   )
