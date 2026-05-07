@@ -130,17 +130,17 @@ export default function ClienteDashboard() {
                     const badge = ESTADO_BADGE[c.estado] ?? { label: c.estado, color: '#6b7280' }
                     return (
                       <tr key={c.id}>
-                        <td className="adm-table__name">{c.nombre}</td>
-                        <td>{c.email}</td>
-                        <td>{c.telefono || '—'}</td>
-                        <td>{c.producto_nombre}</td>
-                        <td className="adm-table__price">$ {Number(c.precio).toLocaleString('es-AR')}</td>
-                        <td>
+                        <td data-label="Cliente" className="adm-table__name">{c.nombre}</td>
+                        <td data-label="Email">{c.email}</td>
+                        <td data-label="Teléfono">{c.telefono || '—'}</td>
+                        <td data-label="Producto">{c.producto_nombre}</td>
+                        <td data-label="Precio" className="adm-table__price">$ {Number(c.precio).toLocaleString('es-AR')}</td>
+                        <td data-label="Estado">
                           <span className="adm-badge" style={{ '--badge-color': badge.color }}>
                             {badge.label}
                           </span>
                         </td>
-                        <td style={{ fontSize: '.8rem', color: 'var(--color-text-light)' }}>
+                        <td data-label="Fecha" style={{ fontSize: '.8rem', color: 'var(--color-text-light)' }}>
                           {new Date(c.created_at).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' })}
                         </td>
                       </tr>
