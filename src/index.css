@@ -2735,6 +2735,60 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   .adm-toolbar { align-items: flex-start; flex-wrap: wrap; }
 }
 
+@media (max-width: 600px) {
+  /* Header compacto */
+  .adm-header__sep,
+  .adm-header__area { display: none; }
+  .adm-header__logo { font-size: 1.2rem; }
+  .adm-header__right { gap: .6rem; }
+
+  /* Toolbar */
+  .adm-toolbar__title { font-size: 1.5rem; }
+
+  /* Tabla → cards */
+  .adm-table-wrap { border: none; background: transparent; box-shadow: none; }
+  .adm-table thead { display: none; }
+  .adm-table,
+  .adm-table tbody { display: block; }
+  .adm-table tr {
+    display: block;
+    margin-bottom: 1rem;
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-md);
+    background: var(--color-white);
+    box-shadow: var(--shadow-sm);
+    overflow: hidden;
+  }
+  .adm-table td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .75rem;
+    padding: .7rem 1rem;
+    border-bottom: 1px solid var(--color-border);
+    font-size: .875rem;
+    text-align: right;
+  }
+  .adm-table tr td:last-child { border-bottom: none; }
+  .adm-table tbody tr:hover { background: var(--color-white); }
+  .adm-table td::before {
+    content: attr(data-label);
+    font-size: .72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+    color: var(--color-text-light);
+    flex-shrink: 0;
+    text-align: left;
+  }
+  /* Ocultar columna imagen en mobile */
+  .adm-table td[data-label="Imagen"] { display: none; }
+  /* Descripción: vuelve visible en card */
+  .adm-table__desc { display: flex; max-width: none; }
+  /* Acciones alineadas a la derecha */
+  .adm-table__actions { justify-content: flex-end; }
+}
+
 /* ═══════════════════════════════════════════════════
    HERO SLIDESHOW
 ═══════════════════════════════════════════════════ */
