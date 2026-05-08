@@ -162,11 +162,16 @@ export default function ProductModal({ producto, onClose, onComprar }) {
         </div>
 
         <div className="pmodal__body">
-          <span className="pmodal__badge">
-            {producto.categoria === 'nacional' ? 'Nacional'
-              : producto.categoria === 'egresados' ? 'Viajes de Egresados'
-              : 'Internacional'}
-          </span>
+          <div className="pmodal__badges">
+            <span className="pmodal__badge">
+              {producto.categoria === 'nacional' ? 'Nacional'
+                : producto.categoria === 'egresados' ? 'Viajes de Egresados'
+                : 'Internacional'}
+            </span>
+            {producto.hot_sale && (
+              <span className="pmodal__hot-sale-badge">🔥 HOT SALE · 40% OFF</span>
+            )}
+          </div>
           <h2 className="pmodal__title">{producto.nombre}</h2>
 
           {producto.categoria !== 'egresados' && (
