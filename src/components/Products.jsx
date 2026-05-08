@@ -182,6 +182,9 @@ export default function Products() {
                 {p.imagen_url && (
                   <img src={p.imagen_url} alt={p.nombre} loading="lazy" className="prod-card__img" />
                 )}
+                {p.hot_sale && (
+                  <span className="prod-card__hot-sale">🔥 HOT SALE · 40% OFF</span>
+                )}
                 <h3 className="prod-card__title">{p.nombre}</h3>
                 <div className="prod-card__details">
                   {p.descripcion && <p className="prod-card__desc">{p.descripcion}</p>}

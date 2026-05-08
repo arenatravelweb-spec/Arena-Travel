@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { uploadToCloudinary, uploadVideoToCloudinary, VIDEO_MAX_BYTES } from '../../lib/cloudinary'
 import { getMoneda } from '../../lib/pricing'
 
-const EMPTY = { nombre: '', precio: '', precio_desde: '', descripcion: '', imagen_url: '', video_url: '', categoria: 'nacional', subcategoria: '' }
+const EMPTY = { nombre: '', precio: '', precio_desde: '', descripcion: '', imagen_url: '', video_url: '', categoria: 'nacional', subcategoria: '', hot_sale: false }
 
 export default function ProductForm({ initial, onSave, onCancel }) {
   const [form, setForm] = useState(initial ? {
@@ -14,6 +14,7 @@ export default function ProductForm({ initial, onSave, onCancel }) {
     video_url:    initial.video_url ?? '',
     categoria:    initial.categoria ?? 'nacional',
     subcategoria: initial.subcategoria ?? '',
+    hot_sale:     initial.hot_sale ?? false,
   } : EMPTY)
   const [file, setFile] = useState(null)
   const [preview, setPreview] = useState(initial?.imagen_url ?? '')
@@ -25,8 +26,8 @@ export default function ProductForm({ initial, onSave, onCancel }) {
   const [errors, setErrors] = useState({})
 
   const handleChange = e => {
-    const { name, value } = e.target
-    setForm(prev => ({ ...prev, [name]: value }))
+    const { name, value, type, checked } = e.target
+    setForm(prev => ({ ...prev, [name]: type === 'checkbox' ? checked : value }))
     if (errors[name]) setErrors(prev => ({ ...prev, [name]: false }))
   }
 
@@ -262,6 +263,29 @@ export default function ProductForm({ initial, onSave, onCancel }) {
           </button>
         </div>
       )}
+
+      <div className="product-form__hot-sale">
+        <label className="product-form__toggle-label">
+          <input
+            type="checkbox"
+            name="hot_sale"
+            checked={form.hot_sale}
+            onChange={handleChange}
+            className="product-form__toggle-input"
+          />
+          <span className="product-form__toggle-track">
+            <span className="product-form__toggle-thumb" />
+          </span>
+          <span className="product-form__toggle-text">
+            🔥 Activar Hot Sale <span className="product-form__toggle-pct">— 40% OFF</span>
+          </span>
+        </label>
+        {form.hot_sale && (
+          <p className="product-form__hot-sale-preview">
+            El badge <strong>"🔥 HOT SALE · 40% OFF"</strong> se mostrará en el modal del producto.
+          </p>
+        )}
+      </div>
 
       <div className="product-form__actions">
         <button type="button" className="btn btn--outline btn--sm" onClick={onCancel} disabled={busy}>
