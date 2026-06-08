@@ -6,6 +6,7 @@ import {
   HiStar, HiCreditCard, HiReceiptPercent,
 } from 'react-icons/hi2'
 import { supabase } from '../lib/supabase'
+import ItinerarioEditorial from '../components/reserva/ItinerarioEditorial'
 
 const WA = 'https://wa.me/5493815477147'
 
@@ -95,7 +96,8 @@ export default function PaqueteDetalle() {
   const alojamiento      = paquete.alojamiento       ?? null
   const incluye          = paquete.incluye           ?? []
   const noIncluye        = paquete.no_incluye        ?? []
-  const precioDesde      = paquete.precio            ?? 0
+  const precioDesde      = paquete.precio || paquete.precio_desde || 0
+  const esInternacional  = paquete.categoria === 'internacional'
 
   // Next 3 upcoming dates for sidebar
   const proximasFechas = fechasSalida.slice(0, 3)
@@ -158,37 +160,33 @@ export default function PaqueteDetalle() {
           {/* ── LEFT: main content ── */}
           <main className="pdetalle__main">
 
-            {/* Itinerary */}
-            {itinerario.length > 0 && (
+            {/* Internacionales: CTA de consulta, sin itinerario en página */}
+            {esInternacional && (
+              <section className="pdetalle__section pdetalle__section--intl-cta">
+                <p className="pdetalle__intl-msg">
+                  Para ver el itinerario completo y consultar disponibilidad, escribinos por WhatsApp o hacé click en <strong>Comprar ahora</strong> desde la página principal.
+                </p>
+                <a
+                  href={WA}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn btn--primary"
+                >
+                  <HiChatBubbleLeftRight /> Consultar por WhatsApp
+                </a>
+              </section>
+            )}
+
+            {/* Itinerary — solo nacionales/egresados en la página */}
+            {!esInternacional && itinerario.length > 0 && (
               <section className="pdetalle__section">
                 <h2 className="pdetalle__section-title">Itinerario día a día</h2>
-                <div className="itin">
-                  {itinerario.map((dia, i) => {
-                    const num = String(dia.dia || i + 1).padStart(2, '0')
-                    return (
-                      <div key={i} className="itin__card">
-                        <span className="itin__card-num">{num}</span>
-                        <div className="itin__card-body">
-                          <span className="itin__card-chip">DÍA {dia.dia || i + 1}</span>
-                          <h3 className="itin__card-title">{dia.titulo}</h3>
-                          {dia.descripcion && <p className="itin__card-desc">{dia.descripcion}</p>}
-                          {dia.actividades?.length > 0 && (
-                            <ul className="itin__actividades">
-                              {dia.actividades.map((a, j) => (
-                                <li key={j}><HiCheck /> {a}</li>
-                              ))}
-                            </ul>
-                          )}
-                        </div>
-                      </div>
-                    )
-                  })}
-                </div>
+                <ItinerarioEditorial itinerario={itinerario} paquete={paquete} />
               </section>
             )}
 
             {/* Accommodation */}
-            {alojamiento && (
+            {!esInternacional && alojamiento && (
               <section className="pdetalle__section">
                 <h2 className="pdetalle__section-title">
                   Tu alojamiento en {paquete.destino_ciudad || ''}
@@ -208,8 +206,8 @@ export default function PaqueteDetalle() {
               </section>
             )}
 
-            {/* Includes / Excludes */}
-            {(incluye.length > 0 || noIncluye.length > 0) && (
+            {/* Includes / Excludes — solo para nacionales/egresados */}
+            {!esInternacional && (incluye.length > 0 || noIncluye.length > 0) && (
               <section className="pdetalle__section">
                 <div className="aloj__includes">
                   {incluye.length > 0 && (
@@ -244,8 +242,8 @@ export default function PaqueteDetalle() {
               </section>
             )}
 
-            {/* Dates table */}
-            {fechasSalida.length > 0 && (
+            {/* Dates table — solo para nacionales/egresados */}
+            {!esInternacional && fechasSalida.length > 0 && (
               <section className="pdetalle__section">
                 <h2 className="pdetalle__section-title">Fechas disponibles</h2>
                 <div className="fechas__table">
@@ -327,71 +325,75 @@ export default function PaqueteDetalle() {
 
           {/* ── RIGHT: sticky sidebar ── */}
           <aside className="pdetalle__sidebar">
-            <div className="sidebar-det__price-box">
-              <span className="sidebar-det__price-label">PRECIO POR PERSONA DESDE</span>
-              <p className="sidebar-det__price-amount">${fmt(precioDesde)}</p>
-              <span className="sidebar-det__price-note">* Tarifa base doble / triple</span>
-            </div>
-
-            <div className="sidebar-det__body">
-              {/* Next dates */}
-              {proximasFechas.length > 0 && (
-                <div className="sidebar-det__section">
-                  <span className="sidebar-det__section-label">PRÓXIMAS SALIDAS</span>
-                  <div className="sidebar-det__dates">
-                    {proximasFechas.map((f, i) => (
-                      <button
-                        key={i}
-                        className={`sidebar-det__date-chip${selectedFecha === f.fecha ? ' sidebar-det__date-chip--selected' : ''}`}
-                        onClick={() => setSelectedFecha(f.fecha)}
-                      >
-                        <HiCalendarDays /> {parseFecha(f.fecha)}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              )}
-
-              {/* Origin */}
-              {paquete.origen_ciudad && (
-                <div className="sidebar-det__section">
-                  <span className="sidebar-det__section-label">SALIDAS DISPONIBLES DESDE</span>
-                  <div className="sidebar-det__city">
-                    <HiMapPin />
-                    <span>{paquete.origen_ciudad}</span>
-                    <span className="sidebar-det__city-badge">base</span>
-                  </div>
-                </div>
-              )}
-
-              {/* CTA buttons */}
-              <button
-                className="btn btn--primary btn--full sidebar-det__btn"
-                onClick={() => handleReservar()}
-                disabled={!selectedFecha && fechasSalida.length > 0}
-              >
-                Reservar ahora
-              </button>
-              <a
-                href={WA}
-                target="_blank"
-                rel="noreferrer"
-                className="btn btn--outline btn--full sidebar-det__btn"
-              >
-                <HiChatBubbleLeftRight /> Consultar por WhatsApp
-              </a>
-
-              {/* Perks */}
-              <div className="sidebar-det__perks">
-                <span><HiReceiptPercent /> Reservá con seña</span>
-                <span><HiCreditCard /> Hasta 6 cuotas sin interés</span>
+            <>
+              <div className="sidebar-det__price-box">
+                <span className="sidebar-det__price-label">PRECIO POR PERSONA DESDE</span>
+                {precioDesde > 0
+                  ? <p className="sidebar-det__price-amount">${fmt(precioDesde)}</p>
+                  : <p className="sidebar-det__price-amount sidebar-det__price-amount--consultar">A consultar</p>
+                }
+                <span className="sidebar-det__price-note">* Tarifa base doble / triple</span>
               </div>
-            </div>
 
-            {/* Disclaimer */}
-            <p className="sidebar-det__disclaimer">
-              Precio sujeto a modificación. Las tasas e impuestos se calculan al momento de reservar.
-            </p>
+              <div className="sidebar-det__body">
+                {!esInternacional && proximasFechas.length > 0 && (
+                  <div className="sidebar-det__section">
+                    <span className="sidebar-det__section-label">PRÓXIMAS SALIDAS</span>
+                    <div className="sidebar-det__dates">
+                      {proximasFechas.map((f, i) => (
+                        <button
+                          key={i}
+                          className={`sidebar-det__date-chip${selectedFecha === f.fecha ? ' sidebar-det__date-chip--selected' : ''}`}
+                          onClick={() => setSelectedFecha(f.fecha)}
+                        >
+                          <HiCalendarDays /> {parseFecha(f.fecha)}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {!esInternacional && paquete.origen_ciudad && (
+                  <div className="sidebar-det__section">
+                    <span className="sidebar-det__section-label">SALIDAS DISPONIBLES DESDE</span>
+                    <div className="sidebar-det__city">
+                      <HiMapPin />
+                      <span>{paquete.origen_ciudad}</span>
+                      <span className="sidebar-det__city-badge">base</span>
+                    </div>
+                  </div>
+                )}
+
+                {!esInternacional && (
+                  <button
+                    className="btn btn--primary btn--full sidebar-det__btn"
+                    onClick={() => handleReservar()}
+                    disabled={!selectedFecha && fechasSalida.length > 0}
+                  >
+                    Reservar ahora
+                  </button>
+                )}
+                <a
+                  href={WA}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="btn btn--primary btn--full sidebar-det__btn"
+                >
+                  <HiChatBubbleLeftRight /> Consultar por WhatsApp
+                </a>
+
+                {!esInternacional && (
+                  <div className="sidebar-det__perks">
+                    <span><HiReceiptPercent /> Reservá con seña</span>
+                    <span><HiCreditCard /> Hasta 6 cuotas sin interés</span>
+                  </div>
+                )}
+              </div>
+
+                <p className="sidebar-det__disclaimer">
+                  Precio sujeto a modificación. Las tasas e impuestos se calculan al momento de reservar.
+                </p>
+              </>
           </aside>
         </div>
       </div>

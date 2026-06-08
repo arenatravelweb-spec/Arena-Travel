@@ -36,12 +36,18 @@ export default function SidebarReserva() {
     <aside className="sidebar-res">
       {/* Price box */}
       <div className="sidebar-res__price-box">
-        <span className="sidebar-res__total-label">TOTAL ESTIMADO</span>
-        <p className="sidebar-res__total">
-          ${fmt(total)}
-        </p>
-        {precioBase > 0 && (
-          <span className="sidebar-res__per-person">Desde ${fmt(precioBase)} por persona</span>
+        {precioBase > 0 ? (
+          <>
+            <span className="sidebar-res__total-label">TOTAL ESTIMADO</span>
+            <p className="sidebar-res__total">${fmt(total)}</p>
+            <span className="sidebar-res__per-person">Desde ${fmt(precioBase)} por persona</span>
+          </>
+        ) : (
+          <>
+            <span className="sidebar-res__total-label">PRECIO</span>
+            <p className="sidebar-res__total sidebar-res__total--consultar">A consultar</p>
+            <span className="sidebar-res__per-person">Precio a confirmar con el equipo</span>
+          </>
         )}
       </div>
 

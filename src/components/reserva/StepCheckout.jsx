@@ -54,11 +54,12 @@ export default function StepCheckout() {
   const total = calcTotal()
 
   const initDatos = pasajeros.map((p, i) => ({
-    nombre:      p.nombre || '',
-    apellido:    '',
-    tipoDoc:     '',
-    numDoc:      '',
-    sexo:        '',
+    nombre:       p.nombre || '',
+    apellido:     '',
+    edad:         p.edad  || '',
+    tipoDoc:      '',
+    numDoc:       '',
+    sexo:         '',
     nacionalidad: 'Argentina',
     ...(checkout.datos?.[i] || {}),
   }))
@@ -77,6 +78,7 @@ export default function StepCheckout() {
       if (!d.apellido) errs[`apellido_${i}`] = 'Requerido'
       if (!d.tipoDoc)  errs[`tipoDoc_${i}`]  = 'Requerido'
       if (!d.numDoc)   errs[`numDoc_${i}`]   = 'Requerido'
+      if (d.edad === '' || isNaN(parseInt(d.edad))) errs[`edad_${i}`] = 'Requerido'
     })
     if (!checkout.medioPago) errs.medioPago = 'Seleccioná un método de pago'
     if (!checkout.email)     errs.email     = 'Requerido'
@@ -170,8 +172,8 @@ export default function StepCheckout() {
                     <strong>Pasajero {i + 1}</strong>
                     <span>{pax.edad} años · {parseInt(pax.edad) >= 12 ? 'Adulto' : 'Menor'}</span>
                   </div>
-                  {/* Nombre + Apellido */}
-                  <div className="form__row">
+                  {/* Nombre + Apellido + Edad: 2fr 2fr 1fr */}
+                  <div className="form__grid-2-2-1">
                     <div className="form__group">
                       <label>Nombre/s</label>
                       <input
@@ -191,6 +193,19 @@ export default function StepCheckout() {
                         onChange={e => updateDato(i, 'apellido', e.target.value)}
                       />
                       {errors[`apellido_${i}`] && <span className="form__error">{errors[`apellido_${i}`]}</span>}
+                    </div>
+                    <div className="form__group">
+                      <label>Edad *</label>
+                      <input
+                        type="number"
+                        min="0"
+                        max="120"
+                        placeholder="Ej: 30"
+                        value={dato.edad}
+                        className={errors[`edad_${i}`] ? 'error' : ''}
+                        onChange={e => updateDato(i, 'edad', e.target.value)}
+                      />
+                      {errors[`edad_${i}`] && <span className="form__error">{errors[`edad_${i}`]}</span>}
                     </div>
                   </div>
                   {/* TipoDoc + NumDoc + Sexo: 3 cols */}
@@ -239,82 +254,112 @@ export default function StepCheckout() {
           </div>
         </div>
 
-        {/* COL DERECHA: Pago + Contacto + Notas */}
+        {/* COL DERECHA: pasos secuenciales numerados */}
         <div className="checkout__col-right">
-          {/* Medio de pago */}
-          <div className="checkout__section">
-            <h3 className="checkout__section-title">
-              <HiCreditCard /> Medio de pago
-            </h3>
-            {errors.medioPago && <span className="form__error" style={{ marginBottom: '.75rem', display: 'block' }}>{errors.medioPago}</span>}
-            <div className="checkout__pago-grid">
-              {METODOS_PAGO.map(m => (
-                <button
-                  key={m.id}
-                  className={`checkout__pago-card${checkout.medioPago === m.id ? ' checkout__pago-card--selected' : ''}`}
-                  onClick={() => updateField('medioPago', m.id)}
-                >
-                  {m.recomendado && <span className="checkout__pago-rec">Recomendado</span>}
-                  <m.Icon className="checkout__pago-icon" />
-                  <strong className="checkout__pago-name">{m.nombre}</strong>
-                  <span className="checkout__pago-desc">{m.desc}</span>
-                </button>
-              ))}
-            </div>
-          </div>
+          <div className="checkout__steps">
 
-          {/* Datos de contacto */}
-          <div className="checkout__section">
-            <h3 className="checkout__section-title">
-              <HiEnvelope /> Datos de contacto
-            </h3>
-            <p className="checkout__section-sub">Usaremos este contacto para enviarte la confirmación y documentos del viaje.</p>
-            <div className="form__group">
-              <label>Email *</label>
-              <input
-                type="email"
-                placeholder="tu@email.com"
-                value={checkout.email}
-                className={errors.email ? 'error' : ''}
-                onChange={e => updateField('email', e.target.value)}
-              />
-              {errors.email && <span className="form__error">{errors.email}</span>}
-            </div>
-            <div className="form__group">
-              <label>Teléfono *</label>
-              <div className="checkout__phone-group">
-                <span className="checkout__phone-prefix">+54</span>
-                <input
-                  type="tel"
-                  placeholder="3815 123456"
-                  value={checkout.telefono}
-                  className={errors.telefono ? 'error' : ''}
-                  onChange={e => updateField('telefono', e.target.value)}
-                />
+            {/* Paso 1: Medio de pago */}
+            <div className={`checkout__step${checkout.medioPago ? ' checkout__step--done' : ''}`}>
+              <div className="checkout__step-head">
+                <span className="checkout__step-num">1</span>
+                <div>
+                  <strong className="checkout__step-title">Medio de pago</strong>
+                  {checkout.medioPago && (
+                    <span className="checkout__step-preview">
+                      {METODOS_PAGO.find(m => m.id === checkout.medioPago)?.nombre}
+                    </span>
+                  )}
+                </div>
+                <HiCreditCard className="checkout__step-icon" />
               </div>
-              {errors.telefono && <span className="form__error">{errors.telefono}</span>}
+              <div className="checkout__step-body">
+                {errors.medioPago && <span className="form__error" style={{ marginBottom: '.5rem', display: 'block' }}>{errors.medioPago}</span>}
+                <div className="checkout__pago-grid">
+                  {METODOS_PAGO.map(m => (
+                    <button
+                      key={m.id}
+                      className={`checkout__pago-card${checkout.medioPago === m.id ? ' checkout__pago-card--selected' : ''}`}
+                      onClick={() => updateField('medioPago', m.id)}
+                    >
+                      {m.recomendado && <span className="checkout__pago-rec">Recomendado</span>}
+                      <m.Icon className="checkout__pago-icon" />
+                      <strong className="checkout__pago-name">{m.nombre}</strong>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              <div className="checkout__step-connector" />
             </div>
-          </div>
 
-          {/* Notas */}
-          <div className="checkout__section">
-            <h3 className="checkout__section-title">Dudas o requisitos especiales</h3>
-            <div className="form__group">
-              <textarea
-                rows={3}
-                maxLength={500}
-                placeholder="Alergias, necesidades adicionales, solicitudes…"
-                value={checkout.notas}
-                onChange={e => updateField('notas', e.target.value)}
-              />
-              <span className="checkout__char-count">{(checkout.notas || '').length}/500</span>
+            {/* Paso 2: Datos de contacto */}
+            <div className={`checkout__step${(checkout.email && checkout.telefono) ? ' checkout__step--done' : ''}`}>
+              <div className="checkout__step-head">
+                <span className="checkout__step-num">2</span>
+                <div>
+                  <strong className="checkout__step-title">Datos de contacto</strong>
+                  {checkout.email && (
+                    <span className="checkout__step-preview">{checkout.email}</span>
+                  )}
+                </div>
+                <HiEnvelope className="checkout__step-icon" />
+              </div>
+              <div className="checkout__step-body">
+                <div className="form__grid-2-1">
+                  <div className="form__group">
+                    <label>Email *</label>
+                    <input
+                      type="email"
+                      placeholder="tu@email.com"
+                      value={checkout.email}
+                      className={errors.email ? 'error' : ''}
+                      onChange={e => updateField('email', e.target.value)}
+                    />
+                    {errors.email && <span className="form__error">{errors.email}</span>}
+                  </div>
+                  <div className="form__group">
+                    <label>Teléfono *</label>
+                    <div className="checkout__phone-group">
+                      <span className="checkout__phone-prefix">+54</span>
+                      <input
+                        type="tel"
+                        placeholder="3815 123456"
+                        value={checkout.telefono}
+                        className={errors.telefono ? 'error' : ''}
+                        onChange={e => updateField('telefono', e.target.value)}
+                      />
+                    </div>
+                    {errors.telefono && <span className="form__error">{errors.telefono}</span>}
+                  </div>
+                </div>
+              </div>
+              <div className="checkout__step-connector" />
             </div>
-          </div>
 
-          {/* Privacy */}
-          <div className="checkout__privacy">
-            <HiShieldCheck />
-            Tus datos están protegidos. No compartimos tu información con terceros.
+            {/* Paso 3: Notas */}
+            <div className="checkout__step checkout__step--last">
+              <div className="checkout__step-head">
+                <span className="checkout__step-num">3</span>
+                <strong className="checkout__step-title">Dudas o requisitos especiales</strong>
+                <HiShieldCheck className="checkout__step-icon" />
+              </div>
+              <div className="checkout__step-body">
+                <div className="form__group">
+                  <textarea
+                    rows={3}
+                    maxLength={500}
+                    placeholder="Alergias, necesidades adicionales, solicitudes…"
+                    value={checkout.notas}
+                    onChange={e => updateField('notas', e.target.value)}
+                  />
+                  <span className="checkout__char-count">{(checkout.notas || '').length}/500</span>
+                </div>
+                <div className="checkout__privacy">
+                  <HiShieldCheck />
+                  Datos protegidos. No compartimos tu información.
+                </div>
+              </div>
+            </div>
+
           </div>
         </div>
 

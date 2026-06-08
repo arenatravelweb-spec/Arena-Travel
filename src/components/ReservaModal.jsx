@@ -93,15 +93,28 @@ function ModalInner({ producto, onClose }) {
               <div>
                 <h3 className="rmodal__section-title">Itinerario día a día</h3>
                 <ItinerarioEditorial itinerario={itinerario} paquete={producto} />
+                {producto.categoria === 'internacional' && (
+                  <a
+                    href="https://wa.me/5493815477147"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="btn btn--primary btn--full"
+                    style={{ marginTop: '1.5rem' }}
+                  >
+                    Consultar por WhatsApp
+                  </a>
+                )}
               </div>
             )}
 
-            {/* Booking flow */}
-            <div>
-              <h3 className="rmodal__section-title">Completar reserva</h3>
-              <BookingStepper />
-              <Steps />
-            </div>
+            {/* Booking flow — solo para nacionales y egresados */}
+            {producto.categoria !== 'internacional' && (
+              <div>
+                <h3 className="rmodal__section-title">Completar reserva</h3>
+                <BookingStepper />
+                <Steps />
+              </div>
+            )}
           </div>
 
           {/* RIGHT: sticky price summary */}

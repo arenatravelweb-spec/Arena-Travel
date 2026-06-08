@@ -200,10 +200,14 @@ export default function Products() {
                     <p className="prod-card__price">Precio: desde {formatPrecioDesde(p.nombre, p.precio_desde)}</p>
                   )}
                   <AnimatedButton
-                    text="Ver destino"
+                    text={p.categoria === 'internacional' ? 'Ver itinerario' : 'Ver destino'}
                     size="sm"
                     color="var(--color-accent)"
-                    onClick={e => { e.stopPropagation(); setDetail(p) }}
+                    onClick={e => {
+                      e.stopPropagation()
+                      if (p.categoria === 'internacional') setReserva(p)
+                      else setDetail(p)
+                    }}
                   />
                 </div>
               </article>

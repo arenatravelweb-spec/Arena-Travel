@@ -1516,6 +1516,7 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 .form__grid-3-1   { display: grid; grid-template-columns: 3fr 1fr;        gap: 1.25rem; }
 .form__grid-1-2-1 { display: grid; grid-template-columns: 1fr 2fr 1fr;    gap: 1rem; }
 .form__grid-2-2-1 { display: grid; grid-template-columns: 2fr 2fr 1fr;    gap: 1rem; }
+.form__grid-1-1-1 { display: grid; grid-template-columns: 1fr 1fr 1fr;    gap: 1rem; }
 
 /* Grid para múltiples pasajeros (2 por fila en desktop) */
 .pasajeros__forms-grid {
@@ -1547,7 +1548,8 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   .form__grid-1-1-2,
   .form__grid-3-1,
   .form__grid-1-2-1,
-  .form__grid-2-2-1   { grid-template-columns: 1fr; }
+  .form__grid-2-2-1,
+  .form__grid-1-1-1   { grid-template-columns: 1fr; }
   .habitaciones__pax-grid { grid-template-columns: 1fr; }
   .transporte__pasajeros-grid { grid-template-columns: 1fr; }
 }
@@ -2635,7 +2637,22 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   position: sticky;
   bottom: 0;
   background: var(--color-white);
+  display: flex;
+  flex-direction: column;
+  gap: .6rem;
 }
+.pmodal__detail-link {
+  display: block;
+  text-align: center;
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--color-primary);
+  text-decoration: none;
+  padding: .4rem 0;
+  border-top: 1px solid var(--color-border);
+  transition: opacity .2s;
+}
+.pmodal__detail-link:hover { opacity: .75; }
 
 @media (max-width: 600px) {
   .pmodal__media:not(.pmodal__media--video) { height: 160px; }
@@ -3217,6 +3234,16 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 
 /* Fallback section */
 .pdetalle__section--fallback { text-align: center; padding-block: 3rem; }
+
+/* CTA internacional */
+.pdetalle__section--intl-cta { text-align: center; padding-block: 3rem; }
+.pdetalle__intl-msg {
+  font-size: 1rem;
+  color: var(--color-text-light);
+  max-width: 480px;
+  margin: 0 auto 1.5rem;
+  line-height: 1.6;
+}
 .pdetalle__fallback-desc {
   color: var(--color-text-light);
   line-height: 1.7;
@@ -3535,6 +3562,10 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   color: var(--color-text);
   margin-bottom: .35rem;
 }
+.sidebar-det__price-amount--consultar {
+  font-size: 2rem;
+  color: var(--color-text-light);
+}
 .sidebar-det__price-note {
   font-size: .78rem;
   color: var(--color-text-light);
@@ -3656,12 +3687,12 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--color-white);
+  background: var(--color-bg);
   border-radius: var(--radius-md);
   margin-bottom: 1.75rem;
   overflow: visible;
   cursor: default;
-  box-shadow: 0 1px 4px rgba(0,0,0,.06), 0 4px 20px rgba(0,0,0,.05);
+  box-shadow: none;
 }
 
 /* Centre orb */
@@ -3933,6 +3964,26 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 }
 .pasajeros__counter-btn:disabled { opacity: .35; cursor: not-allowed; }
 .pasajeros__count { font-weight: 700; font-size: 1.2rem; min-width: 28px; text-align: center; }
+
+/* Chips que muestran cuántos pasajeros hay */
+.pasajeros__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin: 1rem 0;
+}
+.pasajeros__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font-size: .8rem;
+  font-weight: 600;
+  background: rgba(247,147,30,.1);
+  color: var(--color-primary);
+  border: 1px solid rgba(247,147,30,.25);
+  border-radius: 100px;
+  padding: .3rem .75rem;
+}
 
 .pasajero-form {
   border: 1.5px solid var(--color-border);
@@ -4360,6 +4411,85 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   padding-bottom: .5rem;
   border-bottom: 1.5px solid var(--color-border);
 }
+
+/* ── Pasos secuenciales (col derecha del checkout) ── */
+.checkout__steps {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+.checkout__step {
+  position: relative;
+  padding-left: 3rem;
+}
+.checkout__step-connector {
+  position: absolute;
+  left: 1.1rem;
+  top: 2.8rem;
+  bottom: -1.25rem;
+  width: 2px;
+  background: linear-gradient(to bottom, var(--color-border), transparent);
+  z-index: 0;
+}
+.checkout__step--last .checkout__step-connector { display: none; }
+.checkout__step-head {
+  display: flex;
+  align-items: flex-start;
+  gap: .75rem;
+  margin-bottom: 1rem;
+  padding-bottom: .75rem;
+  border-bottom: 1px solid var(--color-border);
+}
+.checkout__step-num {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 2.2rem;
+  height: 2.2rem;
+  border-radius: 50%;
+  background: var(--color-bg);
+  border: 2px solid var(--color-border);
+  color: var(--color-text-light);
+  font-weight: 800;
+  font-size: .9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .3s;
+  z-index: 1;
+}
+.checkout__step--done .checkout__step-num {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: #fff;
+}
+.checkout__step-title {
+  font-weight: 700;
+  font-size: .95rem;
+  color: var(--color-text);
+  display: block;
+}
+.checkout__step-preview {
+  font-size: .78rem;
+  color: var(--color-primary);
+  font-weight: 600;
+  display: block;
+  margin-top: .15rem;
+}
+.checkout__step-icon {
+  margin-left: auto;
+  color: var(--color-primary);
+  opacity: .35;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+.checkout__step--done .checkout__step-icon { opacity: .7; }
+.checkout__step-body {
+  padding-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: .75rem;
+}
 .checkout__section-title svg { color: var(--color-primary); }
 .checkout__section-sub { font-size: .82rem; color: var(--color-text-light); margin-top: -.5rem; }
 
@@ -4530,6 +4660,10 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   line-height: 1.1;
   color: var(--color-text);
   margin-bottom: .2rem;
+}
+.sidebar-res__total--consultar {
+  font-size: 1.5rem;
+  color: var(--color-text-light);
 }
 .sidebar-res__per-person {
   font-size: .78rem;

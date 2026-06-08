@@ -22,7 +22,7 @@ UPDATE productos SET
     {"dia":6,"titulo":"Día libre en Puerto Iguazú","descripcion":"Mañana libre para disfrutar la ciudad, compras o actividades opcionales. Por la tarde, preparación para el regreso.","actividades":["Mañana libre","Compras en el free shop","Preparación regreso"]},
     {"dia":7,"titulo":"Regreso a Tucumán","descripcion":"Traslado al terminal y partida hacia Tucumán. Llegada estimada a la mañana siguiente.","actividades":["Traslado al terminal","Partida hacia Tucumán"]}
   ]'
-WHERE nombre = 'Cataratas';
+WHERE nombre ILIKE '%cataratas%';
 
 -- ── MAR DEL PLATA ──────────────────────────────────────────────
 UPDATE productos SET
@@ -45,7 +45,7 @@ UPDATE productos SET
     {"dia":7,"titulo":"Último día en la costa","descripcion":"Mañana libre de compras en el centro comercial y recuerdos. Por la tarde, preparación del regreso.","actividades":["Paseo de compras","Paseo del Puerto","Check-out y preparación"]},
     {"dia":8,"titulo":"Regreso a Tucumán","descripcion":"Traslado al terminal y partida hacia Tucumán.","actividades":["Traslado al terminal","Partida hacia Tucumán"]}
   ]'
-WHERE nombre = 'Mar del Plata';
+WHERE nombre ILIKE '%mar del plata%';
 
 -- ── BARILOCHE (egresados) ──────────────────────────────────────
 UPDATE productos SET
@@ -68,7 +68,7 @@ UPDATE productos SET
     {"dia":7,"titulo":"Ruta del Chocolate y compras","descripcion":"Recorrida por la Ruta del Chocolate, degustaciones y compras en el centro. Última noche en Bariloche.","actividades":["Ruta del Chocolate","Chocolaterías tradicionales","Compras en el centro","Última cena en Bariloche"]},
     {"dia":8,"titulo":"Regreso a Tucumán","descripcion":"Traslado al terminal y partida hacia Tucumán. Llegada estimada al segundo día.","actividades":["Traslado al terminal","Partida hacia Tucumán"]}
   ]'
-WHERE nombre = 'Bariloche';
+WHERE nombre ILIKE '%bariloche%';
 
 -- ── CARLOS PAZ (egresados) ────────────────────────────────────
 UPDATE productos SET
@@ -89,7 +89,7 @@ UPDATE productos SET
     {"dia":5,"titulo":"Shows y actividad acuática","descripcion":"Tarde libre para disfrutar actividades en el lago, paseos en lancha o visita al parque temático. Por la noche, show de entretenimiento.","actividades":["Paseo en lancha por el lago","Parque temático opcional","Show nocturno"]},
     {"dia":6,"titulo":"Regreso a Tucumán","descripcion":"Mañana libre para últimas compras. Traslado al terminal y partida hacia Tucumán.","actividades":["Últimas compras","Traslado al terminal","Partida hacia Tucumán"]}
   ]'
-WHERE nombre = 'Carlos Paz';
+WHERE nombre ILIKE '%carlos paz%';
 
 -- ── CAMBORIÚ (egresados) ──────────────────────────────────────
 UPDATE productos SET
@@ -113,7 +113,7 @@ UPDATE productos SET
     {"dia":8,"titulo":"Último día en Brasil","descripcion":"Mañana libre para disfrutar y hacer las últimas compras. Por la tarde, preparación del equipaje y check-out.","actividades":["Últimas compras","Recuerdos","Check-out"]},
     {"dia":9,"titulo":"Regreso a Tucumán","descripcion":"Partida hacia Tucumán. Cruce fronterizo de regreso. Llegada estimada al día siguiente.","actividades":["Partida desde Brasil","Cruce fronterizo","Rumbo a Tucumán"]}
   ]'
-WHERE nombre = 'Camboriú' AND categoria = 'egresados';
+WHERE nombre ILIKE '%camborí%' AND categoria = 'egresados';
 
 -- ── PUNTA CANA ────────────────────────────────────────────────
 UPDATE productos SET
@@ -136,7 +136,7 @@ UPDATE productos SET
     {"dia":7,"titulo":"Último día en el paraíso","descripcion":"Último día en Punta Cana. Disfrute pleno del resort. Por la noche, cena de despedida.","actividades":["Playa y piscina libre","Compras de recuerdos","Cena de despedida"]},
     {"dia":8,"titulo":"Regreso","descripcion":"Check-out y traslado al aeropuerto. Vuelo de regreso.","actividades":["Check-out","Traslado al aeropuerto","Vuelo de regreso"]}
   ]'
-WHERE nombre = 'Punta Cana';
+WHERE nombre ILIKE '%punta cana%';
 
 -- ── CANASVIEIRAS ──────────────────────────────────────────────
 UPDATE productos SET
@@ -160,7 +160,7 @@ UPDATE productos SET
     {"dia":8,"titulo":"Último día en Floripa","descripcion":"Mañana libre en la playa. Por la tarde, preparación del equipaje y despedida.","actividades":["Playa libre","Check-out","Cena de despedida"]},
     {"dia":9,"titulo":"Regreso a Tucumán","descripcion":"Partida hacia Tucumán. Cruce fronterizo de regreso.","actividades":["Partida desde Brasil","Cruce fronterizo","Regreso a Tucumán"]}
   ]'
-WHERE nombre = 'Canasvieiras';
+WHERE nombre ILIKE '%canasvieiras%';
 
 -- ── FERRUGEM ─────────────────────────────────────────────────
 UPDATE productos SET
@@ -184,7 +184,7 @@ UPDATE productos SET
     {"dia":8,"titulo":"Último día en Brasil","descripcion":"Mañana libre en la playa y compras de recuerdos. Por la tarde, check-out y despedida.","actividades":["Playa libre","Compras de recuerdos","Check-out"]},
     {"dia":9,"titulo":"Regreso a Tucumán","descripcion":"Partida hacia Tucumán con los mejores recuerdos de Ferrugem.","actividades":["Partida desde Brasil","Cruce fronterizo","Regreso a Tucumán"]}
   ]'
-WHERE nombre = 'Ferrugem';
+WHERE nombre ILIKE '%ferrugem%';
 
 -- ── CAMBORIÚ (internacional, no egresados) ────────────────────
 UPDATE productos SET
@@ -208,7 +208,7 @@ UPDATE productos SET
     {"dia":8,"titulo":"Último día en Camboriú","descripcion":"Mañana libre. Últimas compras en los shoppings y en tiendas de artesanías.","actividades":["Compras finales","Playa","Check-out"]},
     {"dia":9,"titulo":"Regreso a Tucumán","descripcion":"Partida desde Brasil hacia Tucumán.","actividades":["Partida desde Brasil","Cruce fronterizo","Regreso a Tucumán"]}
   ]'
-WHERE nombre = 'Camboriú' AND (categoria = 'internacional' OR categoria IS NULL) AND descripcion LIKE '%Torre Sol%';
+WHERE nombre ILIKE '%camborí%' AND categoria = 'internacional';
 
 -- ── GAROPABA ─────────────────────────────────────────────────
 UPDATE productos SET
@@ -232,7 +232,7 @@ UPDATE productos SET
     {"dia":8,"titulo":"Último día en Brasil","descripcion":"Mañana libre para compras y despedidas. Check-out por la tarde.","actividades":["Compras de recuerdos","Playa","Check-out"]},
     {"dia":9,"titulo":"Regreso a Tucumán","descripcion":"Partida desde Garopaba hacia Tucumán.","actividades":["Partida desde Brasil","Cruce fronterizo","Regreso a Tucumán"]}
   ]'
-WHERE nombre = 'Garopaba';
+WHERE nombre ILIKE '%garopaba%';
 
 -- ── JURERÉ ───────────────────────────────────────────────────
 UPDATE productos SET
@@ -256,7 +256,7 @@ UPDATE productos SET
     {"dia":8,"titulo":"Último día en Floripa","descripcion":"Mañana libre. Últimas compras y despedida de Florianópolis.","actividades":["Compras finales","Playa","Check-out"]},
     {"dia":9,"titulo":"Regreso a Tucumán","descripcion":"Partida desde Florianópolis hacia Tucumán.","actividades":["Partida desde Brasil","Cruce fronterizo","Regreso a Tucumán"]}
   ]'
-WHERE nombre = 'JURERÉ';
+WHERE nombre ILIKE '%jurer%';
 
 -- ── RÍO DE JANEIRO ────────────────────────────────────────────
 UPDATE productos SET
@@ -279,7 +279,7 @@ UPDATE productos SET
     {"dia":7,"titulo":"Último día en Río","descripcion":"Mañana libre en la playa o de compras en el Feira de São Cristóvão. Noche de samba opcional.","actividades":["Playa o compras libre","Feira de São Cristóvão","Opcional: noche de samba"]},
     {"dia":8,"titulo":"Regreso","descripcion":"Check-out y traslado al aeropuerto. Vuelo de regreso.","actividades":["Check-out","Traslado al aeropuerto","Vuelo de regreso"]}
   ]'
-WHERE nombre = 'Rio de Janeiro';
+WHERE nombre ILIKE '%rio de janeiro%' OR nombre ILIKE '%río de janeiro%';
 
 -- ── CARTAGENA Y SAN ANDRÉS ────────────────────────────────────
 UPDATE productos SET
@@ -303,4 +303,4 @@ UPDATE productos SET
     {"dia":8,"titulo":"Último día en San Andrés","descripcion":"Mañana libre para disfrutar el mar. Por la tarde, check-out y cena de despedida.","actividades":["Playa libre","Compras de recuerdos","Check-out","Cena de despedida"]},
     {"dia":9,"titulo":"Regreso","descripcion":"Traslado al aeropuerto. Vuelo de regreso.","actividades":["Traslado al aeropuerto","Vuelo de regreso"]}
   ]'
-WHERE nombre = 'Cartagena y San Andres';
+WHERE nombre ILIKE '%cartagena%';
