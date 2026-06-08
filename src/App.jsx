@@ -4,6 +4,8 @@ import { Toaster, toast } from 'sonner'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
 import Home from './pages/Home'
+import PaqueteDetalle from './pages/PaqueteDetalle'
+import Reservar from './pages/Reservar'
 import AdminLogin from './pages/admin/AdminLogin'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import ClienteDashboard from './pages/admin/ClienteDashboard'
@@ -74,6 +76,8 @@ export default function App() {
         />
         <Routes>
           <Route path="/" element={<><PagoToast /><Home /></>} />
+          <Route path="/paquete/:id" element={<PaqueteDetalle />} />
+          <Route path="/reservar" element={<Reservar />} />
           <Route path="/admin/login" element={<AdminLogin />} />
           <Route
             path="/admin"

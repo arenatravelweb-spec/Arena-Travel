@@ -3,6 +3,7 @@ import Hero from '../components/Hero'
 import Stats from '../components/Stats'
 import Products from '../components/Products'
 import About from '../components/About'
+import Rifas from '../components/Rifas'
 import Experiences from '../components/Experiences'
 import Testimonials from '../components/Testimonials'
 import CTABanner from '../components/CTABanner'
@@ -18,6 +19,7 @@ export default function Home() {
         <Stats />
         <Products />
         <About />
+        <Rifas />
         <Experiences />
         <Testimonials />
         <CTABanner />
