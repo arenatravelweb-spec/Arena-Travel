@@ -1,12 +1,13 @@
 import { useState, useEffect, useRef } from 'react'
 import {
-  HiHome, HiUserGroup, HiShoppingBag, HiSparkles, HiEnvelope
+  HiHome, HiUserGroup, HiShoppingBag, HiSparkles, HiEnvelope, HiTicket,
 } from 'react-icons/hi2'
 
 const NAV_ITEMS = [
   { href: '#inicio',       label: 'Inicio',       id: 'inicio',       Icon: HiHome },
   { href: '#nosotros',     label: 'Nosotros',     id: 'nosotros',     Icon: HiUserGroup },
   { href: '#productos',    label: 'Productos',    id: 'productos',    Icon: HiShoppingBag },
+  { href: '#rifas',        label: 'Rifas',        id: 'rifas',        Icon: HiTicket },
   { href: '#experiencias', label: 'Experiencias', id: 'experiencias', Icon: HiSparkles },
   { href: '#contacto',     label: 'Contacto',     id: 'contacto',     Icon: HiEnvelope },
 ]
