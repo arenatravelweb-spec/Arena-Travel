@@ -5,6 +5,7 @@ import { formatPrecioDesde } from '../lib/pricing'
 import AnimatedButton from './AnimatedButton'
 import CompraModal from './CompraModal'
 import ProductModal from './ProductModal'
+import ReservaModal from './ReservaModal'
 
 const WA = 'https://wa.me/5493815477147'
 
@@ -57,6 +58,7 @@ export default function Products() {
   const [subcatIndicator, setSubcatInd]   = useState({ width: 0, left: 0 })
   const [modalProducto, setModal]         = useState(null)
   const [detailProducto, setDetail]       = useState(null)
+  const [reservaProducto, setReserva]     = useState(null)
   const [pagando, setPagando]             = useState(false)
   const [preferenceId, setPreferenceId]   = useState(null)
   const tabsRef   = useRef(null)
@@ -198,10 +200,14 @@ export default function Products() {
                     <p className="prod-card__price">Precio: desde {formatPrecioDesde(p.nombre, p.precio_desde)}</p>
                   )}
                   <AnimatedButton
-                    text="Ver destino"
+                    text={p.categoria === 'internacional' ? 'Ver itinerario' : 'Ver destino'}
                     size="sm"
                     color="var(--color-accent)"
-                    onClick={e => { e.stopPropagation(); setDetail(p) }}
+                    onClick={e => {
+                      e.stopPropagation()
+                      if (p.categoria === 'internacional') setReserva(p)
+                      else setDetail(p)
+                    }}
                   />
                 </div>
               </article>
@@ -214,7 +220,14 @@ export default function Products() {
         <ProductModal
           producto={detailProducto}
           onClose={() => setDetail(null)}
-          onComprar={() => { setModal(detailProducto); setDetail(null) }}
+          onComprar={() => { setReserva(detailProducto); setDetail(null) }}
+        />
+      )}
+
+      {reservaProducto && (
+        <ReservaModal
+          producto={reservaProducto}
+          onClose={() => setReserva(null)}
         />
       )}
 

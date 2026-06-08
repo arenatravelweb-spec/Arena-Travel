@@ -5,36 +5,71 @@ serve(async (req) => {
   try {
     const body = await req.json()
 
-    // MP envía distintos tipos: payment, merchant_order, etc.
-    if (body.type !== 'payment') {
-      return new Response('ok', { status: 200 })
-    }
+    if (body.type !== 'payment') return new Response('ok', { status: 200 })
 
     const paymentId = body.data?.id
     if (!paymentId) return new Response('ok', { status: 200 })
 
     const accessToken = Deno.env.get('MP_ACCESS_TOKEN')!
 
-    // Obtener detalles del pago desde MP
     const paymentRes = await fetch(
       `https://api.mercadopago.com/v1/payments/${paymentId}`,
-      { headers: { 'Authorization': `Bearer ${accessToken}` } }
+      { headers: { 'Authorization': `Bearer ${accessToken}` } },
     )
     const payment = await paymentRes.json()
 
+    const externalRef: string = payment.external_reference ?? ''
+
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL')!,
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
     )
 
-    // Actualizar estado de la compra
-    await supabase
-      .from('compras')
-      .update({
-        estado:        payment.status,        // approved | rejected | pending
-        mp_payment_id: String(paymentId),
-      })
-      .eq('id', payment.external_reference)
+    if (externalRef.startsWith('rifa_')) {
+      // Pago de rifa
+      const participacionId = externalRef.slice(5)
+
+      await supabase
+        .from('rifa_participaciones')
+        .update({
+          estado:        payment.status,
+          mp_payment_id: String(paymentId),
+        })
+        .eq('id', participacionId)
+
+      // Si fue aprobado, incrementar numeros_vendidos en la rifa
+      if (payment.status === 'approved') {
+        const { data: part } = await supabase
+          .from('rifa_participaciones')
+          .select('rifa_id, cantidad_numeros')
+          .eq('id', participacionId)
+          .single()
+
+        if (part) {
+          const { data: rifaData } = await supabase
+            .from('rifas')
+            .select('numeros_vendidos')
+            .eq('id', part.rifa_id)
+            .single()
+
+          if (rifaData) {
+            await supabase
+              .from('rifas')
+              .update({ numeros_vendidos: rifaData.numeros_vendidos + part.cantidad_numeros })
+              .eq('id', part.rifa_id)
+          }
+        }
+      }
+    } else {
+      // Pago de compra/paquete
+      await supabase
+        .from('compras')
+        .update({
+          estado:        payment.status,
+          mp_payment_id: String(paymentId),
+        })
+        .eq('id', externalRef)
+    }
 
     return new Response('ok', { status: 200 })
 
