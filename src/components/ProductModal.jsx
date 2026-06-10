@@ -210,7 +210,7 @@ export default function ProductModal({ producto, onClose, onComprar }) {
           <div className="pmodal__actions">
             {producto.categoria === 'egresados' ? (
               <AnimatedButton
-                text="Consultar por WhatsApp"
+                text="Consultar"
                 color="var(--color-accent)"
                 onClick={() => window.open('https://wa.me/5493815477147', '_blank')}
               />
