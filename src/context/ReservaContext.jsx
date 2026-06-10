@@ -22,7 +22,7 @@ function initHabitaciones(n) {
 
 export function ReservaProvider({ paquete, fechaInicial, origenInicial, children }) {
   const [step, setStep] = useState(1)
-  const [pasajeros, setPasajeros] = useState([{ edad: '', nombre: '' }])
+  const [pasajeros, setPasajeros] = useState([{ edad: '25', nombre: '' }])
   // { '0': 'SEMICAMA', '1': 'COCHE CAMA', ... } - índice en pasajerosConAsiento
   const [transportes, setTransportes] = useState({})
   // [{ pasajeros: [indices], tipo: 'single'|'doble'|'triple'|'cuadruple', subTipo: 'twin'|'matrimonial'|null }]
