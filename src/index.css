@@ -923,7 +923,7 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   display: flex;
   flex-direction: column;
   gap: 6px;
-  transform: translateY(115px);
+  transform: translateY(110%);
   transition: transform .5s ease;
 }
 
