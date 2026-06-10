@@ -2,7 +2,9 @@ import { HiCheck, HiExclamationCircle, HiTruck } from 'react-icons/hi2'
 import { useReserva } from '../../context/ReservaContext'
 
 const DEFAULT_OPTIONS = [
-  { nombre: 'SEMICAMA', precio: 0, incluido: true },
+  { nombre: 'SEMICAMA',    precio: 0, incluido: true },
+  { nombre: 'COCHE CAMA',  precio: 0, incluido: true },
+  { nombre: 'PANORÁMICO',  precio: 0, incluido: true },
 ]
 
 function fmt(n) {
