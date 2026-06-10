@@ -208,11 +208,19 @@ export default function ProductModal({ producto, onClose, onComprar }) {
           )}
 
           <div className="pmodal__actions">
-            <AnimatedButton
-              text="Consultar"
-              color="var(--color-accent)"
-              onClick={() => window.open('https://wa.me/5493815477147', '_blank')}
-            />
+            {producto.categoria === 'nacional' ? (
+              <AnimatedButton
+                text="Comprar"
+                color="var(--color-accent)"
+                onClick={onComprar}
+              />
+            ) : (
+              <AnimatedButton
+                text="Consultar"
+                color="var(--color-accent)"
+                onClick={() => window.open('https://wa.me/5493815477147', '_blank')}
+              />
+            )}
           </div>
 
           {producto.categoria === 'egresados' && (
