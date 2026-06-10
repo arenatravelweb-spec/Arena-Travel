@@ -4361,7 +4361,7 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 /* Botones dobles en cards de productos nacionales */
 .prod-card__btns {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
   gap: .5rem;
   width: 100%;
 }
