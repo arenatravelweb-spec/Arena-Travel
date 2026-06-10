@@ -4759,15 +4759,11 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 }
 .checkout__terms-link { color: var(--color-primary); text-decoration: underline; }
 
-/* ── Checkout layout: dos columnas en desktop ── */
+/* ── Checkout layout ── */
 .checkout__layout {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 2rem;
-  align-items: start;
-}
-@media (max-width: 768px) {
-  .checkout__layout { grid-template-columns: 1fr; gap: 0; }
 }
 
 /* ── Wallet MercadoPago ── */
@@ -5823,7 +5819,6 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   .itin__band     { grid-template-columns: 72px 1fr; }
   .itin__band-day { font-size: 1.85rem; }
   .rmodal__flow-body { padding: 0 .75rem .75rem; }
-  .checkout__layout  { grid-template-columns: 1fr; }
   .checkout__passenger { padding: 1rem; }
 }
 
