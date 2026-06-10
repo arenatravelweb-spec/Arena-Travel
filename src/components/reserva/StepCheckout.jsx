@@ -79,6 +79,7 @@ export default function StepCheckout() {
   const validate = () => {
     const errs = {}
     initDatos.forEach((d, i) => {
+      if (!d.nombre)   errs[`nombre_${i}`]   = 'Requerido'
       if (!d.apellido) errs[`apellido_${i}`] = 'Requerido'
       if (!d.tipoDoc)  errs[`tipoDoc_${i}`]  = 'Requerido'
       if (!d.numDoc)   errs[`numDoc_${i}`]   = 'Requerido'
@@ -208,13 +209,15 @@ export default function StepCheckout() {
                   {/* Nombre + Apellido + Edad: 2fr 2fr 1fr */}
                   <div className="form__grid-2-2-1">
                     <div className="form__group">
-                      <label>Nombre/s</label>
+                      <label>Nombre/s *</label>
                       <input
                         type="text"
                         value={dato.nombre}
                         placeholder="Como figura en el DNI"
+                        className={errors[`nombre_${i}`] ? 'error' : ''}
                         onChange={e => updateDato(i, 'nombre', e.target.value)}
                       />
+                      {errors[`nombre_${i}`] && <span className="form__error">{errors[`nombre_${i}`]}</span>}
                     </div>
                     <div className="form__group">
                       <label>Apellido/s *</label>
