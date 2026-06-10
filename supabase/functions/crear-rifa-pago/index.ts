@@ -24,10 +24,7 @@ serve(async (req) => {
       throw new Error('Faltan campos obligatorios')
     }
 
-    const isSandbox   = Deno.env.get('MP_SANDBOX') === 'true'
-    const accessToken = isSandbox
-      ? Deno.env.get('MP_ACCESS_TOKEN_TEST')!
-      : Deno.env.get('MP_ACCESS_TOKEN')!
+    const accessToken = Deno.env.get('MP_ACCESS_TOKEN')!
     const baseUrl = Deno.env.get('APP_URL') || req.headers.get('origin') || 'http://localhost:5173'
 
     const supabase = createClient(
@@ -97,7 +94,7 @@ serve(async (req) => {
     })
 
     const mpData = await mpRes.json()
-    const url = isSandbox ? mpData.sandbox_init_point : mpData.init_point
+    const url = mpData.init_point
 
     if (!url) throw new Error('No se pudo crear el link de pago')
 
