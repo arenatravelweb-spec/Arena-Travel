@@ -12,13 +12,21 @@ function parseFecha(str) {
   return `${parseInt(d)} ${meses[parseInt(m) - 1]} ${y}`
 }
 
+const TIPO_LABEL = {
+  single:    'Single',
+  doble:     'Doble',
+  triple:    'Triple',
+  cuadruple: 'Cuádruple',
+}
+
 export default function SidebarReserva() {
   const {
     paquete, fecha, origen,
-    pasajeros, transportes, singleRooms,
+    pasajeros, transportes, habitaciones,
     pasajerosConAsiento,
     precioBase, calcTotal, calcTransporteCost, calcRecargo,
     opcionesTransporte,
+    recargoSingle,
     step,
   } = useReserva()
 
@@ -29,8 +37,6 @@ export default function SidebarReserva() {
   const transportLabel = Object.keys(transportes).length > 0
     ? Object.entries(transportes).map(([i, n]) => n).join(', ')
     : null
-
-  const habitaciones = buildHabitaciones(pasajeros, singleRooms)
 
   return (
     <aside className="sidebar-res">
@@ -108,8 +114,12 @@ export default function SidebarReserva() {
             </span>
             {habitaciones.map((hab, i) => (
               <div key={i} className="sidebar-res__detail-row">
-                <span>Hab. {i + 1} · {hab.tipo} · {hab.pax} pax</span>
-                {hab.single && <span className="sidebar-res__badge-single">+{hab.pct}%</span>}
+                <span>
+                  Hab. {i + 1} · {TIPO_LABEL[hab.tipo] || hab.tipo} · {hab.pasajeros.length} pax
+                </span>
+                {hab.tipo === 'single' && (
+                  <span className="sidebar-res__badge-single">+{recargoSingle}%</span>
+                )}
               </div>
             ))}
           </div>
@@ -177,21 +187,3 @@ export default function SidebarReserva() {
   )
 }
 
-function buildHabitaciones(pasajeros, singleRooms) {
-  const result = []
-  const noSingle = pasajeros.filter((_, i) => !singleRooms.includes(i))
-
-  singleRooms.forEach(i => {
-    result.push({ tipo: 'Habitación single', pax: 1, single: true, pct: 50 })
-  })
-
-  if (noSingle.length > 0) {
-    const rooms = Math.ceil(noSingle.length / 2)
-    for (let i = 0; i < rooms; i++) {
-      const pax = i < rooms - 1 ? 2 : noSingle.length - (rooms - 1) * 2
-      result.push({ tipo: 'Habitación doble', pax: Math.max(pax, 1), single: false })
-    }
-  }
-
-  return result
-}

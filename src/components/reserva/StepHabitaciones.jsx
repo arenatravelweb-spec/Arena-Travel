@@ -1,112 +1,171 @@
-import { HiBuildingOffice2, HiExclamationCircle } from 'react-icons/hi2'
+import { useEffect } from 'react'
+import { HiBuildingOffice2, HiInformationCircle } from 'react-icons/hi2'
 import { useReserva } from '../../context/ReservaContext'
 
-const MAX_POR_HAB = 3
+const TIPOS = [
+  { id: 'single',     label: 'Single',     capacidad: 1, desc: '1 persona · +50% recargo' },
+  { id: 'doble',      label: 'Doble',      capacidad: 2, desc: '2 personas' },
+  { id: 'triple',     label: 'Triple',     capacidad: 3, desc: '3 personas' },
+  { id: 'cuadruple',  label: 'Cuádruple',  capacidad: 4, desc: '4 personas' },
+]
 
-function edadLabel(edad) {
-  const e = parseInt(edad)
-  if (isNaN(e)) return 'Adulto'
-  if (e >= 12) return 'Adulto (12+)'
-  if (e >= 2)  return 'Menor (2-11)'
-  return 'Bebé (0-1)'
-}
+const SUBTIPOS = [
+  { id: 'twin',        label: 'Cama twin / separadas' },
+  { id: 'matrimonial', label: 'Cama matrimonial' },
+]
 
-function buildDistribution(pasajeros, singleRooms) {
-  const noSingle = pasajeros.filter((_, i) => !singleRooms.includes(i))
-  const habs = []
-
-  singleRooms.forEach(i => {
-    habs.push([pasajeros[i]])
-  })
-
-  for (let i = 0; i < noSingle.length; i += 2) {
-    habs.push(noSingle.slice(i, Math.min(i + 2, noSingle.length)))
-  }
-
-  return habs
+function distribuirPasajeros(pasajeros, habitaciones) {
+  const asignados = new Set(habitaciones.flatMap(h => h.pasajeros))
+  return pasajeros.map((_, i) => i).filter(i => !asignados.has(i))
 }
 
 export default function StepHabitaciones() {
-  const { pasajeros, singleRooms, setSingleRooms, nextStep, prevStep } = useReserva()
+  const { pasajeros, habitaciones, setHabitaciones, recargoSingle, precioBase, nextStep, prevStep, initHabitaciones } = useReserva()
 
-  const toggleSingle = (i) => {
-    setSingleRooms(prev =>
-      prev.includes(i) ? prev.filter(x => x !== i) : [...prev, i]
-    )
+  useEffect(() => {
+    setHabitaciones(initHabitaciones(pasajeros.length))
+  }, [pasajeros.length])
+
+  const updateTipo = (idx, nuevoTipo) => {
+    setHabitaciones(prev => {
+      const habs = [...prev]
+      const cap = TIPOS.find(t => t.id === nuevoTipo)?.capacidad ?? 2
+      const pasActuales = habs[idx].pasajeros
+
+      if (nuevoTipo === habs[idx].tipo) return prev
+
+      let nuevosPasajeros = pasActuales.slice(0, cap)
+      const sobrantes = pasActuales.slice(cap)
+
+      habs[idx] = {
+        pasajeros: nuevosPasajeros,
+        tipo: nuevoTipo,
+        subTipo: nuevoTipo === 'doble' ? 'twin' : null,
+      }
+
+      // Reasignar sobrantes distribuyendo en nuevas habitaciones dobles
+      for (let i = 0; i < sobrantes.length; i += 2) {
+        const grupo = sobrantes.slice(i, Math.min(i + 2, sobrantes.length))
+        habs.splice(idx + 1 + Math.floor(i / 2), 0, {
+          pasajeros: grupo,
+          tipo: grupo.length === 1 ? 'single' : 'doble',
+          subTipo: grupo.length === 1 ? null : 'twin',
+        })
+      }
+
+      return habs
+    })
   }
 
-  const noSinglePax = pasajeros.filter((_, i) => !singleRooms.includes(i))
-  const distribucionCompleta = noSinglePax.length <= MAX_POR_HAB
-    || (noSinglePax.length % 2 === 0 || noSinglePax.length % 3 === 0)
-  const necesitaMasInfo = noSinglePax.length === 1 && pasajeros.length > 1
+  const updateSubTipo = (idx, subTipo) => {
+    setHabitaciones(prev => {
+      const habs = [...prev]
+      habs[idx] = { ...habs[idx], subTipo }
+      return habs
+    })
+  }
 
-  const distrib = buildDistribution(pasajeros, singleRooms)
+  const sinAsignar = distribuirPasajeros(pasajeros, habitaciones)
+  const todoAsignado = sinAsignar.length === 0
+
+  const recargo = habitaciones
+    .filter(h => h.tipo === 'single')
+    .reduce((acc, h) => acc + h.pasajeros.length * (precioBase * recargoSingle) / 100, 0)
 
   return (
     <div className="paso">
-      <h2 className="paso__title">¿Cómo se acomodan?</h2>
+      <h2 className="paso__title">Tipo de habitaciones</h2>
       <p className="paso__subtitle">
-        Si alguien necesita su propio cuarto, marcalo acá. Al resto lo agrupamos para que salga más económico.
+        Elegí el tipo de habitación para cada grupo. Las habitaciones single tienen un recargo del {recargoSingle}%.
       </p>
 
-      <div className="habitaciones__cap-row">
-        <span className="habitaciones__cap-badge">
-          <HiBuildingOffice2 /> Capacidad máx. por habitación: {MAX_POR_HAB}
-        </span>
-        <span className="habitaciones__cap-info">Se pueden combinar habitaciones de 2 a {MAX_POR_HAB} pasajeros.</span>
-      </div>
+      <div className="habitaciones__rooms">
+        {habitaciones.map((hab, idx) => {
+          const tipoInfo = TIPOS.find(t => t.id === hab.tipo)
 
-      <div className="habitaciones__pax-grid">
-      {pasajeros.map((pax, i) => (
-        <div key={i} className="habitaciones__pax">
-          <div>
-            <strong>{pax.nombre || `Pasajero ${i + 1}`}</strong>
-            <span className="habitaciones__pax-tipo">{edadLabel(pax.edad)} · {pax.edad} años</span>
-          </div>
-          <label className="habitaciones__toggle">
-            <input
-              type="checkbox"
-              checked={singleRooms.includes(i)}
-              onChange={() => toggleSingle(i)}
-            />
-            <span className="habitaciones__toggle-track" />
-            <span className="habitaciones__toggle-text">Habitación single</span>
-          </label>
-        </div>
-      ))}
-      </div>
+          return (
+            <div key={idx} className="habitaciones__room-card">
+              <div className="habitaciones__room-header">
+                <HiBuildingOffice2 />
+                <span className="habitaciones__room-num">Habitación {idx + 1}</span>
+                <span className="habitaciones__room-pax-tag">
+                  {hab.pasajeros.map(i => pasajeros[i]?.nombre || `Pasajero ${i + 1}`).join(', ')}
+                </span>
+              </div>
 
-      {/* Distribution suggestion */}
-      {distrib.length > 0 && !necesitaMasInfo && (
-        <div className="habitaciones__distrib">
-          <h4 className="habitaciones__distrib-title">
-            <HiBuildingOffice2 /> Distribución sugerida
-          </h4>
-          {distrib.map((hab, i) => (
-            <div key={i} className="habitaciones__distrib-row">
-              <span className="habitaciones__distrib-num">Hab. {i + 1}</span>
-              <span>{hab.map(p => p.nombre || 'Pasajero').join(' · ')}</span>
-              {singleRooms.includes(pasajeros.indexOf(hab[0])) && (
-                <span className="habitaciones__single-tag">Single +50%</span>
+              <div className="habitaciones__tipo-grid">
+                {TIPOS.map(tipo => {
+                  const asignables = tipo.capacidad >= hab.pasajeros.length
+                  if (!asignables && tipo.capacidad < hab.pasajeros.length) return null
+                  return (
+                    <label
+                      key={tipo.id}
+                      className={`habitaciones__tipo-opt${hab.tipo === tipo.id ? ' habitaciones__tipo-opt--selected' : ''}`}
+                    >
+                      <input
+                        type="radio"
+                        name={`tipo-${idx}`}
+                        value={tipo.id}
+                        checked={hab.tipo === tipo.id}
+                        onChange={() => updateTipo(idx, tipo.id)}
+                      />
+                      <span className="habitaciones__tipo-label">{tipo.label}</span>
+                      <span className="habitaciones__tipo-desc">{tipo.desc}</span>
+                    </label>
+                  )
+                })}
+              </div>
+
+              {hab.tipo === 'doble' && (
+                <div className="habitaciones__subtipo">
+                  <p className="habitaciones__subtipo-label">Tipo de cama:</p>
+                  <div className="habitaciones__subtipo-opts">
+                    {SUBTIPOS.map(st => (
+                      <label
+                        key={st.id}
+                        className={`habitaciones__subtipo-opt${hab.subTipo === st.id ? ' habitaciones__subtipo-opt--selected' : ''}`}
+                      >
+                        <input
+                          type="radio"
+                          name={`subtipo-${idx}`}
+                          value={st.id}
+                          checked={hab.subTipo === st.id}
+                          onChange={() => updateSubTipo(idx, st.id)}
+                        />
+                        {st.label}
+                      </label>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {hab.tipo === 'single' && precioBase > 0 && (
+                <div className="habitaciones__single-info">
+                  <HiInformationCircle />
+                  <span>Recargo: +${(hab.pasajeros.length * precioBase * recargoSingle / 100).toLocaleString('es-AR')}</span>
+                </div>
               )}
             </div>
-          ))}
-          <p className="habitaciones__distrib-note">
-            * La distribución puede cambiar según la disponibilidad de habitaciones.
-          </p>
+          )
+        })}
+      </div>
+
+      {sinAsignar.length > 0 && (
+        <div className="habitaciones__warning">
+          <HiInformationCircle />
+          Pasajeros sin habitación asignada: {sinAsignar.map(i => pasajeros[i]?.nombre || `Pasajero ${i + 1}`).join(', ')}
         </div>
       )}
 
-      {necesitaMasInfo && (
-        <div className="habitaciones__warning">
-          <HiExclamationCircle />
-          Para completar la distribución, hacé que algún pasajero adicional solicite habitación single.
+      {recargo > 0 && (
+        <div className="habitaciones__recargo-info">
+          Recargo total por habitaciones single: +${recargo.toLocaleString('es-AR')}
         </div>
       )}
 
       <div className="paso__actions">
         <button className="btn btn--outline" onClick={prevStep}>Volver</button>
-        <button className="btn btn--primary" onClick={nextStep}>
+        <button className="btn btn--primary" onClick={nextStep} disabled={!todoAsignado}>
           Continuar al resumen
         </button>
       </div>

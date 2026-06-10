@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { HiTicket, HiCalendarDays, HiShieldCheck, HiUsers, HiTrophy } from 'react-icons/hi2'
+import { HiTicket, HiCalendarDays, HiShieldCheck, HiUsers, HiTrophy, HiCheckCircle } from 'react-icons/hi2'
 import { supabase } from '../lib/supabase'
 import RifaModal from './RifaModal'
 
@@ -16,7 +16,39 @@ function diasRestantes(fechaLimite) {
   return Math.max(0, Math.ceil((new Date(fechaLimite) - new Date()) / 86400000))
 }
 
+/* ─── Grilla interactiva de números ─── */
+function NumeroGrid({ total, vendidosLista, seleccionados, onToggle }) {
+  const vendidosSet = new Set(Array.isArray(vendidosLista) ? vendidosLista : [])
+
+  return (
+    <div className="rifa-numgrid">
+      {Array.from({ length: total }, (_, i) => i + 1).map(n => {
+        const vendido    = vendidosSet.has(n)
+        const selected   = seleccionados.includes(n)
+        return (
+          <button
+            key={n}
+            className={[
+              'rifa-numgrid__cell',
+              vendido  ? 'rifa-numgrid__cell--vendido'    : '',
+              selected ? 'rifa-numgrid__cell--selected'   : '',
+            ].join(' ')}
+            disabled={vendido}
+            onClick={() => !vendido && onToggle(n)}
+            title={vendido ? `Número ${n} — vendido` : `Seleccionar número ${n}`}
+          >
+            {vendido ? '✈' : selected ? <HiCheckCircle /> : n}
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 function RifaCard({ rifa, onComprar }) {
+  const [mostrarGrilla, setMostrarGrilla] = useState(false)
+  const [seleccionados, setSeleccionados] = useState([])
+
   const vendidos    = rifa.numeros_vendidos || 0
   const total       = rifa.total_numeros   || 300
   const pct         = Math.min(100, Math.round((vendidos / total) * 100))
@@ -25,6 +57,17 @@ function RifaCard({ rifa, onComprar }) {
   const premios     = Array.isArray(rifa.premios)        ? rifa.premios        : []
   const caract      = Array.isArray(rifa.caracteristicas) ? rifa.caracteristicas : []
   const urgente     = disponibles <= 50 || (dias !== null && dias <= 10)
+  const vendidosLista = Array.isArray(rifa.numeros_vendidos_lista) ? rifa.numeros_vendidos_lista : []
+
+  const toggleNumero = (n) => {
+    setSeleccionados(prev =>
+      prev.includes(n) ? prev.filter(x => x !== n) : [...prev, n]
+    )
+  }
+
+  const handleComprar = () => {
+    onComprar(rifa, seleccionados)
+  }
 
   return (
     <div className="rc">
@@ -94,12 +137,52 @@ function RifaCard({ rifa, onComprar }) {
         </ul>
       )}
 
+      {/* Selector de números */}
+      {disponibles > 0 && (
+        <div className="rc__selector">
+          <button
+            className="rc__selector-toggle"
+            onClick={() => setMostrarGrilla(v => !v)}
+          >
+            {mostrarGrilla ? 'Ocultar números' : '🔢 Elegir mi número'}
+          </button>
+
+          {mostrarGrilla && (
+            <div className="rc__selector-body">
+              <p className="rc__selector-hint">
+                Tocá los números disponibles para seleccionarlos.
+                <span className="rc__legend">
+                  <span className="rc__legend-item rc__legend-item--libre">Libre</span>
+                  <span className="rc__legend-item rc__legend-item--sel">Seleccionado</span>
+                  <span className="rc__legend-item rc__legend-item--vend">✈ Vendido</span>
+                </span>
+              </p>
+              <NumeroGrid
+                total={total}
+                vendidosLista={vendidosLista}
+                seleccionados={seleccionados}
+                onToggle={toggleNumero}
+              />
+              {seleccionados.length > 0 && (
+                <p className="rc__selector-sel">
+                  Seleccionados: <strong>{seleccionados.sort((a,b)=>a-b).join(', ')}</strong>
+                </p>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
       <button
         className="rc__cta btn btn--primary"
-        onClick={() => onComprar(rifa)}
+        onClick={handleComprar}
         disabled={disponibles === 0}
       >
-        {disponibles > 0 ? '🎟 Quiero mi número' : 'Agotado'}
+        {disponibles > 0
+          ? seleccionados.length > 0
+            ? `🎟 Comprar ${seleccionados.length} número${seleccionados.length > 1 ? 's' : ''}`
+            : '🎟 Quiero mi número'
+          : 'Agotado'}
       </button>
     </div>
   )
@@ -109,6 +192,7 @@ export default function Rifas() {
   const [rifas, setRifas]       = useState([])
   const [loading, setLoading]   = useState(true)
   const [selected, setSelected] = useState(null)
+  const [numerosModal, setNumerosModal] = useState([])
 
   useEffect(() => {
     supabase
@@ -118,6 +202,11 @@ export default function Rifas() {
   }, [])
 
   if (loading || rifas.length === 0) return null
+
+  const handleComprar = (rifa, numeros) => {
+    setSelected(rifa)
+    setNumerosModal(numeros)
+  }
 
   return (
     <section id="rifas" className="rifas-sec">
@@ -137,14 +226,20 @@ export default function Rifas() {
         <div className={`rifas-sec__grid rifas-sec__grid--${Math.min(rifas.length, 3)}`}>
           {rifas.map(r => (
             <div key={r.id} className="reveal">
-              <RifaCard rifa={r} onComprar={setSelected} />
+              <RifaCard rifa={r} onComprar={handleComprar} />
             </div>
           ))}
         </div>
 
       </div>
 
-      {selected && <RifaModal rifa={selected} onClose={() => setSelected(null)} />}
+      {selected && (
+        <RifaModal
+          rifa={selected}
+          numerosPreseleccionados={numerosModal}
+          onClose={() => { setSelected(null); setNumerosModal([]) }}
+        />
+      )}
     </section>
   )
 }

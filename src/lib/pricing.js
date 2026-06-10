@@ -1,4 +1,4 @@
-const USD_DESTINATIONS = ['punta cana', 'cartagena', 'san andrés', 'san andres', 'río de janeiro', 'rio de janeiro']
+const USD_DESTINATIONS = ['punta cana', 'cartagena', 'san andrés', 'san andres', 'río de janeiro', 'rio de janeiro', 'cancún', 'cancun']
 
 export function getMoneda(nombre) {
   const lower = (nombre || '').toLowerCase()

@@ -32,7 +32,7 @@ function Steps() {
   }
 }
 
-function ModalInner({ producto, onClose }) {
+function ModalInner({ producto, onClose, mode }) {
   const itinerario  = producto?.itinerario   ?? []
   const fechas      = producto?.fechas_salida ?? []
   const primerFecha = fechas[0]?.fecha ?? null
@@ -41,9 +41,11 @@ function ModalInner({ producto, onClose }) {
     producto.categoria === 'egresados'     ? 'Viaje de egresados' :
     producto.categoria === 'internacional' ? 'Internacional'       : 'Nacional'
 
+  const isFlow = mode === 'flow'
+
   return (
-    <div className="rmodal__overlay" onClick={onClose}>
-      <div className="rmodal" onClick={e => e.stopPropagation()}>
+    <div className={`rmodal__overlay${isFlow ? ' rmodal__overlay--flow' : ''}`} onClick={onClose}>
+      <div className={`rmodal${isFlow ? ' rmodal--flow' : ''}`} onClick={e => e.stopPropagation()}>
 
         {/* ── Header ── */}
         <header className="rmodal__header">
@@ -56,79 +58,89 @@ function ModalInner({ producto, onClose }) {
           </button>
         </header>
 
-        {/* ── Body ── */}
-        <div className="rmodal__body">
-
-          {/* LEFT: itinerary + booking form */}
-          <div className="rmodal__main">
-
-            {/* Package banner */}
-            {producto.imagen_url && (
-              <div className="rmodal__banner">
-                <img src={producto.imagen_url} alt={producto.nombre} className="rmodal__banner-img" />
-                <div className="rmodal__banner-overlay" />
-                <div className="rmodal__banner-info">
-                  {(producto.duracion_dias || producto.duracion_noches) && (
-                    <span className="rmodal__banner-chip">
-                      <HiClock />
-                      {producto.duracion_dias}d / {producto.duracion_noches}n
-                    </span>
-                  )}
-                  {producto.origen_ciudad && (
-                    <span className="rmodal__banner-chip">
-                      <HiMapPin /> {producto.origen_ciudad}
-                    </span>
-                  )}
-                  {primerFecha && (
-                    <span className="rmodal__banner-chip">
-                      <HiCalendarDays /> Próx. salida: {parseFecha(primerFecha)}
-                    </span>
-                  )}
-                </div>
-              </div>
-            )}
-
-            {/* Itinerary */}
-            {itinerario.length > 0 && (
-              <div>
-                <h3 className="rmodal__section-title">Itinerario día a día</h3>
-                <ItinerarioEditorial itinerario={itinerario} paquete={producto} />
-                {producto.categoria === 'internacional' && (
-                  <a
-                    href="https://wa.me/5493815477147"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="btn btn--primary btn--full"
-                    style={{ marginTop: '1.5rem' }}
-                  >
-                    Consultar por WhatsApp
-                  </a>
-                )}
-              </div>
-            )}
-
-            {/* Booking flow — solo para nacionales y egresados */}
-            {producto.categoria !== 'internacional' && (
-              <div>
-                <h3 className="rmodal__section-title">Completar reserva</h3>
-                <BookingStepper />
+        {/* ── Modo FLOW: stepper + steps + sidebar ── */}
+        {isFlow ? (
+          <div className="rmodal__flow-body">
+            <BookingStepper />
+            <div className="rmodal__flow-layout">
+              <div className="rmodal__flow-main">
                 <Steps />
               </div>
-            )}
+              <div className="rmodal__flow-sidebar">
+                <SidebarReserva />
+              </div>
+            </div>
           </div>
+        ) : (
+          /* ── Modo ITINERARIO ── */
+          <div className="rmodal__body">
 
-          {/* RIGHT: sticky price summary */}
-          <div className="rmodal__sidebar">
-            <SidebarReserva />
+            <div className="rmodal__main">
+              {producto.imagen_url && (
+                <div className="rmodal__banner">
+                  <img src={producto.imagen_url} alt={producto.nombre} className="rmodal__banner-img" />
+                  <div className="rmodal__banner-overlay" />
+                  <div className="rmodal__banner-info">
+                    {(producto.duracion_dias || producto.duracion_noches) && (
+                      <span className="rmodal__banner-chip">
+                        <HiClock />
+                        {producto.duracion_dias}d / {producto.duracion_noches}n
+                      </span>
+                    )}
+                    {producto.origen_ciudad && (
+                      <span className="rmodal__banner-chip">
+                        <HiMapPin /> {producto.origen_ciudad}
+                      </span>
+                    )}
+                    {primerFecha && (
+                      <span className="rmodal__banner-chip">
+                        <HiCalendarDays /> Próx. salida: {parseFecha(primerFecha)}
+                      </span>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {itinerario.length > 0 && (
+                <div>
+                  <h3 className="rmodal__section-title">Itinerario día a día</h3>
+                  <ItinerarioEditorial itinerario={itinerario} paquete={producto} />
+                  {producto.categoria === 'internacional' && (
+                    <a
+                      href="https://wa.me/5493815477147"
+                      target="_blank"
+                      rel="noreferrer"
+                      className="btn btn--primary btn--full"
+                      style={{ marginTop: '1.5rem' }}
+                    >
+                      Consultar por WhatsApp
+                    </a>
+                  )}
+                </div>
+              )}
+
+              {/* Booking flow para egresados — igual que antes */}
+              {producto.categoria === 'egresados' && (
+                <div>
+                  <h3 className="rmodal__section-title">Completar reserva</h3>
+                  <BookingStepper />
+                  <Steps />
+                </div>
+              )}
+            </div>
+
+            <div className="rmodal__sidebar">
+              <SidebarReserva />
+            </div>
+
           </div>
-
-        </div>
+        )}
       </div>
     </div>
   )
 }
 
-export default function ReservaModal({ producto, onClose }) {
+export default function ReservaModal({ producto, onClose, mode = 'itinerary' }) {
   const primerFecha = producto?.fechas_salida?.[0]?.fecha ?? null
   const origen      = producto?.origen_ciudad ?? 'San Miguel de Tucumán'
 
@@ -145,7 +157,7 @@ export default function ReservaModal({ producto, onClose }) {
 
   return (
     <ReservaProvider paquete={producto} fechaInicial={primerFecha} origenInicial={origen}>
-      <ModalInner producto={producto} onClose={onClose} />
+      <ModalInner producto={producto} onClose={onClose} mode={mode} />
     </ReservaProvider>
   )
 }
