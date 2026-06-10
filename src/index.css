@@ -934,14 +934,16 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 
 .prod-card__desc {
   font-size: .8rem;
-  opacity: .85;
+  opacity: 0;
   line-height: 1.5;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  transition: opacity .4s ease;
 }
+.prod-card:hover .prod-card__desc { opacity: .85; }
 
 .prod-card__price {
   font-weight: 700;
