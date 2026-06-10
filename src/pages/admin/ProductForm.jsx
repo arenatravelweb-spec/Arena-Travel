@@ -335,6 +335,7 @@ export default function ProductForm({ initial, onSave, onCancel }) {
             <option value="">— Seleccioná un nivel —</option>
             <option value="primario">Primario</option>
             <option value="secundario">Secundario</option>
+            <option value="ambos">Primario y Secundario</option>
           </select>
           {errors.subcategoria && <span className="product-form__field-error">Seleccioná un nivel</span>}
         </div>
