@@ -1,15 +1,14 @@
 import { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
 import ProductModal from './ProductModal'
 import ReservaModal from './ReservaModal'
 
 export default function Packages() {
-  const navigate = useNavigate()
   const [packages, setPackages] = useState([])
   const [loading, setLoading]   = useState(true)
-  const [detailProducto, setDetail]  = useState(null)
+  const [detailProducto, setDetail]   = useState(null)
   const [reservaProducto, setReserva] = useState(null)
+  const [flowProducto, setFlow]       = useState(null)
 
   useEffect(() => {
     supabase
@@ -80,7 +79,7 @@ export default function Packages() {
           onClose={() => setDetail(null)}
           onComprar={() => {
             setDetail(null)
-            navigate(`/reservar?paquete=${detailProducto.id}`)
+            setFlow(detailProducto)
           }}
         />
       )}
@@ -88,7 +87,16 @@ export default function Packages() {
       {reservaProducto && (
         <ReservaModal
           producto={reservaProducto}
+          mode="itinerary"
           onClose={() => setReserva(null)}
+        />
+      )}
+
+      {flowProducto && (
+        <ReservaModal
+          producto={flowProducto}
+          mode="flow"
+          onClose={() => setFlow(null)}
         />
       )}
     </section>

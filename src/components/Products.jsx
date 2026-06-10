@@ -61,6 +61,7 @@ export default function Products() {
   const [modalProducto, setModal]         = useState(null)
   const [detailProducto, setDetail]       = useState(null)
   const [reservaProducto, setReserva]     = useState(null)
+  const [flowProducto, setFlow]           = useState(null)
   const [pagando, setPagando]             = useState(false)
   const [preferenceId, setPreferenceId]   = useState(null)
   const tabsRef   = useRef(null)
@@ -237,7 +238,7 @@ export default function Products() {
           onClose={() => setDetail(null)}
           onComprar={() => {
             setDetail(null)
-            navigate(`/reservar?paquete=${detailProducto.id}`)
+            setFlow(detailProducto)
           }}
         />
       )}
@@ -245,7 +246,16 @@ export default function Products() {
       {reservaProducto && (
         <ReservaModal
           producto={reservaProducto}
+          mode="itinerary"
           onClose={() => setReserva(null)}
+        />
+      )}
+
+      {flowProducto && (
+        <ReservaModal
+          producto={flowProducto}
+          mode="flow"
+          onClose={() => setFlow(null)}
         />
       )}
 

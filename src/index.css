@@ -5441,6 +5441,40 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   animation: fadeUp .35s cubic-bezier(.22,1,.36,1);
 }
 
+/* Flow mode — ocupa casi toda la pantalla */
+.rmodal__overlay--flow {
+  align-items: flex-start;
+  padding: 1.5rem;
+}
+.rmodal--flow {
+  max-width: 1100px;
+  max-height: calc(100vh - 3rem);
+  overflow-y: auto;
+}
+.rmodal__flow-body {
+  padding: 0 1.5rem 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+.rmodal__flow-layout {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 1.5rem;
+  align-items: start;
+}
+.rmodal__flow-main { min-width: 0; }
+.rmodal__flow-sidebar {
+  position: sticky;
+  top: 1rem;
+}
+@media (max-width: 768px) {
+  .rmodal__overlay--flow { padding: 0; }
+  .rmodal--flow { max-height: 100vh; border-radius: 0; }
+  .rmodal__flow-layout { grid-template-columns: 1fr; }
+  .rmodal__flow-sidebar { position: static; }
+}
+
 .rmodal__header {
   position: sticky;
   top: 0;
