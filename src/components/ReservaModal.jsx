@@ -105,7 +105,7 @@ function ModalInner({ producto, onClose, mode }) {
                 <div>
                   <h3 className="rmodal__section-title">Itinerario día a día</h3>
                   <ItinerarioEditorial itinerario={itinerario} paquete={producto} />
-                  {producto.categoria === 'internacional' && (
+                  {(producto.categoria === 'internacional' || producto.categoria === 'nacional') && (
                     <a
                       href="https://wa.me/5493815477147"
                       target="_blank"
