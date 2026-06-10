@@ -48,10 +48,22 @@ function Accordion({ icon: Icon, title, children, defaultOpen = true }) {
   )
 }
 
+const TIPO_LABEL = {
+  single:    'Habitación single',
+  doble:     'Habitación doble',
+  triple:    'Habitación triple',
+  cuadruple: 'Habitación cuádruple',
+}
+
+const SUBTIPO_LABEL = {
+  twin:        'cama twin / separadas',
+  matrimonial: 'cama matrimonial',
+}
+
 export default function StepResumen() {
   const {
     paquete, fecha, origen,
-    pasajeros, transportes, singleRooms,
+    pasajeros, transportes, habitaciones,
     opcionesTransporte,
     precioBase, calcTotal, calcTransporteCost, calcRecargo,
     nextStep, prevStep,
@@ -61,8 +73,6 @@ export default function StepResumen() {
   const transporteCost = calcTransporteCost()
   const recargo        = calcRecargo()
   const fechaFin       = addDias(fecha, paquete?.duracion_dias)
-
-  const habsData = buildHabs(pasajeros, singleRooms)
 
   return (
     <div className="paso">
@@ -104,17 +114,20 @@ export default function StepResumen() {
       {/* Pasajeros + Transporte: 2 columnas */}
       <div className="resumen__mid-grid">
         <Accordion icon={HiUsers} title={`Pasajeros (${pasajeros.length})`} defaultOpen={true}>
-          {pasajeros.map((pax, i) => (
-            <div key={i} className="resumen__row resumen__row--col">
-              <span className="resumen__row-name">{pax.nombre || `Pasajero ${i + 1}`}</span>
-              <span className="resumen__row-detail">
-                {pax.edad} años · {edadLabel(pax.edad)}
-              </span>
-              <span className="resumen__row-detail">
-                {singleRooms.includes(i) ? 'Habitación single' : 'Hab. compartida'}
-              </span>
-            </div>
-          ))}
+          {pasajeros.map((pax, i) => {
+            const hab = habitaciones.find(h => h.pasajeros.includes(i))
+            return (
+              <div key={i} className="resumen__row resumen__row--col">
+                <span className="resumen__row-name">{pax.nombre || `Pasajero ${i + 1}`}</span>
+                <span className="resumen__row-detail">
+                  {pax.edad} años · {edadLabel(pax.edad)}
+                </span>
+                <span className="resumen__row-detail">
+                  {hab ? TIPO_LABEL[hab.tipo] || hab.tipo : 'Sin asignar'}
+                </span>
+              </div>
+            )
+          })}
         </Accordion>
 
         <Accordion icon={HiTruck} title="Transporte" defaultOpen={true}>
@@ -134,19 +147,25 @@ export default function StepResumen() {
       </div>
 
       {/* Habitaciones — full width */}
-      <Accordion icon={HiBuildingOffice2} title={`Habitaciones (${habsData.length})`}>
+      <Accordion icon={HiBuildingOffice2} title={`Habitaciones (${habitaciones.length})`}>
         <div className="resumen__habs-grid">
-          {habsData.map((hab, i) => (
+          {habitaciones.map((hab, i) => (
             <div key={i} className="resumen__hab-card">
               <div className="resumen__hab-header">
-                <span>Hab. {i + 1} · {hab.tipo}</span>
-                {hab.single && <span className="resumen__badge-single">Single +50%</span>}
-              </div>
-              {hab.pasajeros.map((p, j) => (
-                <span key={j} className="resumen__hab-pax">
-                  {p.nombre || 'Pasajero'} · {edadLabel(p.edad)}
+                <span>
+                  Hab. {i + 1} · {TIPO_LABEL[hab.tipo] || hab.tipo}
+                  {hab.tipo === 'doble' && hab.subTipo ? ` · ${SUBTIPO_LABEL[hab.subTipo] || hab.subTipo}` : ''}
                 </span>
-              ))}
+                {hab.tipo === 'single' && <span className="resumen__badge-single">Single +50%</span>}
+              </div>
+              {hab.pasajeros.map((pIdx, j) => {
+                const p = pasajeros[pIdx]
+                return (
+                  <span key={j} className="resumen__hab-pax">
+                    {p?.nombre || `Pasajero ${pIdx + 1}`} · {edadLabel(p?.edad)}
+                  </span>
+                )
+              })}
             </div>
           ))}
         </div>
@@ -179,18 +198,3 @@ export default function StepResumen() {
   )
 }
 
-function buildHabs(pasajeros, singleRooms) {
-  const habs = []
-  singleRooms.forEach(i => {
-    habs.push({ tipo: 'Habitación single', single: true, pasajeros: [pasajeros[i]] })
-  })
-  const noSingle = pasajeros.filter((_, i) => !singleRooms.includes(i))
-  for (let i = 0; i < noSingle.length; i += 2) {
-    habs.push({
-      tipo: 'Habitación doble',
-      single: false,
-      pasajeros: noSingle.slice(i, Math.min(i + 2, noSingle.length)),
-    })
-  }
-  return habs
-}

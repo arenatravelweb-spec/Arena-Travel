@@ -8,10 +8,10 @@ export default async function handler(req, res) {
   if (req.method === 'OPTIONS') return res.status(200).end()
   if (req.method !== 'POST') return res.status(405).json({ error: 'Method not allowed' })
 
-  const supabase = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_SERVICE_ROLE_KEY
-  )
+  const supabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL
+  const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.VITE_SERVICE_ROLE
+
+  const supabase = createClient(supabaseUrl, supabaseKey)
 
   try {
     const { nombre, precio, descripcion, comprador } = req.body
@@ -31,8 +31,9 @@ export default async function handler(req, res) {
 
     if (dbErr) throw new Error(dbErr.message)
 
-    const origin = req.headers.origin || process.env.APP_URL || ''
-    const isProd  = origin && !origin.includes('localhost')
+    const appUrl  = process.env.APP_URL || ''
+    const origin  = req.headers.origin || appUrl
+    const isProd  = appUrl ? true : (!!origin && !origin.includes('localhost'))
 
     const isSandbox   = process.env.MP_SANDBOX === 'true'
     const accessToken = isSandbox
@@ -61,9 +62,9 @@ export default async function handler(req, res) {
         notification_url: `${process.env.SUPABASE_URL}/functions/v1/mp-webhook`,
         ...(isProd && {
           back_urls: {
-            success: `${origin}/?pago=exitoso`,
-            failure: `${origin}/?pago=fallido`,
-            pending: `${origin}/?pago=pendiente`,
+            success: `${appUrl || origin}/?pago=exitoso`,
+            failure: `${appUrl || origin}/?pago=fallido`,
+            pending: `${appUrl || origin}/?pago=pendiente`,
           },
           auto_return: 'approved',
         }),
