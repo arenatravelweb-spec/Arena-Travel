@@ -41,7 +41,7 @@ function ModalInner({ producto, onClose, mode }) {
     producto.categoria === 'egresados'     ? 'Viaje de egresados' :
     producto.categoria === 'internacional' ? 'Internacional'       : 'Nacional'
 
-  const isFlow = mode === 'flow' || producto.categoria === 'egresados'
+  const isFlow = mode === 'flow'
 
   return (
     <div className={`rmodal__overlay${isFlow ? ' rmodal__overlay--flow' : ''}`} onClick={onClose}>
@@ -116,6 +116,15 @@ function ModalInner({ producto, onClose, mode }) {
                       Consultar por WhatsApp
                     </a>
                   )}
+                </div>
+              )}
+
+              {/* Booking flow para egresados — igual que antes */}
+              {producto.categoria === 'egresados' && (
+                <div>
+                  <h3 className="rmodal__section-title">Completar reserva</h3>
+                  <BookingStepper />
+                  <Steps />
                 </div>
               )}
             </div>
