@@ -4234,6 +4234,146 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 }
 .habitaciones__warning svg { flex-shrink: 0; margin-top: 2px; }
 
+/* Nuevo sistema de selección de habitaciones */
+.habitaciones__rooms {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+.habitaciones__room-card {
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  background: var(--color-white);
+}
+.habitaciones__room-header {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  padding: .75rem 1.1rem;
+  background: var(--color-bg);
+  border-bottom: 1.5px solid var(--color-border);
+  font-size: .85rem;
+  font-weight: 600;
+}
+.habitaciones__room-num {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+.habitaciones__room-pax-tag {
+  font-size: .78rem;
+  color: var(--color-text-light);
+  margin-left: auto;
+}
+.habitaciones__tipo-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  padding: .9rem 1.1rem;
+}
+.habitaciones__tipo-opt {
+  flex: 1 1 calc(50% - .5rem);
+  min-width: 120px;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: .65rem .9rem;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+  display: flex;
+  flex-direction: column;
+  gap: .2rem;
+}
+.habitaciones__tipo-opt input { display: none; }
+.habitaciones__tipo-opt:hover { border-color: var(--color-primary); }
+.habitaciones__tipo-opt--selected {
+  border-color: var(--color-primary);
+  background: rgba(247,147,30,.06);
+}
+.habitaciones__tipo-label {
+  font-weight: 700;
+  font-size: .85rem;
+  color: var(--color-text);
+}
+.habitaciones__tipo-opt--selected .habitaciones__tipo-label { color: var(--color-primary); }
+.habitaciones__tipo-desc {
+  font-size: .74rem;
+  color: var(--color-text-light);
+}
+.habitaciones__subtipo {
+  padding: .5rem 1.1rem .9rem;
+  border-top: 1px dashed var(--color-border);
+}
+.habitaciones__subtipo-label {
+  font-size: .78rem;
+  font-weight: 600;
+  color: var(--color-text-light);
+  margin-bottom: .45rem;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+.habitaciones__subtipo-opts {
+  display: flex;
+  gap: .6rem;
+  flex-wrap: wrap;
+}
+.habitaciones__subtipo-opt {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  border: 1.5px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: .5rem .9rem;
+  font-size: .82rem;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+}
+.habitaciones__subtipo-opt input { display: none; }
+.habitaciones__subtipo-opt:hover { border-color: var(--color-primary); }
+.habitaciones__subtipo-opt--selected {
+  border-color: var(--color-primary);
+  background: rgba(247,147,30,.06);
+  font-weight: 600;
+  color: var(--color-primary-dark);
+}
+.habitaciones__single-info {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  padding: .5rem 1.1rem .9rem;
+  font-size: .82rem;
+  color: var(--color-primary-dark);
+  font-weight: 600;
+  border-top: 1px dashed var(--color-border);
+}
+.habitaciones__recargo-info {
+  background: rgba(247,147,30,.08);
+  border: 1.5px solid rgba(247,147,30,.3);
+  border-radius: var(--radius-sm);
+  padding: .65rem 1rem;
+  font-size: .82rem;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+  margin-bottom: 1rem;
+}
+
+/* Botones dobles en cards de productos nacionales */
+.prod-card__btns {
+  display: flex;
+  flex-direction: column;
+  gap: .5rem;
+  width: 100%;
+}
+
+/* Botones dobles en pkg-card */
+.pkg-card__btns {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+}
+.pkg-card__btns .btn { flex: 1; min-width: 100px; white-space: nowrap; }
+
 /* ═══════════════════════════════════════════════════
    STEP 4 — RESUMEN
 ═══════════════════════════════════════════════════ */
@@ -5681,6 +5821,170 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 
 /* CTA */
 .rc__cta { margin: .6rem 1rem .9rem; width: calc(100% - 2rem); justify-content: center; font-size: .88rem; }
+
+/* Números disponibles — grilla de imágenes */
+.rc__numeros { padding: .8rem 1rem .6rem; border-top: 1px solid var(--color-border); }
+.rc__numeros .rc__sub { margin-bottom: .55rem; }
+.rc__numeros-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  gap: .4rem;
+}
+.rc__numero-img-wrap {
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1.5px solid var(--color-border);
+  display: block;
+  transition: border-color .2s, transform .2s;
+}
+.rc__numero-img-wrap:hover {
+  border-color: var(--color-primary);
+  transform: scale(1.04);
+}
+.rc__numero-img {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+}
+
+/* ── Selector interactivo de números ── */
+.rc__selector { padding: .8rem 1rem .6rem; border-top: 1px solid var(--color-border); }
+.rc__selector-toggle {
+  width: 100%;
+  padding: .6rem 1rem;
+  background: var(--color-surface-2, #f4f4f5);
+  border: 1.5px solid var(--color-border);
+  border-radius: 8px;
+  font-size: .88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .2s, border-color .2s;
+  color: var(--color-text);
+}
+.rc__selector-toggle:hover { background: var(--color-border); border-color: var(--color-primary); }
+.rc__selector-body { margin-top: .75rem; }
+.rc__selector-hint {
+  font-size: .78rem;
+  color: var(--color-muted);
+  margin-bottom: .65rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: .45rem;
+  align-items: center;
+}
+.rc__legend { display: flex; gap: .35rem; flex-wrap: wrap; margin-left: auto; }
+.rc__legend-item {
+  font-size: .72rem;
+  font-weight: 600;
+  padding: 2px 7px;
+  border-radius: 99px;
+}
+.rc__legend-item--libre  { background: var(--color-surface-2, #f4f4f5); border: 1px solid var(--color-border); }
+.rc__legend-item--sel    { background: var(--color-primary); color: #fff; }
+.rc__legend-item--vend   { background: #e5e7eb; color: #9ca3af; }
+.rc__selector-sel {
+  margin-top: .6rem;
+  font-size: .82rem;
+  color: var(--color-muted);
+  word-break: break-word;
+}
+.rifa-numgrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(34px, 1fr));
+  gap: 3px;
+  max-height: 260px;
+  overflow-y: auto;
+  padding: 2px;
+  border-radius: 8px;
+}
+.rifa-numgrid__cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .72rem;
+  font-weight: 700;
+  border-radius: 6px;
+  border: 1.5px solid var(--color-border);
+  background: var(--color-surface-2, #f9f9f9);
+  cursor: pointer;
+  transition: background .15s, border-color .15s, color .15s;
+  color: var(--color-text);
+  padding: 0;
+  line-height: 1;
+}
+.rifa-numgrid__cell:hover:not(:disabled) {
+  background: var(--color-primary-light, #fde7e0);
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+}
+.rifa-numgrid__cell--selected {
+  background: var(--color-primary) !important;
+  border-color: var(--color-primary) !important;
+  color: #fff !important;
+}
+.rifa-numgrid__cell--selected svg { width: 14px; height: 14px; }
+.rifa-numgrid__cell--vendido {
+  background: #f3f4f6 !important;
+  border-color: #e5e7eb !important;
+  color: #9ca3af !important;
+  cursor: not-allowed;
+  font-size: .85rem;
+}
+.rfmodal__nums-wrap { margin-top: 1rem; }
+.rfmodal__nums-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .35rem;
+  margin: .5rem 0 .4rem;
+}
+.rfmodal__num-tag {
+  background: var(--color-primary);
+  color: #fff;
+  font-size: .82rem;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 99px;
+}
+
+/* Admin RifaForm — grilla imágenes de números */
+.rifa-form__numeros-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: .5rem;
+  margin-bottom: .75rem;
+}
+.rifa-form__numero-item {
+  position: relative;
+  border-radius: var(--radius-sm);
+  overflow: hidden;
+  border: 1.5px solid var(--color-border);
+}
+.rifa-form__numero-preview {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+}
+.rifa-form__numero-del {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  background: rgba(0,0,0,.65);
+  border: none;
+  border-radius: 50%;
+  color: #fff;
+  width: 22px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: .8rem;
+  cursor: pointer;
+  transition: background .2s;
+}
+.rifa-form__numero-del:hover { background: #dc2626; }
 
 /* ── Overlay exclusivo del rifa modal ── */
 .rfmodal__overlay {

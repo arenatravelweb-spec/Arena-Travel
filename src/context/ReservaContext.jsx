@@ -2,15 +2,33 @@ import { createContext, useContext, useState, useCallback } from 'react'
 
 const ReservaCtx = createContext(null)
 
+function initHabitaciones(n) {
+  const habs = []
+  let restantes = n
+  let idx = 0
+  while (restantes > 0) {
+    if (restantes === 1) {
+      habs.push({ pasajeros: [idx], tipo: 'single', subTipo: null })
+      restantes -= 1
+    } else {
+      habs.push({ pasajeros: [idx, idx + 1], tipo: 'doble', subTipo: 'twin' })
+      restantes -= 2
+      idx += 2
+    }
+    if (restantes <= 0) break
+  }
+  return habs
+}
+
 export function ReservaProvider({ paquete, fechaInicial, origenInicial, children }) {
   const [step, setStep] = useState(1)
   const [pasajeros, setPasajeros] = useState([{ edad: '', nombre: '' }])
   // { '0': 'SEMICAMA', '1': 'COCHE CAMA', ... } - índice en pasajerosConAsiento
   const [transportes, setTransportes] = useState({})
-  // índices en pasajeros[] que piden habitación single
-  const [singleRooms, setSingleRooms] = useState([])
+  // [{ pasajeros: [indices], tipo: 'single'|'doble'|'triple'|'cuadruple', subTipo: 'twin'|'matrimonial'|null }]
+  const [habitaciones, setHabitaciones] = useState(() => initHabitaciones(1))
   const [checkout, setCheckout] = useState({
-    datos: [],          // [{ nombre, apellido, tipoDoc, numDoc, sexo, nacionalidad }]
+    datos: [],
     medioPago: '',
     email: '',
     telefono: '',
@@ -24,7 +42,6 @@ export function ReservaProvider({ paquete, fechaInicial, origenInicial, children
   const recargoSingle     = Number(paquete?.precio_single_recargo ?? 50)
   const opcionesTransporte = paquete?.opciones_transporte ?? []
 
-  // Pasajeros que necesitan asiento (≥2 años)
   const pasajerosConAsiento = pasajeros.filter(p => {
     const age = parseInt(p.edad)
     return !isNaN(age) && age >= 2
@@ -42,8 +59,14 @@ export function ReservaProvider({ paquete, fechaInicial, origenInicial, children
   }, [transportes, opcionesTransporte, pasajerosConAsiento])
 
   const calcRecargo = useCallback(() => {
-    return singleRooms.length * (precioBase * recargoSingle) / 100
-  }, [singleRooms, precioBase, recargoSingle])
+    let recargo = 0
+    habitaciones.forEach(hab => {
+      if (hab.tipo === 'single') {
+        recargo += hab.pasajeros.length * (precioBase * recargoSingle) / 100
+      }
+    })
+    return recargo
+  }, [habitaciones, precioBase, recargoSingle])
 
   const calcTotal = useCallback(() => {
     if (!precioBase || pasajeros.length === 0) return 0
@@ -58,7 +81,7 @@ export function ReservaProvider({ paquete, fechaInicial, origenInicial, children
       step, nextStep, prevStep, setStep,
       pasajeros, setPasajeros,
       transportes, setTransportes,
-      singleRooms, setSingleRooms,
+      habitaciones, setHabitaciones,
       checkout, setCheckout,
       pasajerosConAsiento,
       precioBase,
@@ -67,6 +90,7 @@ export function ReservaProvider({ paquete, fechaInicial, origenInicial, children
       calcTotal,
       calcTransporteCost,
       calcRecargo,
+      initHabitaciones,
     }}>
       {children}
     </ReservaCtx.Provider>

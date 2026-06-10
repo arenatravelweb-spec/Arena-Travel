@@ -46,16 +46,18 @@ function validateField(name, value) {
   return ''
 }
 
-export default function RifaModal({ rifa, onClose }) {
+export default function RifaModal({ rifa, onClose, numerosPreseleccionados = [] }) {
+  const tieneSeleccion = numerosPreseleccionados.length > 0
+
   const [form, setForm]     = useState({ nombre: '', email: '', telefono: '' })
   const [touched, setTouched] = useState({})
   const [errors, setErrors] = useState({})
-  const [cantidad, setCantidad] = useState(1)
+  const [cantidad, setCantidad] = useState(tieneSeleccion ? numerosPreseleccionados.length : 1)
   const [loading, setLoading]   = useState(false)
 
   const disponibles = (rifa.total_numeros || 300) - (rifa.numeros_vendidos || 0)
   const maxCompra   = Math.min(5, disponibles)
-  const total       = Number(rifa.precio_numero) * cantidad
+  const total       = Number(rifa.precio_numero) * (tieneSeleccion ? numerosPreseleccionados.length : cantidad)
   const premios     = Array.isArray(rifa.premios) ? rifa.premios : []
   const caract      = Array.isArray(rifa.caracteristicas) ? rifa.caracteristicas : []
 
@@ -119,18 +121,20 @@ export default function RifaModal({ rifa, onClose }) {
     try {
       const { data: { session } } = await supabase.auth.getSession()
       const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+      const anonKey     = import.meta.env.VITE_SUPABASE_ANON_KEY
       const res = await fetch(`${supabaseUrl}/functions/v1/crear-rifa-pago`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          ...(session?.access_token ? { Authorization: `Bearer ${session.access_token}` } : {}),
+          'Authorization': `Bearer ${session?.access_token || anonKey}`,
         },
         body: JSON.stringify({
           rifa_id:          rifa.id,
           nombre:           form.nombre.trim(),
           email:            form.email.trim(),
           telefono:         form.telefono.trim(),
-          cantidad_numeros: cantidad,
+          cantidad_numeros: tieneSeleccion ? numerosPreseleccionados.length : cantidad,
+          numeros_elegidos: tieneSeleccion ? numerosPreseleccionados : [],
         }),
       })
       const data = await res.json()
@@ -260,16 +264,28 @@ export default function RifaModal({ rifa, onClose }) {
                 </div>
               </div>
 
-              {/* Cantidad */}
-              <div className="rfmodal__qty-wrap">
-                <p className="rfmodal__qty-label">Cantidad de números</p>
-                <div className="rfmodal__qty-row">
-                  <button className="rfmodal__qty-btn" onClick={() => setCantidad(c => Math.max(1, c - 1))} disabled={cantidad <= 1}><HiMinus /></button>
-                  <span className="rfmodal__qty-val">{cantidad}</span>
-                  <button className="rfmodal__qty-btn" onClick={() => setCantidad(c => Math.min(maxCompra, c + 1))} disabled={cantidad >= maxCompra}><HiPlus /></button>
+              {/* Números elegidos o selector de cantidad */}
+              {tieneSeleccion ? (
+                <div className="rfmodal__nums-wrap">
+                  <p className="rfmodal__qty-label">Tus números elegidos</p>
+                  <div className="rfmodal__nums-tags">
+                    {numerosPreseleccionados.sort((a, b) => a - b).map(n => (
+                      <span key={n} className="rfmodal__num-tag">{n}</span>
+                    ))}
+                  </div>
+                  <p className="rfmodal__qty-hint">{numerosPreseleccionados.length} número{numerosPreseleccionados.length > 1 ? 's' : ''} seleccionado{numerosPreseleccionados.length > 1 ? 's' : ''}</p>
                 </div>
-                <p className="rfmodal__qty-hint">Cuantos más números, más chances. Máx. {maxCompra} por compra.</p>
-              </div>
+              ) : (
+                <div className="rfmodal__qty-wrap">
+                  <p className="rfmodal__qty-label">Cantidad de números</p>
+                  <div className="rfmodal__qty-row">
+                    <button className="rfmodal__qty-btn" onClick={() => setCantidad(c => Math.max(1, c - 1))} disabled={cantidad <= 1}><HiMinus /></button>
+                    <span className="rfmodal__qty-val">{cantidad}</span>
+                    <button className="rfmodal__qty-btn" onClick={() => setCantidad(c => Math.min(maxCompra, c + 1))} disabled={cantidad >= maxCompra}><HiPlus /></button>
+                  </div>
+                  <p className="rfmodal__qty-hint">Cuantos más números, más chances. Máx. {maxCompra} por compra.</p>
+                </div>
+              )}
             </div>
           </div>
 

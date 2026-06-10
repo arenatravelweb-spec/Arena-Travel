@@ -3,15 +3,16 @@ import { HiPlus, HiTrash, HiPhoto, HiXMark } from 'react-icons/hi2'
 import { uploadToCloudinary } from '../../lib/cloudinary'
 
 const EMPTY = {
-  titulo:           '',
-  descripcion:      '',
-  imagen_url:       '',
-  precio_numero:    '',
-  total_numeros:    300,
-  fecha_limite:     '',
-  activa:           true,
-  premios:          [{ orden: 1, descripcion: '' }, { orden: 2, descripcion: '' }],
-  caracteristicas:  [
+  titulo:            '',
+  descripcion:       '',
+  imagen_url:        '',
+  precio_numero:     '',
+  total_numeros:     300,
+  fecha_limite:      '',
+  activa:            true,
+  imagenes_numeros:  [],
+  premios:           [{ orden: 1, descripcion: '' }, { orden: 2, descripcion: '' }],
+  caracteristicas:   [
     'Solo 300 números disponibles',
     'Sorteo al vender todos los números',
     'Transparencia y seguridad',
@@ -33,15 +34,18 @@ export default function RifaForm({ initial, onSave, onCancel }) {
     ? {
         ...EMPTY,
         ...initial,
-        premios:         Array.isArray(initial.premios)         ? initial.premios         : EMPTY.premios,
-        caracteristicas: Array.isArray(initial.caracteristicas) ? initial.caracteristicas : EMPTY.caracteristicas,
+        premios:          Array.isArray(initial.premios)          ? initial.premios          : EMPTY.premios,
+        caracteristicas:  Array.isArray(initial.caracteristicas)  ? initial.caracteristicas  : EMPTY.caracteristicas,
+        imagenes_numeros: Array.isArray(initial.imagenes_numeros) ? initial.imagenes_numeros : [],
       }
     : { ...EMPTY }
   )
-  const [saving, setSaving]       = useState(false)
-  const [uploading, setUploading] = useState(false)
-  const [errors, setErrors]       = useState({})
-  const fileRef = useRef()
+  const [saving, setSaving]           = useState(false)
+  const [uploading, setUploading]     = useState(false)
+  const [uploadingNum, setUploadingNum] = useState(false)
+  const [errors, setErrors]           = useState({})
+  const fileRef    = useRef()
+  const fileNumRef = useRef()
 
   const set = (field, val) => setForm(f => ({ ...f, [field]: val }))
 
@@ -59,6 +63,25 @@ export default function RifaForm({ initial, onSave, onCancel }) {
       setUploading(false)
       if (fileRef.current) fileRef.current.value = ''
     }
+  }
+
+  const handleImagenesNumeros = async (e) => {
+    const files = Array.from(e.target.files || [])
+    if (!files.length) return
+    setUploadingNum(true)
+    try {
+      const urls = await Promise.all(files.map(f => uploadToCloudinary(f)))
+      set('imagenes_numeros', [...form.imagenes_numeros, ...urls])
+    } catch (err) {
+      setErrors(prev => ({ ...prev, imagenes_numeros: err.message }))
+    } finally {
+      setUploadingNum(false)
+      if (fileNumRef.current) fileNumRef.current.value = ''
+    }
+  }
+
+  const removeImagenNumero = (i) => {
+    set('imagenes_numeros', form.imagenes_numeros.filter((_, j) => j !== i))
   }
 
   const setPremio = (i, field, val) => {
@@ -86,15 +109,16 @@ export default function RifaForm({ initial, onSave, onCancel }) {
     if (!validate()) return
     setSaving(true)
     await onSave({
-      titulo:          form.titulo.trim(),
-      descripcion:     form.descripcion.trim() || null,
-      imagen_url:      form.imagen_url.trim()  || null,
-      precio_numero:   Number(form.precio_numero),
-      total_numeros:   Number(form.total_numeros),
-      fecha_limite:    form.fecha_limite || null,
-      activa:          form.activa,
-      premios:         form.premios.filter(p => p.descripcion.trim()),
-      caracteristicas: form.caracteristicas.filter(c => c.trim()),
+      titulo:            form.titulo.trim(),
+      descripcion:       form.descripcion.trim() || null,
+      imagen_url:        form.imagen_url.trim()  || null,
+      precio_numero:     Number(form.precio_numero),
+      total_numeros:     Number(form.total_numeros),
+      fecha_limite:      form.fecha_limite || null,
+      activa:            form.activa,
+      imagenes_numeros:  form.imagenes_numeros,
+      premios:           form.premios.filter(p => p.descripcion.trim()),
+      caracteristicas:   form.caracteristicas.filter(c => c.trim()),
     })
     setSaving(false)
   }
@@ -189,6 +213,49 @@ export default function RifaForm({ initial, onSave, onCancel }) {
             </label>
           </div>
         </div>
+      </Section>
+
+      <Section title="Imágenes de números disponibles">
+        <p style={{ fontSize: '.85rem', color: 'var(--color-text-muted)', marginBottom: '.75rem' }}>
+          Subí imágenes con los números disponibles. Se mostrarán en una grilla en la sección de rifas.
+        </p>
+        {form.imagenes_numeros.length > 0 && (
+          <div className="rifa-form__numeros-grid">
+            {form.imagenes_numeros.map((url, i) => (
+              <div key={i} className="rifa-form__numero-item">
+                <img src={url} alt={`Número ${i + 1}`} className="rifa-form__numero-preview" />
+                <button
+                  type="button"
+                  className="rifa-form__numero-del"
+                  onClick={() => removeImagenNumero(i)}
+                  title="Quitar"
+                >
+                  <HiXMark />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
+        <button
+          type="button"
+          className="rifa-form__upload-btn"
+          onClick={() => fileNumRef.current?.click()}
+          disabled={uploadingNum}
+        >
+          <HiPhoto />
+          {uploadingNum ? 'Subiendo…' : 'Agregar imágenes'}
+        </button>
+        <input
+          ref={fileNumRef}
+          type="file"
+          accept="image/*"
+          multiple
+          style={{ display: 'none' }}
+          onChange={handleImagenesNumeros}
+        />
+        {errors.imagenes_numeros && (
+          <span className="form__error">{errors.imagenes_numeros}</span>
+        )}
       </Section>
 
       <Section title="Premios">

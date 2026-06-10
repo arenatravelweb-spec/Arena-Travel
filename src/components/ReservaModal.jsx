@@ -107,8 +107,19 @@ function ModalInner({ producto, onClose }) {
               </div>
             )}
 
-            {/* Booking flow — solo para nacionales y egresados */}
-            {producto.categoria !== 'internacional' && (
+            {/* Botón CTA para nacionales */}
+            {producto.categoria === 'nacional' && (
+              <a
+                href={`/reservar?paquete=${producto.id}`}
+                className="btn btn--primary btn--full"
+                style={{ marginTop: '1.5rem' }}
+              >
+                Reservar este paquete
+              </a>
+            )}
+
+            {/* Booking flow — solo para egresados */}
+            {producto.categoria === 'egresados' && (
               <div>
                 <h3 className="rmodal__section-title">Completar reserva</h3>
                 <BookingStepper />

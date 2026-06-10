@@ -40,7 +40,7 @@ function fmt(n) {
 export default function StepCheckout() {
   const {
     paquete, fecha,
-    pasajeros, transportes, singleRooms,
+    pasajeros, transportes, habitaciones,
     checkout, setCheckout,
     precioBase, calcTotal,
     opcionesTransporte,
@@ -98,7 +98,11 @@ export default function StepCheckout() {
         .filter(p => { const e=parseInt(p.edad); return !isNaN(e)&&e>=2 })
         .map((_, i) => ({ pasajero: i, transporte: transportes[i] || opcionesTransporte[0]?.nombre }))
 
-      const habitacionesArr = buildHabitaciones(pasajeros, singleRooms)
+      const habitacionesArr = habitaciones.map(h => ({
+        tipo:     h.tipo,
+        subTipo:  h.subTipo,
+        pasajeros: h.pasajeros,
+      }))
 
       const { error } = await supabase.from('reservas').insert({
         paquete_id:    paquete?.id,
@@ -380,14 +384,3 @@ export default function StepCheckout() {
   )
 }
 
-function buildHabitaciones(pasajeros, singleRooms) {
-  const habs = []
-  singleRooms.forEach(i => {
-    habs.push({ tipo: 'single', pasajero: i })
-  })
-  const noSingle = pasajeros.filter((_, i) => !singleRooms.includes(i))
-  for (let i = 0; i < noSingle.length; i += 2) {
-    habs.push({ tipo: 'doble', pasajeros: [i, Math.min(i+1, noSingle.length-1)] })
-  }
-  return habs
-}

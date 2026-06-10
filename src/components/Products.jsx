@@ -1,4 +1,5 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { toast } from 'sonner'
 import { supabase } from '../lib/supabase'
 import { formatPrecioDesde } from '../lib/pricing'
@@ -49,6 +50,7 @@ const SUBCATS = [
 ]
 
 export default function Products() {
+  const navigate = useNavigate()
   const [products, setProducts]           = useState([])
   const [loading, setLoading]             = useState(true)
   const [error, setError]                 = useState('')
@@ -199,16 +201,29 @@ export default function Products() {
                   {p.categoria === 'internacional' && p.precio_desde && (
                     <p className="prod-card__price">Precio: desde {formatPrecioDesde(p.nombre, p.precio_desde)}</p>
                   )}
-                  <AnimatedButton
-                    text={p.categoria === 'internacional' ? 'Ver itinerario' : 'Ver destino'}
-                    size="sm"
-                    color="var(--color-accent)"
-                    onClick={e => {
-                      e.stopPropagation()
-                      if (p.categoria === 'internacional') setReserva(p)
-                      else setDetail(p)
-                    }}
-                  />
+                  {p.categoria === 'nacional' ? (
+                    <div className="prod-card__btns">
+                      <AnimatedButton
+                        text="Ver itinerario"
+                        size="sm"
+                        color="var(--color-accent)"
+                        onClick={e => { e.stopPropagation(); setReserva(p) }}
+                      />
+                      <AnimatedButton
+                        text="Reservar"
+                        size="sm"
+                        color="var(--color-primary)"
+                        onClick={e => { e.stopPropagation(); setDetail(p) }}
+                      />
+                    </div>
+                  ) : (
+                    <AnimatedButton
+                      text="Ver itinerario"
+                      size="sm"
+                      color="var(--color-accent)"
+                      onClick={e => { e.stopPropagation(); setReserva(p) }}
+                    />
+                  )}
                 </div>
               </article>
             ))}
@@ -220,7 +235,10 @@ export default function Products() {
         <ProductModal
           producto={detailProducto}
           onClose={() => setDetail(null)}
-          onComprar={() => { setReserva(detailProducto); setDetail(null) }}
+          onComprar={() => {
+            setDetail(null)
+            navigate(`/reservar?paquete=${detailProducto.id}`)
+          }}
         />
       )}
 

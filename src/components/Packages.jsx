@@ -1,9 +1,15 @@
 import { useEffect, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { supabase } from '../lib/supabase'
+import ProductModal from './ProductModal'
+import ReservaModal from './ReservaModal'
 
 export default function Packages() {
+  const navigate = useNavigate()
   const [packages, setPackages] = useState([])
   const [loading, setLoading]   = useState(true)
+  const [detailProducto, setDetail]  = useState(null)
+  const [reservaProducto, setReserva] = useState(null)
 
   useEffect(() => {
     supabase
@@ -47,13 +53,44 @@ export default function Packages() {
                     </span>
                     <span className="per-person">por persona</span>
                   </div>
-                  <a href="#productos" className="btn btn--primary">Ver más</a>
+                  <div className="pkg-card__btns">
+                    <button
+                      className="btn btn--outline btn--sm"
+                      onClick={() => setReserva(pkg)}
+                    >
+                      Ver itinerario
+                    </button>
+                    <button
+                      className="btn btn--primary btn--sm"
+                      onClick={() => setDetail(pkg)}
+                    >
+                      Reservar
+                    </button>
+                  </div>
                 </div>
               </div>
             </article>
           ))}
         </div>
       </div>
+
+      {detailProducto && (
+        <ProductModal
+          producto={detailProducto}
+          onClose={() => setDetail(null)}
+          onComprar={() => {
+            setDetail(null)
+            navigate(`/reservar?paquete=${detailProducto.id}`)
+          }}
+        />
+      )}
+
+      {reservaProducto && (
+        <ReservaModal
+          producto={reservaProducto}
+          onClose={() => setReserva(null)}
+        />
+      )}
     </section>
   )
 }
