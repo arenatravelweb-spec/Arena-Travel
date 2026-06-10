@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
+import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
 import {
   HiDocumentText, HiCreditCard, HiBanknotes, HiBuildingLibrary,
-  HiEnvelope, HiPhone, HiShieldCheck, HiCheckCircle,
+  HiEnvelope, HiShieldCheck, HiCheckCircle,
 } from 'react-icons/hi2'
 import { supabase } from '../../lib/supabase'
 import { useReserva } from '../../context/ReservaContext'
+
+initMercadoPago(import.meta.env.VITE_MP_PUBLIC_KEY, { locale: 'es-AR' })
 
 const TIPOS_DOC = ['DNI', 'Pasaporte', 'LC', 'LE', 'CI']
 const SEXOS     = ['Femenino', 'Masculino', 'No binario', 'Prefiero no decir']
@@ -47,9 +50,10 @@ export default function StepCheckout() {
     prevStep,
   } = useReserva()
 
-  const [submitting, setSubmitting] = useState(false)
-  const [done, setDone] = useState(false)
-  const [errors, setErrors] = useState({})
+  const [submitting, setSubmitting]   = useState(false)
+  const [done, setDone]               = useState(false)
+  const [errors, setErrors]           = useState({})
+  const [preferenceId, setPreferenceId] = useState(null)
 
   const total = calcTotal()
 
@@ -123,6 +127,31 @@ export default function StepCheckout() {
       })
 
       if (error) throw error
+
+      // Si eligió tarjeta, crear preferencia en MercadoPago
+      if (checkout.medioPago === 'tarjeta') {
+        const mpRes = await fetch('/api/crear-preferencia', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            nombre:      paquete?.nombre,
+            precio:      total,
+            descripcion: `Reserva ${paquete?.nombre}`,
+            comprador: {
+              nombre:   (checkout.datos?.[0]?.nombre || '') + ' ' + (checkout.datos?.[0]?.apellido || ''),
+              email:    checkout.email,
+              telefono: checkout.telefono,
+            },
+          }),
+        })
+        const mpData = await mpRes.json()
+        if (mpData.preference_id) {
+          setPreferenceId(mpData.preference_id)
+          setSubmitting(false)
+          return
+        }
+      }
+
       setDone(true)
     } catch (err) {
       console.error('Error al guardar reserva:', err)
@@ -369,12 +398,22 @@ export default function StepCheckout() {
 
       </div>{/* fin checkout__layout */}
 
-      <div className="paso__actions">
-        <button className="btn btn--outline" onClick={prevStep} disabled={submitting}>Volver</button>
-        <button className="btn btn--primary" onClick={handleSubmit} disabled={submitting}>
-          {submitting ? 'Confirmando…' : 'Confirmar reserva'}
-        </button>
-      </div>
+      {preferenceId ? (
+        <div className="checkout__wallet">
+          <p className="checkout__wallet-note">Tu reserva está guardada. Completá el pago con MercadoPago:</p>
+          <Wallet
+            initialization={{ preferenceId }}
+            customization={{ texts: { valueProp: 'smart_option' } }}
+          />
+        </div>
+      ) : (
+        <div className="paso__actions">
+          <button className="btn btn--outline" onClick={prevStep} disabled={submitting}>Volver</button>
+          <button className="btn btn--primary" onClick={handleSubmit} disabled={submitting}>
+            {submitting ? 'Confirmando…' : 'Confirmar reserva'}
+          </button>
+        </div>
+      )}
 
       <p className="checkout__terms">
         Al confirmar, aceptás los{' '}

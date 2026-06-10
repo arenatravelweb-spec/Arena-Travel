@@ -22,10 +22,7 @@ Deno.serve(async (req) => {
   try {
     const { nombre, precio, descripcion, comprador } = body
 
-    const isSandbox   = Deno.env.get('MP_SANDBOX') === 'true'
-    const accessToken = isSandbox
-      ? Deno.env.get('MP_ACCESS_TOKEN_TEST')!
-      : Deno.env.get('MP_ACCESS_TOKEN')!
+    const accessToken = Deno.env.get('MP_ACCESS_TOKEN')!
     const baseUrl     = Deno.env.get('APP_URL') || req.headers.get('origin') || 'http://localhost:5173'
 
     const supabase = createClient(
@@ -81,7 +78,7 @@ Deno.serve(async (req) => {
 
     const mpData = await mpRes.json()
 
-    const url = isSandbox ? mpData.sandbox_init_point : mpData.init_point
+    const url = mpData.init_point
 
     return new Response(JSON.stringify({ preference_id: mpData.id, init_point: url }), {
       headers: { ...CORS, 'Content-Type': 'application/json' },
