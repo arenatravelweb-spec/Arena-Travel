@@ -104,7 +104,7 @@ export default function Products() {
 
   const filtered = products.filter(p => {
     if (p.categoria !== active) return false
-    if (active === 'egresados') return p.subcategoria === subcat
+    if (active === 'egresados') return p.subcategoria === subcat || p.subcategoria === 'ambos'
     return true
   })
 
