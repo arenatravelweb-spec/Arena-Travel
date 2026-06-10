@@ -192,7 +192,7 @@ export default function Products() {
                 )}
                 <h3 className="prod-card__title">{p.nombre}</h3>
                 <div className="prod-card__details">
-                  {p.descripcion && <p className="prod-card__desc">{p.descripcion}</p>}
+                  {p.descripcion && p.categoria !== 'nacional' && <p className="prod-card__desc">{p.descripcion}</p>}
                   {p.categoria === 'nacional' && p.precio && (
                     <p className="prod-card__price">
                       $ {Number(p.precio).toLocaleString('es-AR', { minimumFractionDigits: 2 })}
