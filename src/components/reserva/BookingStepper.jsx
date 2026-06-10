@@ -63,63 +63,73 @@ export default function BookingStepper() {
   }
 
   return (
-    <div className="orb-stepper" ref={containerRef} onClick={handleContainerClick}>
-      {/* Centre orb */}
-      <div className="orb-stepper__center">
-        <div className="orb-stepper__center-ring orb-stepper__center-ring--1" />
-        <div className="orb-stepper__center-ring orb-stepper__center-ring--2" />
-        <div className="orb-stepper__center-core" />
+    <>
+      {/* Orbital stepper — desktop */}
+      <div className="orb-stepper" ref={containerRef} onClick={handleContainerClick}>
+        <div className="orb-stepper__center">
+          <div className="orb-stepper__center-ring orb-stepper__center-ring--1" />
+          <div className="orb-stepper__center-ring orb-stepper__center-ring--2" />
+          <div className="orb-stepper__center-core" />
+        </div>
+        <div className="orb-stepper__ring" />
+        {STEPS.map((s, index) => {
+          const pos      = calcPos(index, STEPS.length)
+          const status   = getStatus(s.id)
+          const expanded = expandedId === s.id
+          const Icon     = s.Icon
+          return (
+            <div
+              key={s.id}
+              className={`orb-stepper__node orb-stepper__node--${status}`}
+              style={{
+                transform: `translate(${pos.x}px, ${pos.y}px)`,
+                zIndex:    expanded ? 200 : pos.zIndex,
+                opacity:   expanded ? 1   : pos.opacity,
+              }}
+              onClick={(e) => handleNodeClick(e, s.id)}
+            >
+              {status === 'active' && <div className="orb-stepper__glow" />}
+              <div className={`orb-stepper__dot${expanded ? ' orb-stepper__dot--exp' : ''}`}>
+                {status === 'done' ? <HiCheck /> : <Icon />}
+              </div>
+              <span className="orb-stepper__label">{s.label}</span>
+              {expanded && (
+                <div className="orb-stepper__card" onClick={e => e.stopPropagation()}>
+                  <div className="orb-stepper__card-top" />
+                  <span className={`orb-stepper__badge orb-stepper__badge--${status}`}>
+                    {status === 'done' ? 'Completado' : status === 'active' ? 'En curso' : 'Pendiente'}
+                  </span>
+                  <strong className="orb-stepper__card-title">{s.label}</strong>
+                  <p className="orb-stepper__card-desc">{s.desc}</p>
+                  <div className="orb-stepper__card-bar">
+                    <div className="orb-stepper__card-fill"
+                      style={{ width: status === 'done' ? '100%' : status === 'active' ? '50%' : '0%' }} />
+                  </div>
+                </div>
+              )}
+            </div>
+          )
+        })}
       </div>
 
-      {/* Orbit ring */}
-      <div className="orb-stepper__ring" />
-
-      {/* Step nodes */}
-      {STEPS.map((s, index) => {
-        const pos      = calcPos(index, STEPS.length)
-        const status   = getStatus(s.id)
-        const expanded = expandedId === s.id
-        const Icon     = s.Icon
-
-        return (
-          <div
-            key={s.id}
-            className={`orb-stepper__node orb-stepper__node--${status}`}
-            style={{
-              transform: `translate(${pos.x}px, ${pos.y}px)`,
-              zIndex:    expanded ? 200 : pos.zIndex,
-              opacity:   expanded ? 1   : pos.opacity,
-            }}
-            onClick={(e) => handleNodeClick(e, s.id)}
-          >
-            {/* Pulse glow for active */}
-            {status === 'active' && <div className="orb-stepper__glow" />}
-
-            <div className={`orb-stepper__dot${expanded ? ' orb-stepper__dot--exp' : ''}`}>
-              {status === 'done' ? <HiCheck /> : <Icon />}
-            </div>
-
-            <span className="orb-stepper__label">{s.label}</span>
-
-            {expanded && (
-              <div className="orb-stepper__card" onClick={e => e.stopPropagation()}>
-                <div className="orb-stepper__card-top" />
-                <span className={`orb-stepper__badge orb-stepper__badge--${status}`}>
-                  {status === 'done' ? 'Completado' : status === 'active' ? 'En curso' : 'Pendiente'}
-                </span>
-                <strong className="orb-stepper__card-title">{s.label}</strong>
-                <p className="orb-stepper__card-desc">{s.desc}</p>
-                <div className="orb-stepper__card-bar">
-                  <div
-                    className="orb-stepper__card-fill"
-                    style={{ width: status === 'done' ? '100%' : status === 'active' ? '50%' : '0%' }}
-                  />
-                </div>
+      {/* Linear stepper — mobile */}
+      <div className="lin-stepper">
+        {STEPS.map((s, i) => {
+          const status = getStatus(s.id)
+          const Icon   = s.Icon
+          return (
+            <div key={s.id} className="lin-stepper__item">
+              <div className={`lin-stepper__circle lin-stepper__circle--${status}`}>
+                {status === 'done' ? <HiCheck /> : <Icon />}
               </div>
-            )}
-          </div>
-        )
-      })}
-    </div>
+              <span className={`lin-stepper__label lin-stepper__label--${status}`}>{s.label}</span>
+              {i < STEPS.length - 1 && (
+                <div className={`lin-stepper__line${status === 'done' ? ' lin-stepper__line--done' : ''}`} />
+              )}
+            </div>
+          )
+        })}
+      </div>
+    </>
   )
 }

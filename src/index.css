@@ -4759,6 +4759,97 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 }
 .checkout__terms-link { color: var(--color-primary); text-decoration: underline; }
 
+/* ── Checkout layout: dos columnas en desktop ── */
+.checkout__layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+@media (max-width: 768px) {
+  .checkout__layout { grid-template-columns: 1fr; gap: 0; }
+}
+
+/* ── Wallet MercadoPago ── */
+.checkout__wallet {
+  padding: 1.5rem 1.25rem;
+  background: var(--color-bg);
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--color-border);
+  margin-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+.checkout__wallet-note {
+  font-size: .88rem;
+  color: var(--color-text-light);
+  text-align: center;
+}
+
+/* ── Linear stepper — mobile ── */
+.lin-stepper {
+  display: none;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 1rem .5rem 1.5rem;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.lin-stepper__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  flex-shrink: 0;
+}
+.lin-stepper__circle {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  border: 2px solid var(--color-border);
+  background: var(--color-bg);
+  color: var(--color-text-light);
+  font-size: .9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all .3s;
+  z-index: 1;
+}
+.lin-stepper__circle--active {
+  border-color: var(--color-primary);
+  background: var(--color-primary);
+  color: #fff;
+  box-shadow: 0 0 0 4px rgba(247,147,30,.18);
+}
+.lin-stepper__circle--done {
+  border-color: var(--color-ocean);
+  background: var(--color-ocean);
+  color: #fff;
+}
+.lin-stepper__label {
+  font-size: .6rem;
+  font-weight: 600;
+  color: var(--color-text-light);
+  text-align: center;
+  max-width: 56px;
+  line-height: 1.2;
+  margin-top: .35rem;
+}
+.lin-stepper__label--active { color: var(--color-primary); }
+.lin-stepper__label--done   { color: var(--color-ocean); }
+.lin-stepper__line {
+  position: absolute;
+  top: 19px;
+  left: calc(50% + 19px);
+  width: 28px;
+  height: 2px;
+  background: var(--color-border);
+}
+.lin-stepper__line--done { background: var(--color-ocean); }
+
 /* ═══════════════════════════════════════════════════
    SIDEBAR RESERVA
 ═══════════════════════════════════════════════════ */
@@ -4999,7 +5090,8 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   .aloj__includes { grid-template-columns: 1fr; gap: 1rem; }
 
   .paso { padding: 1.25rem; }
-  .orb-stepper { height: 260px; }
+  .orb-stepper { display: none; }
+  .lin-stepper  { display: flex; }
   .pasajero-form__fields { grid-template-columns: 1fr; }
   .checkout__pago-grid { grid-template-columns: 1fr; }
   .form__row { grid-template-columns: 1fr; }
@@ -5011,8 +5103,9 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
 @media (max-width: 480px) {
   .pdetalle__hero { height: 200px; }
   .transporte__options { grid-template-columns: 1fr; }
-  .orb-stepper { height: 240px; }
-  .orb-stepper__ring { width: 190px; height: 190px; }
+  .paso { padding: 1rem; }
+  .paso__actions { flex-direction: column; }
+  .paso__actions .btn { width: 100%; justify-content: center; }
 }
 
 /* ═══════════════════════════════════════════════════
@@ -5471,10 +5564,16 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   top: 1rem;
 }
 @media (max-width: 768px) {
-  .rmodal__overlay--flow { padding: 0; }
-  .rmodal--flow { max-height: 100vh; border-radius: 0; }
-  .rmodal__flow-layout { grid-template-columns: 1fr; }
-  .rmodal__flow-sidebar { position: static; }
+  .rmodal__overlay--flow { padding: 0; align-items: stretch; }
+  .rmodal--flow {
+    max-height: 100dvh;
+    height: 100dvh;
+    border-radius: 0;
+    overflow-y: auto;
+  }
+  .rmodal__flow-body { padding: 0 .75rem .75rem; }
+  .rmodal__flow-layout { grid-template-columns: 1fr; gap: 1rem; }
+  .rmodal__flow-sidebar { position: static; order: -1; }
 }
 
 .rmodal__header {
@@ -5723,6 +5822,9 @@ input, select, textarea { font-family: inherit; font-size: 1rem; }
   .rmodal__main   { padding: 1.25rem; gap: 1.5rem; }
   .itin__band     { grid-template-columns: 72px 1fr; }
   .itin__band-day { font-size: 1.85rem; }
+  .rmodal__flow-body { padding: 0 .75rem .75rem; }
+  .checkout__layout  { grid-template-columns: 1fr; }
+  .checkout__passenger { padding: 1rem; }
 }
 
 /* ═══════════════════════════════════════════════════
