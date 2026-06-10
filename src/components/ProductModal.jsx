@@ -208,7 +208,7 @@ export default function ProductModal({ producto, onClose, onComprar }) {
           )}
 
           <div className="pmodal__actions">
-            {producto.categoria === 'egresados' ? (
+            {producto.categoria === 'egresados' || producto.categoria === 'internacional' ? (
               <AnimatedButton
                 text="Consultar"
                 color="var(--color-accent)"

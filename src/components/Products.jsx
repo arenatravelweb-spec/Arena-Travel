@@ -225,12 +225,20 @@ export default function Products() {
                       onClick={e => { e.stopPropagation(); setDetail(p) }}
                     />
                   ) : (
-                    <AnimatedButton
-                      text="Ver itinerario"
-                      size="sm"
-                      color="var(--color-accent)"
-                      onClick={e => { e.stopPropagation(); setReserva(p) }}
-                    />
+                    <div className="prod-card__btns">
+                      <AnimatedButton
+                        text="Ver itinerario"
+                        size="sm"
+                        color="var(--color-accent)"
+                        onClick={e => { e.stopPropagation(); setReserva(p) }}
+                      />
+                      <AnimatedButton
+                        text="Ver paquete"
+                        size="sm"
+                        color="var(--color-primary)"
+                        onClick={e => { e.stopPropagation(); setDetail(p) }}
+                      />
+                    </div>
                   )}
                 </div>
               </article>
