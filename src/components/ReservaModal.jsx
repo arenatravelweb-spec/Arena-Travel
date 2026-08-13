@@ -142,7 +142,7 @@ function ModalInner({ producto, onClose, mode }) {
             </div>
 
             <div className="rmodal__sidebar">
-              <SidebarReserva />
+              <SidebarReserva readOnly={producto.categoria !== 'egresados'} />
             </div>
 
           </div>

@@ -19,7 +19,7 @@ const TIPO_LABEL = {
   cuadruple: 'Cuádruple',
 }
 
-export default function SidebarReserva() {
+export default function SidebarReserva({ readOnly = false }) {
   const {
     paquete, fecha, origen,
     pasajeros, transportes, habitaciones,
@@ -30,7 +30,7 @@ export default function SidebarReserva() {
     step,
   } = useReserva()
 
-  const total           = calcTotal()
+  const total           = readOnly ? precioBase : calcTotal()
   const transporteCost  = calcTransporteCost()
   const recargo         = calcRecargo()
 
@@ -170,7 +170,7 @@ export default function SidebarReserva() {
           </div>
         )}
 
-        {step < 4 && precioBase > 0 && (
+        {!readOnly && step < 4 && precioBase > 0 && (
           <div className="sidebar-res__breakdown">
             <div className="sidebar-res__breakdown-row">
               <span>Paquete base</span>
