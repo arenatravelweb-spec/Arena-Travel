@@ -20,6 +20,13 @@ function parseFecha(str) {
   return `${parseInt(d)} ${MESES[parseInt(m) - 1]} ${y}`
 }
 
+const CENTER_IMG_KEYWORDS = ['oktoberfest', 'merlo', 'papa']
+
+function getImgPosition(nombre) {
+  const lower = (nombre || '').toLowerCase()
+  return CENTER_IMG_KEYWORDS.some(k => lower.includes(k)) ? 'center' : 'top'
+}
+
 function Steps() {
   const { step } = useReserva()
   switch (step) {
@@ -78,7 +85,12 @@ function ModalInner({ producto, onClose, mode }) {
             <div className="rmodal__main">
               {producto.imagen_url && (
                 <div className="rmodal__banner">
-                  <img src={producto.imagen_url} alt={producto.nombre} className="rmodal__banner-img" />
+                  <img
+                    src={producto.imagen_url}
+                    alt={producto.nombre}
+                    className="rmodal__banner-img"
+                    style={{ objectPosition: getImgPosition(producto.nombre) }}
+                  />
                   <div className="rmodal__banner-overlay" />
                   <div className="rmodal__banner-info">
                     {(producto.duracion_dias || producto.duracion_noches) && (

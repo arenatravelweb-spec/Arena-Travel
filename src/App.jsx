@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { BrowserRouter, Routes, Route, useSearchParams } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, Navigate, useSearchParams } from 'react-router-dom'
 import { Toaster, toast } from 'sonner'
 import { AuthProvider } from './context/AuthContext'
 import ProtectedRoute from './components/ProtectedRoute'
@@ -8,7 +8,6 @@ import PaqueteDetalle from './pages/PaqueteDetalle'
 import Reservar from './pages/Reservar'
 import AdminLogin from './pages/admin/AdminLogin'
 import AdminDashboard from './pages/admin/AdminDashboard'
-import ClienteDashboard from './pages/admin/ClienteDashboard'
 
 function ScrollReveal() {
   useEffect(() => {
@@ -87,14 +86,7 @@ export default function App() {
               </ProtectedRoute>
             }
           />
-          <Route
-            path="/cliente"
-            element={
-              <ProtectedRoute requiredRole="cliente">
-                <ClienteDashboard />
-              </ProtectedRoute>
-            }
-          />
+          <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AuthProvider>
     </BrowserRouter>

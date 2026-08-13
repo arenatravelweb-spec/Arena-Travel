@@ -20,6 +20,11 @@ export async function uploadToCloudinary(file) {
   return data.secure_url
 }
 
+export function isImageUrl(url) {
+  if (!url) return false
+  return /\.(jpe?g|png|webp|gif|avif)(\?.*)?$/i.test(url) || url.includes('/image/upload/')
+}
+
 export const VIDEO_MAX_BYTES = 100 * 1024 * 1024 // 100 MB
 
 export async function uploadVideoToCloudinary(file) {

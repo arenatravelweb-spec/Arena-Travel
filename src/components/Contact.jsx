@@ -9,7 +9,7 @@ const WA = 'https://wa.me/5493815477147'
 const CONTACT_DETAILS = [
   { icon: '📍', label: 'Oficina',  info: 'Junín 155, local 19, San Miguel de Tucumán, Argentina' },
   { icon: '📞', label: 'Teléfono', info: '+54 9 3815 47-7147', href: WA },
-  { icon: '🕐', label: 'Horario',  info: 'Lunes – Viernes: 10:00 – 18:00' },
+  { icon: '🕐', label: 'Horario',  info: 'Lunes – Viernes: 09:30 – 13:00 y 17:00 – 20:00' },
 ]
 
 const SOCIALS = [
