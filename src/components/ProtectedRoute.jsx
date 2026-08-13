@@ -8,8 +8,7 @@ export default function ProtectedRoute({ children, requiredRole }) {
   if (!session) return <Navigate to="/admin/login" replace />
 
   if (requiredRole && role !== requiredRole) {
-    const redirect = role === 'cliente' ? '/cliente' : '/admin'
-    return <Navigate to={redirect} replace />
+    return <Navigate to="/" replace />
   }
 
   return children

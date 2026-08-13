@@ -11,7 +11,7 @@ export default function AdminLogin() {
 
   useEffect(() => {
     if (!session) return
-    navigate(role === 'cliente' ? '/cliente' : '/admin', { replace: true })
+    navigate(role === 'developer' ? '/admin' : '/', { replace: true })
   }, [session, role, navigate])
 
   const handleChange = e =>

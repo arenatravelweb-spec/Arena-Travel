@@ -1,10 +1,8 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { toast } from 'sonner'
 import { supabase } from '../lib/supabase'
 import { formatPrecioDesde } from '../lib/pricing'
 import AnimatedButton from './AnimatedButton'
-import CompraModal from './CompraModal'
 import ProductModal from './ProductModal'
 import ReservaModal from './ReservaModal'
 
@@ -15,34 +13,6 @@ const TABS = [
   { id: 'internacional', label: 'Internacionales' },
   { id: 'egresados',     label: 'Egresados' },
 ]
-
-async function crearPreferenciaMP(producto, comprador, setPagando, setPreferenceId) {
-  setPagando(true)
-  try {
-    const res = await fetch('/api/crear-preferencia', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        nombre:      producto.nombre,
-        precio:      producto.precio,
-        descripcion: producto.descripcion ?? '',
-        comprador,
-      }),
-    })
-    const data = await res.json()
-    console.log('Respuesta API pago:', data)
-    if (data.preference_id) {
-      setPreferenceId(data.preference_id)
-    } else {
-      throw new Error(data.error || 'No se recibió la preferencia de pago')
-    }
-  } catch (err) {
-    console.error('Error pago:', err)
-    toast.error('No se pudo iniciar el pago. Escribinos por WhatsApp.', { duration: 5000 })
-  } finally {
-    setPagando(false)
-  }
-}
 
 const SUBCATS = [
   { id: 'primario',   label: 'Primario' },
@@ -58,12 +28,8 @@ export default function Products() {
   const [indicator, setIndicator]         = useState({ width: 0, left: 0 })
   const [subcat, setSubcat]               = useState('primario')
   const [subcatIndicator, setSubcatInd]   = useState({ width: 0, left: 0 })
-  const [modalProducto, setModal]         = useState(null)
   const [detailProducto, setDetail]       = useState(null)
   const [reservaProducto, setReserva]     = useState(null)
-  const [flowProducto, setFlow]           = useState(null)
-  const [pagando, setPagando]             = useState(false)
-  const [preferenceId, setPreferenceId]   = useState(null)
   const tabsRef   = useRef(null)
   const subcatRef = useRef(null)
 
@@ -193,53 +159,25 @@ export default function Products() {
                 <h3 className="prod-card__title">{p.nombre}</h3>
                 <div className="prod-card__details">
                   {p.descripcion && <p className="prod-card__desc">{p.descripcion}</p>}
-                  {p.categoria === 'nacional' && p.precio && (
-                    <p className="prod-card__price">
-                      $ {Number(p.precio).toLocaleString('es-AR', { minimumFractionDigits: 2 })}
-                      <span> / persona</span>
-                    </p>
+                  {p.categoria === 'nacional' && (
+                    p.precio ? (
+                      <p className="prod-card__price">
+                        $ {Number(p.precio).toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+                        <span> / persona</span>
+                      </p>
+                    ) : (
+                      <p className="prod-card__price" style={{ fontWeight: 400, fontSize: '.78rem', opacity: .8, color: 'var(--color-white)' }}>Consultar precio</p>
+                    )
                   )}
                   {p.categoria === 'internacional' && p.precio_desde && (
                     <p className="prod-card__price">Precio: desde {formatPrecioDesde(p.nombre, p.precio_desde)}</p>
                   )}
-                  {p.categoria === 'nacional' ? (
-                    <div className="prod-card__btns">
-                      <AnimatedButton
-                        text="Ver itinerario"
-                        size="sm"
-                        color="var(--color-accent)"
-                        onClick={e => { e.stopPropagation(); setReserva(p) }}
-                      />
-                      <AnimatedButton
-                        text="Reservar"
-                        size="sm"
-                        color="var(--color-primary)"
-                        onClick={e => { e.stopPropagation(); setDetail(p) }}
-                      />
-                    </div>
-                  ) : p.categoria === 'egresados' ? (
-                    <AnimatedButton
-                      text="Ver paquete"
-                      size="sm"
-                      color="var(--color-accent)"
-                      onClick={e => { e.stopPropagation(); setDetail(p) }}
-                    />
-                  ) : (
-                    <div className="prod-card__btns">
-                      <AnimatedButton
-                        text="Ver itinerario"
-                        size="sm"
-                        color="var(--color-accent)"
-                        onClick={e => { e.stopPropagation(); setReserva(p) }}
-                      />
-                      <AnimatedButton
-                        text="Ver paquete"
-                        size="sm"
-                        color="var(--color-primary)"
-                        onClick={e => { e.stopPropagation(); setDetail(p) }}
-                      />
-                    </div>
-                  )}
+                  <AnimatedButton
+                    text="Ver más"
+                    size="sm"
+                    color="var(--color-accent)"
+                    onClick={e => { e.stopPropagation(); setDetail(p) }}
+                  />
                 </div>
               </article>
             ))}
@@ -251,9 +189,9 @@ export default function Products() {
         <ProductModal
           producto={detailProducto}
           onClose={() => setDetail(null)}
-          onComprar={() => {
+          onVerItinerario={() => {
             setDetail(null)
-            setFlow(detailProducto)
+            setReserva(detailProducto)
           }}
         />
       )}
@@ -263,24 +201,6 @@ export default function Products() {
           producto={reservaProducto}
           mode="itinerary"
           onClose={() => setReserva(null)}
-        />
-      )}
-
-      {flowProducto && (
-        <ReservaModal
-          producto={flowProducto}
-          mode="flow"
-          onClose={() => setFlow(null)}
-        />
-      )}
-
-      {modalProducto && (
-        <CompraModal
-          producto={modalProducto}
-          loading={pagando}
-          preferenceId={preferenceId}
-          onClose={() => { if (!pagando) { setModal(null); setPreferenceId(null) } }}
-          onConfirm={comprador => crearPreferenciaMP(modalProducto, comprador, setPagando, setPreferenceId)}
         />
       )}
     </section>
