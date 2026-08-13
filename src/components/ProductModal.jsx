@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import AnimatedButton from './AnimatedButton'
 import { formatPrecioDesde } from '../lib/pricing'
+import { isImageUrl } from '../lib/cloudinary'
 
 const WA = 'https://wa.me/5493815477147'
 
@@ -93,6 +94,9 @@ const DEST_INFO = {
   'neuquén':          'La capital del petróleo y el vino patagónico. Neuquén es puerta de entrada a los Lagos Meliquina, Aluminé y Lolog, los yacimientos de dinosaurios más importantes del mundo.',
   'triángulo serrano':'Triángulo Serrano es un recorrido turístico por algunos de los paisajes más encantadores de las sierras argentinas, donde se combinan naturaleza, aire puro, ríos cristalinos, pueblos pintorescos y postales serranas únicas. Ideal para quienes buscan descansar, recorrer y disfrutar de la magia de las sierras en un solo viaje.',
   'triangulo serrano':'Triángulo Serrano es un recorrido turístico por algunos de los paisajes más encantadores de las sierras argentinas, donde se combinan naturaleza, aire puro, ríos cristalinos, pueblos pintorescos y postales serranas únicas. Ideal para quienes buscan descansar, recorrer y disfrutar de la magia de las sierras en un solo viaje.',
+  'visita del papa':   'En noviembre de 2026, el Papa León XIV visitará Córdoba en una gira histórica para el pueblo argentino. Un viaje de fe, encuentro y esperanza para vivir de cerca este momento único junto a miles de peregrinos.',
+  'villa de merlo':    'Villa de Merlo, en San Luis, es famosa por su microclima —uno de los tres mejores del mundo según la NASA—, sus sierras, arroyos cristalinos y una energía serrana que invita al descanso y la conexión con la naturaleza.',
+  'villa general belgrano': 'Villa General Belgrano es la colonia alpina de las sierras cordobesas. Su arquitectura centroeuropea, la tradición cervecera y el mundialmente famoso Oktoberfest la convierten en un destino único para vivir la fiesta de la cerveza más grande de Sudamérica.',
 }
 
 const FALLBACK = {
@@ -115,9 +119,18 @@ function getYouTubeEmbed(url) {
   return m ? `https://www.youtube.com/embed/${m[1]}?autoplay=1&mute=1` : null
 }
 
-export default function ProductModal({ producto, onClose, onComprar }) {
+const CENTER_IMG_KEYWORDS = ['oktoberfest', 'merlo', 'papa']
+
+function getImgPosition(nombre) {
+  const lower = nombre.toLowerCase()
+  return CENTER_IMG_KEYWORDS.some(k => lower.includes(k)) ? 'center' : 'top'
+}
+
+export default function ProductModal({ producto, onClose, onVerItinerario }) {
   const youtubeEmbed = getYouTubeEmbed(producto.video_url)
   const destInfo = getDestInfo(producto.nombre, producto.categoria)
+  const imgPosition = getImgPosition(producto.nombre)
+  const videoIsImage = producto.video_url && !youtubeEmbed && isImageUrl(producto.video_url)
 
   useEffect(() => {
     const prev = document.body.style.overflow
@@ -135,7 +148,7 @@ export default function ProductModal({ producto, onClose, onComprar }) {
       <div className="pmodal" onClick={e => e.stopPropagation()}>
         <button className="pmodal__close" onClick={onClose} aria-label="Cerrar">✕</button>
 
-        <div className={`pmodal__media${producto.video_url ? ' pmodal__media--video' : ''}`}>
+        <div className={`pmodal__media${producto.video_url && !videoIsImage ? ' pmodal__media--video' : ''}`}>
           {producto.video_url ? (
             youtubeEmbed ? (
               <iframe
@@ -144,6 +157,8 @@ export default function ProductModal({ producto, onClose, onComprar }) {
                 allowFullScreen
                 title={producto.nombre}
               />
+            ) : videoIsImage ? (
+              <img src={producto.video_url} alt={producto.nombre} style={{ objectPosition: imgPosition }} />
             ) : (
               <video
                 src={producto.video_url}
@@ -155,7 +170,7 @@ export default function ProductModal({ producto, onClose, onComprar }) {
               />
             )
           ) : producto.imagen_url ? (
-            <img src={producto.imagen_url} alt={producto.nombre} />
+            <img src={producto.imagen_url} alt={producto.nombre} style={{ objectPosition: imgPosition }} />
           ) : (
             <div className="pmodal__media-placeholder">🌍</div>
           )}
@@ -194,11 +209,15 @@ export default function ProductModal({ producto, onClose, onComprar }) {
             </div>
           )}
 
-          {producto.categoria === 'nacional' && producto.precio && (
-            <p className="pmodal__price">
-              $ {Number(producto.precio).toLocaleString('es-AR', { minimumFractionDigits: 2 })}
-              <span> / persona</span>
-            </p>
+          {producto.categoria === 'nacional' && (
+            producto.precio ? (
+              <p className="pmodal__price">
+                $ {Number(producto.precio).toLocaleString('es-AR', { minimumFractionDigits: 2 })}
+                <span> / persona</span>
+              </p>
+            ) : (
+              <p className="pmodal__price">Consultar precio</p>
+            )
           )}
 
           {producto.categoria === 'internacional' && producto.precio_desde && (
@@ -210,9 +229,9 @@ export default function ProductModal({ producto, onClose, onComprar }) {
           <div className="pmodal__actions">
             {producto.categoria === 'nacional' ? (
               <AnimatedButton
-                text="Comprar"
+                text="Ver itinerario"
                 color="var(--color-accent)"
-                onClick={onComprar}
+                onClick={onVerItinerario}
               />
             ) : (
               <AnimatedButton
