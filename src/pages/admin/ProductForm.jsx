@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { HiPlus, HiTrash } from 'react-icons/hi2'
-import { uploadToCloudinary, uploadVideoToCloudinary, VIDEO_MAX_BYTES } from '../../lib/cloudinary'
+import { uploadToCloudinary, uploadVideoToCloudinary, VIDEO_MAX_BYTES, isImageUrl } from '../../lib/cloudinary'
 import { getMoneda } from '../../lib/pricing'
 
 const EMPTY_DIA        = { titulo: '', descripcion: '', actividades_txt: '' }
@@ -178,7 +178,7 @@ export default function ProductForm({ initial, onSave, onCancel }) {
   const handleVideoFile = e => {
     const selected = e.target.files[0]
     if (!selected) return
-    if (selected.size > VIDEO_MAX_BYTES) {
+    if (!selected.type.startsWith('image/') && selected.size > VIDEO_MAX_BYTES) {
       setErrors(prev => ({ ...prev, video: 'El video supera el tamaño máximo de 100 MB' }))
       return
     }
@@ -187,6 +187,8 @@ export default function ProductForm({ initial, onSave, onCancel }) {
     setVideoPreview(URL.createObjectURL(selected))
     setForm(prev => ({ ...prev, video_url: '' }))
   }
+
+  const videoIsImage = videoFile ? videoFile.type.startsWith('image/') : isImageUrl(videoPreview)
 
   const clearVideo = () => {
     setVideoFile(null)
@@ -203,9 +205,13 @@ export default function ProductForm({ initial, onSave, onCancel }) {
   const validate = () => {
     const errs = {}
     if (!form.nombre.trim()) errs.nombre = true
-    if (form.categoria === 'nacional' || form.categoria === 'egresados') {
+    if (form.categoria === 'egresados') {
       const n = parsePrice(form.precio)
       if (!form.precio || isNaN(n) || n <= 0) errs.precio = true
+    }
+    if (form.categoria === 'nacional' && form.precio) {
+      const n = parsePrice(form.precio)
+      if (isNaN(n) || n < 0) errs.precio = true
     }
     if (form.categoria === 'egresados' && !form.subcategoria) errs.subcategoria = true
     return errs
@@ -244,7 +250,9 @@ export default function ProductForm({ initial, onSave, onCancel }) {
     if (videoFile) {
       setUploadingVideo(true)
       try {
-        videoUrl = await uploadVideoToCloudinary(videoFile)
+        videoUrl = videoFile.type.startsWith('image/')
+          ? await uploadToCloudinary(videoFile)
+          : await uploadVideoToCloudinary(videoFile)
       } catch (err) {
         setErrors(prev => ({ ...prev, video: err.message }))
         setUploadingVideo(false)
@@ -343,7 +351,9 @@ export default function ProductForm({ initial, onSave, onCancel }) {
 
       {(form.categoria === 'nacional' || form.categoria === 'egresados') ? (
         <div className="form__group">
-          <label htmlFor="pf-precio">Precio en pesos (ARS) *</label>
+          <label htmlFor="pf-precio">
+            Precio en pesos (ARS){form.categoria === 'egresados' ? ' *' : ''}
+          </label>
           <input
             id="pf-precio" name="precio" type="text"
             inputMode="numeric"
@@ -352,6 +362,9 @@ export default function ProductForm({ initial, onSave, onCancel }) {
             className={errors.precio ? 'error' : ''}
           />
           {errors.precio && <span className="product-form__field-error">Introduce un precio válido en pesos</span>}
+          {form.categoria === 'nacional' && (
+            <span className="product-form__hint">Dejalo vacío para mostrar "Consultar" en vez de un precio.</span>
+          )}
         </div>
       ) : (
         <div className="form__group">
@@ -419,10 +432,10 @@ export default function ProductForm({ initial, onSave, onCancel }) {
       )}
 
       <div className="form__group">
-        <label htmlFor="pf-video-url">URL de video (opcional)</label>
+        <label htmlFor="pf-video-url">URL de video o imagen para el modal (opcional)</label>
         <input
           id="pf-video-url" name="video_url" type="url"
-          placeholder="https://youtube.com/watch?v=... o URL directa"
+          placeholder="https://youtube.com/watch?v=... o URL de video/imagen directa"
           value={form.video_url}
           onChange={e => {
             handleChange(e)
@@ -433,21 +446,23 @@ export default function ProductForm({ initial, onSave, onCancel }) {
       </div>
 
       <div className="form__group">
-        <label htmlFor="pf-video-file">O sube un video — MP4, WebM (máx. 100 MB)</label>
+        <label htmlFor="pf-video-file">O sube un video o una imagen</label>
         <input
-          id="pf-video-file" type="file" accept="video/mp4,video/webm,video/*"
+          id="pf-video-file" type="file" accept="video/mp4,video/webm,video/*,image/*"
           onChange={handleVideoFile}
           className="product-form__file-input"
         />
-        {uploadingVideo && <p className="product-form__status">Subiendo video a Cloudinary…</p>}
+        {uploadingVideo && <p className="product-form__status">Subiendo {videoIsImage ? 'imagen' : 'video'} a Cloudinary…</p>}
         {errors.video && <span className="product-form__field-error">{errors.video}</span>}
       </div>
 
       {videoPreview && (
         <div className="product-form__preview product-form__preview--video">
-          <video src={videoPreview} controls muted preload="metadata" />
+          {videoIsImage
+            ? <img src={videoPreview} alt="Vista previa" />
+            : <video src={videoPreview} controls muted preload="metadata" />}
           <button type="button" className="product-form__clear-media" onClick={clearVideo}>
-            Quitar video
+            Quitar {videoIsImage ? 'imagen' : 'video'}
           </button>
         </div>
       )}
