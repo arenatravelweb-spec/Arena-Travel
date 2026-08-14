@@ -19,6 +19,17 @@ const SUBCATS = [
   { id: 'secundario', label: 'Secundario' },
 ]
 
+const CARD_IMG_POSITION = {
+  'cabo frío': 'bottom',
+  'cabo frio': 'bottom',
+}
+
+function getCardImgPosition(nombre) {
+  const lower = (nombre || '').toLowerCase()
+  const key = Object.keys(CARD_IMG_POSITION).find(k => lower.includes(k))
+  return key ? CARD_IMG_POSITION[key] : undefined
+}
+
 export default function Products() {
   const navigate = useNavigate()
   const [products, setProducts]           = useState([])
@@ -151,7 +162,13 @@ export default function Products() {
                 style={p.imagen_url ? { '--img': `url(${p.imagen_url})` } : undefined}
               >
                 {p.imagen_url && (
-                  <img src={p.imagen_url} alt={p.nombre} loading="lazy" className="prod-card__img" />
+                  <img
+                    src={p.imagen_url}
+                    alt={p.nombre}
+                    loading="lazy"
+                    className="prod-card__img"
+                    style={getCardImgPosition(p.nombre) ? { objectPosition: getCardImgPosition(p.nombre) } : undefined}
+                  />
                 )}
                 {p.hot_sale && (
                   <span className="prod-card__hot-sale">🔥 HOT SALE · 40% OFF</span>
